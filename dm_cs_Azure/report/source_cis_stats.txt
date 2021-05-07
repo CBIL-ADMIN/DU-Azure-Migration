@@ -1,0 +1,360 @@
+BALANCE_TYPE_NAME,BT_ID,PROFILE_TAG,CONDITION,SOURCE_CNT,DISCARDED_CNT,DISCARDED_REMARK
+_pc_NFCNOL_PC,1243,,1243:or:3#4#5#6:::;,23,23,Balance_Type match condition failed-23;
+Corporate Plan,1269,,1269:=:1:::;,61088,18,Lifecycle lookup mismatch-18;
+_pc_ConsBISSocialControl_PC,1085,,1085:or:3#4#5#6:::;,104,100,Balance_Type match condition failed-100;
+MercuryState,3011,,3011:=:5:::;,729,729,Balance_Type match condition failed-712;Balance_Type expired-17;
+_pc_BCP2DataTopUp10_PC,2039,,2039:or:3#4#5#6:::;,1,0,
+_pc_BCP2IDDTopUp11_PC,2996,,2996:or:3#4#5#6:::;,1,0,
+_pc_GCCDailyBundle,2318,,2318:or:3#4#5#6:::;,8,0,
+_pc_IDDRateCutters_PC,2872,,2872:or:3#4#5#6:::;,3770,158,Balance_Type match condition failed-158;
+_pc_0100 AED Auto Topup,1106,,1106:or:3#4#5#6:::;,332,0,
+_pc_BCP150FLVRNew_PC,2061,,2061:or:3#4#5#6:::;,2,0,
+,,ManRenDateLess1Y,ManRenDateLess1Y:>=:migdate::or:214#196:;,49254,0,
+_pc_DailyRecData1,3238,,3238:or:3#4#5#6:::;,23647,20,Balance_Type match condition failed-2;Balance_Type expired-18;
+_pc_MonthlyRecSpecial1,3037,,3037:or:3#4#5#6:::;,2,2,Balance_Type match condition failed-2;
+_pc_BCPNatCUG109_PC,2053,,2053:or:3#4#5#6:::;,51443,4,Balance_Type expired-1;Subscriber relation missing-3;
+_pc_HardCapBMP200_PC,2441,,2441:or:3#4#5#6:::;,141,0,
+_pc_0050 AED Auto Topup,519,,519:or:3#4#5#6:::;,419,0,
+AllValueFlexiDaily,2777,,2777:>=:-99999999:::;,32,32,Balance_Type match condition failed-25;Balance_Type expired-7;
+_pc_C_HardCapBCC100Mins_PC,2570,,2570:or:3#4#5#6:::;,3,0,
+_pc_500 AED Auto Topup,1127,,1127:or:3#4#5#6:::;,1,0,
+_pc_0080 AED Auto Topup,1105,,1105:or:3#4#5#6:::;,41,0,
+_pc_PCOneOffMnthReset,2023,,2023:or:3#4#5#6:::;,78712,78704,Balance_Type match condition failed-78701;Balance_Type expired-3;
+,,NewPPBundle,NewPPBundle:=:Monthly2:P:::;,36,0,
+_pc_OneWayFnFWGrace_PC,3454,,3454:or:3#4#5#6#7#8#9:::;,4605,1,Balance_Type expired-1;
+_pc_PAYGMetDataBenfit_PC,1487,,1487:or:3#4#5#6:::;PAYGMet-=-1,2,0,
+_pc_HotelPrepaidTopUp_PC,3156,,3156:or:3#4#5#6:::;,2,0,
+_pc_HardCapAlphaIN200_PC,3079,,3079:or:3#4#5#6:::;,2,0,
+_pc_NPP Voice Bundle D1,1470,,1470:or:3#4#5#6:::;,8,0,
+_pc_DataBndl2560MBRec,3219,,3219:or:3#4#5#6:::;,395,0,
+NewAlo,1512,,1512:=:1:::;,747684,3,Lifecycle lookup mismatch-2;Subscriber relation missing-1;
+RRMCState,1832,,1832:=:0:::;,476457,4257,Lifecycle lookup mismatch-1;Balance_Type expired-4240;Subscriber relation missing-16;
+_pc_C_HardCapBCC10KMins_PC,2693,,2693:or:3#4#5#6:::;,8097,1,Subscriber relation missing-1;
+_pc_BCPNatCUG108_PC,2052,,2052:or:3#4#5#6:::;,1,0,
+_pc_C_HardCapBCC300Mins_PC,2571,,2571:or:3#4#5#6:::;,1,0,
+_pc_C_HardCapBIntPlus100_PC,2556,,2556:or:3#4#5#6:::;,2,0,
+Free SMS,25,,25:>=:1:::;SmsBndlType-=-1#SmsBndl1Recur-=-T,2,0,
+_pc_BCPComboNat100_PC,2041,,2041:or:3#4#5#6:::;,349,0,
+Premier Plan,1387,,1387:=:2:::;,1422,0,
+_pc_NPP Data Bundle M1,1464,,1464:or:3#4#5#6:::;,51,0,
+_pc_EntBISSocial_PC,840,,840:or:3#4#5#6:::;,58,0,
+_pc_BCPFlexiSMS102_PC,2046,,2046:or:3#4#5#6:::;,1,0,
+DataCamp,1275,,1275:>=:1:::;,103174,2079,Service class Ignored-1;Lifecycle lookup mismatch-1;Balance_Type expired-2077;
+_pc_DataBndl2560MBRec,3219,,3219:or:7#8#9:::;,11,0,
+Premier Plan,1387,,1387:=:3:::;,4835,0,
+_pc_HappinessSIM_PC,3255,,3255:or:3#4#5#6:::;,60164,2,Lifecycle lookup mismatch-1;Subscriber relation missing-1;
+_pc_IDDRateCuttersGrace_PC,2873,,2873:or:3#4#5#6#7#8#9:::;,158,0,
+_pc_C_HardCapRNatVB500_PC,2549,,2549:or:3#4#5#6:::;,137,0,
+_pc_LifeStyleGrace_PC,1767,,1767:or:3#4#5#6#7#8#9:::;,30,0,
+_pc_BCPFlexiSMS101_PC,2045,,2045:or:3#4#5#6:::;,1,0,
+_pc_MercuryTNB15_PC,3296,,3296:or:3#4#5#6:::;,4,0,
+_pc_PC_Monthly_Hybrid1,2959,,2959:or:3#4#5#6:::;,3131,1,Balance_Type match condition failed-1;
+_pc_BronzeDaily_PC,3309,,3309:or:3#4#5#6:::;,22925,13,Balance_Type expired-13;
+_pc_GCCDailyGrace,2319,,2319:or:3#4#5#6#7#8#9:::;,3,0,
+_pc_PeerCounterReset,1190,,1190:or:3#4#5#6:::;,42401,29,Service class Ignored-1;Lifecycle lookup mismatch-1;Balance_Type expired-27;
+_pc_BCPNatCUG106_PC,2050,,2050:or:3#4#5#6:::;,1,0,
+_pc_DataBndl25GBRec,968,,968:or:3#4#5#6:::;,229,0,
+_pc_C_HardCapGMM100_PC,2542,,2542:or:3#4#5#6:::;,702,0,
+,,entBsnssCrclActv,entBsnssCrclActv:=:T::::;,864023,220,Service class Ignored-30;Lifecycle lookup mismatch-23;Subscriber relation missing-167;
+,,CVM,CVM:=:1::::;,132184,4,Service class Ignored-4;
+CashRechPromoState,3424,,3424:>=:1:::;,12893,0,
+_pc_MoviePassAutoStop_PC,3422,,3422:or:3#4#5#6:::;,127,3,Balance_Type expired-3;
+TPVoice2,3273,,3273:>=:-99999999:::;,737,54,Lifecycle lookup mismatch-1;Balance_Type match condition failed-6;Balance_Type expired-42;Subscriber relation missing-5;
+_pc_NPP Data Bundle M3,1466,,1466:or:3#4#5#6:::;,22,0,
+_pc_BCP2NatTopUp10_PC,2035,,2035:or:3#4#5#6:::;,1,0,
+_pc_PCOneOffWeekReset,2024,,2024:or:3#4#5#6:::;,1833,1833,Balance_Type match condition failed-1833;
+,,IDDCutRateAct,IDDCutRateAct:=:T::::;,513195,10,Service class Ignored-10;
+_pc_BCP2DataTopUp6_PC,1575,,1575:or:3#4#5#6:::;,11,0,
+_pc_DataBndl40MBRec,966,,966:or:3#4#5#6:::;,421,0,
+_pc_0300 AED Auto Topup,1116,,1116:or:3#4#5#6:::;,8,0,
+_pc_C_HardCapIDD300Plan_PC,2564,,2564:or:3#4#5#6:::;,1,0,
+InterCamp,1272,,1272:>=:1:::;,35482,383,Balance_Type expired-383;
+RLHActive,1209,,1209:=:1:::;,2690,0,
+RRMCState,1832,,1832:=:1:::;,496055,4479,Service class Ignored-1;Lifecycle lookup mismatch-7;Balance_Type expired-4471;
+_pc_NPP Data Bundle D1,1462,,1462:or:3#4#5#6:::;,34,0,
+_pc_HardCapBMP300_PC,2442,,2442:or:3#4#5#6:::;,86,0,
+_pc_BCPNatCUG105_PC,2049,,2049:or:3#4#5#6:::;,2,0,
+InternationalMin2,1019,,1019:>=:1:::;,845,38,Balance_Type expired-38;
+RateCutterIndia,3390,,3390:>=:1:::;,25632,214,Balance_Type expired-214;
+TPVoice1,3272,,3272:>=:-99999999:::;,461,53,Balance_Type match condition failed-2;Balance_Type expired-44;Subscriber relation missing-7;
+_pc_NPP Data Bundle M2,1465,,1465:or:7#8#9:::;,2,0,
+Tourist Renewed,1494,,1494:=:1:::;,371,1,Subscriber relation missing-1;
+RoamDataMonthlyPlusA,3133,,3133:>=:-99999999:::;,22,0,
+,,TopXCountr2,TopXCountr2:=:T::::;,35,0,
+_pc_Mercury2Daily_PC,3413,,3413:or:3#4#5#6:::;,1,0,
+,,BstrVNNRecur,BstrVNNRecur:=:T::::;BstrVceNatNumTree-!=-EMPTY#BstrVceNatNumExp->=-MIGDATE,5,2,Profile Tag match condition Failed-2;
+_pc_DataBndl100MBRec,967,,967:or:3#4#5#6:::;,54,0,
+_pc_BCP10FLVRNew_PC,2062,,2062:or:3#4#5#6:::;,764,0,
+Hajj Voice,3311,,3311:>=:-99999999:::;,2,0,
+_pc_NPP XL-Data Bundle M2,1469,,1469:or:3#4#5#6:::;,2,0,
+_pc_NewPPBundlePrePurch,3216,,3216:or:3#4#5#6:::;NewPPBundle-=-Monthly10,3,0,
+_pc_BCP2DataTopUp5_PC,1574,,1574:or:3#4#5#6:::;,1258,0,
+_pc_DailyRecCombo1,2929,,2929:or:3#4#5#6:::;,593,104,Balance_Type match condition failed-103;Balance_Type expired-1;
+,,NewPPBundle,NewPPBundle:=:Monthly9:P:::;,447,0,
+_pc_ChatNCallRst_PC,1763,,1763:or:3#4#5#6:::;,4,1,Balance_Type match condition failed-1;
+_pc_RoamingDataDailyGrace,2193,,2193:or:3#4#5#6#7#8#9:::;,11,0,
+_pc_BlackBerry100MB_R,1036,,1036:or:3#4#5#6:::;,31,1,Balance_Type match condition failed-1;
+_pc_RoamDataMonthly_PC,1203,,1203:or:3#4#5#6:::;,55,0,
+,,NPPSocBndlDAPAct,NPPSocBndlDAPAct:=:T::::;,809,0,
+_pc_NewPPBundlePrePurch,3216,,3216:or:3#4#5#6:::;NewPPBundle-=-Monthly1,3,0,
+_pc_MoviePass2AutoStop_PC,3423,,3423:or:3#4#5#6:::;,250,12,Balance_Type expired-12;
+Premier Plan,1387,,1387:=:4:::;,2721,0,
+_pc_NewPPBundlePrePurch,3216,,3216:or:3#4#5#6:::;NewPPBundle-=-Monthly2,8,0,
+_pc_NPP VP-1,1458,,1458:or:3#4#5#6:::;,205,0,
+_pc_BCPComboNat250_PC,2043,,2043:or:3#4#5#6:::;,7,0,
+_pc_BCPComboNat200_PC,2042,,2042:or:3#4#5#6:::;,28,0,
+_pc_DailyGrcSocData1,3294,,3294:or:3#4#5#6#7#8#9:::;,21536,931,Balance_Type match condition failed-914;Balance_Type expired-17;
+_pc_NewPPBundlePrePurch,3216,,3216:or:3#4#5#6:::;NewPPBundle-=-Monthly3,3,0,
+,,NPPBBSocialDAPMod,NPPBBSocialDAPMod:=:T::::;,3,0,
+_pc_NPP Voice Bundle D1,1470,,1470:or:7#8#9:::;,1,0,
+RoamDataDailyB,1197,,1197:>=:-99999999:::;,472,0,
+One Off Data,1633,,1633:=:1048576:::;,2324,0,
+InternationalMin,619,,619:>=:1:::;,1,0,
+_pc_NewPPBundlePrePurch,3216,,3216:or:3#4#5#6:::;NewPPBundle-=-Monthly4,8,0,
+_pc_HardCapBMP400_PC,2443,,2443:or:3#4#5#6:::;,12,0,
+Tourist IRStatus,1865,,1865:>=:1:::;,24,0,
+_pc_BCP2DataTopUp4_PC,1573,,1573:or:3#4#5#6:::;,100,0,
+_pc_ChatNCallGrace_PC,1762,,1762:or:3#4#5#6#7#8#9:::;,176,0,
+_pc_PAYGLifeTimeRenewal,436,,436:or:3#4#5#6#7#8#9:::;,791301,5,Balance_Type expired-5;
+_pc_NewPPBundlePrePurch,3216,,3216:or:3#4#5#6:::;NewPPBundle-=-Monthly6,2,0,
+_pc_LifeStyleRec_PC,1766,,1766:or:3#4#5#6:::;,80,3,Balance_Type match condition failed-3;
+_pc_ChatNCallRec_PC,1761,,1761:or:3#4#5#6:::;,584,58,Balance_Type match condition failed-58;
+_pc_BronzeMonthly_PC,3366,,3366:or:3#4#5#6:::;,561263,38,Lifecycle lookup mismatch-2;Balance_Type match condition failed-1;Balance_Type expired-35;
+_pc_GraceSpecial1,3038,,3038:or:1#2:::;,4639,0,
+Srv-TravelSummer,719,,719:>=:1:::;,2,0,
+_pc_SF Tier-2,2253,,2253:or:3#4#5#6:::;,180,0,
+_pc_BronzeMonthlyGrace_PC,3367,,3367:or:3#4#5#6#7#8#9:::;,65520,25,Balance_Type expired-25;
+_pc_OneWayFnFMonthly_PC,3453,,3453:or:3#4#5#6:::;,39000,1,Balance_Type expired-1;
+GCC Daily Quota,2315,,2315:>=:-99999999:::;,2359,0,
+_pc_PCMonthlyRecurrent,2021,,2021:or:3#4#5#6:::;,6340,366,Balance_Type match condition failed-366;
+_pc_DailyGrcData1,3239,,3239:or:3#4#5#6#7#8#9:::;,30200,19,Balance_Type expired-18;Subscriber relation missing-1;
+_pc_BCP2DataTopUp1_PC,1579,,1579:or:3#4#5#6:::;,16335,2,Subscriber relation missing-2;
+_pc_NewPPBundlePrePurch,3216,,3216:or:3#4#5#6:::;NewPPBundle-=-Monthly9,5,0,
+BlockPPU,1156,,1156:=:1:::;,11396,650,Service class Ignored-1;Balance_Type expired-649;
+_pc_NPP VP-1,1458,,1458:or:7#8#9:::;,10,0,
+PriceShout,1219,,1219:=:1:::;,839132,4,Lifecycle lookup mismatch-3;Subscriber relation missing-1;
+_pc_BCP2DataTopUp3_PC,1572,,1572:or:3#4#5#6:::;,3002,0,
+_pc_BlackBerry1GB_R,1037,,1037:or:3#4#5#6:::;,19,0,
+Blackberry Bundle,1035,,1035:=:2:::;,4044,4044,Balance_Type match condition failed-4044;
+,,IDD2Act,IDD2Act:=:T::::;,465044,21,Service class Ignored-9;Lifecycle lookup mismatch-10;Subscriber relation missing-2;
+_pc_StartStopAutoStopPH2_PC,3308,,3308:or:3#4#5#6:::;,22,0,
+_pc_SocialBundleActive,1321,,1321:or:3#4#5#6:::;,66062,147,Balance_Type match condition failed-82;Balance_Type expired-65;
+_pc_NPP VP-3,1460,,1460:or:3#4#5#6:::;,69,0,
+,,NewPPBundle,NewPPBundle:=:Monthly7:P:::;,2,0,
+_pc_KhaleejiReset,3497,,3497:or:3#4#5#6:::;,5,0,
+Data FNL WH,2892,,2892:>=:1:::;,1492,9,Balance_Type expired-9;
+RRMCState,1832,,1832:=:2:::;,31528,10578,Balance_Type expired-10578;
+_pc_LifeStyleRst_PC,1768,,1768:or:3#4#5#6:::;,2,0,
+_pc_PC_InternatWeekly,1594,,1594:or:3#4#5#6:::;,39,0,
+_pc_BlackBerry4GB_R,1038,,1038:or:3#4#5#6:::;,21,0,
+_pc_C_HardCapMinsNat750_PC,2553,,2553:or:3#4#5#6:::;,615,0,
+AllValueFlexi,2776,,2776:>=:-99999999:::;,46,46,Balance_Type match condition failed-45;Balance_Type expired-1;
+_pc_BCP40FLVRNew_PC,2065,,2065:or:3#4#5#6:::;,2,0,
+Free SMS,25,,25:>=:1:::;SmsBndlType-=-2#SmsBndl2Recur-!=-T,2,0,
+_pc_IntMin15Expiry,1192,,1192:or:3#4#5#6:::;,14,0,
+_pc_BCP2DataTopUp2_PC,1571,,1571:or:3#4#5#6:::;,12234,1,Subscriber relation missing-1;
+_pc_HardCapAlphaN50_PC,3081,,3081:or:3#4#5#6:::;,7,0,
+,,TopXCountr4,TopXCountr4:=:T::::;,20,0,
+_pc_PCZingerGrace,2092,,2092:or:3#4#5#6:::;,338,334,Balance_Type match condition failed-334;
+_pc_C_HardCapIDD50Plan_PC,2561,,2561:or:3#4#5#6:::;,471,0,
+_pc_0160 AED Auto Topup,1109,,1109:or:3#4#5#6:::;,2,0,
+_pc_ChatNCallOneOff_PC,1764,,1764:or:3#4#5#6:::;,2709,2,Balance_Type expired-2;
+Premier Plan,1387,,1387:=:5:::;,23731,1,Subscriber relation missing-1;
+_pc_BCPNatSMS4_PC,3008,,3008:or:3#4#5#6:::;,6,0,
+RoamingDataMonthlyB,1360,,1360:>=:-99999999:::;,20,0,
+_pc_BCP2NatTopUp13_PC,2995,,2995:or:3#4#5#6:::;,243,0,
+_pc_NPP Voice Bundle M1,1471,,1471:or:3#4#5#6:::;,18,0,
+_pc_BronzeMonPromoGrace_PC,3582,,3582:or:3#4#5#6#7#8#9:::;,864,2,Balance_Type expired-2;
+RaomingDataMonthly,1199,,1199:>=:-99999999:::;,399,0,
+_pc_RoamDataWeekly_PC,1202,,1202:or:3#4#5#6:::;,63,0,
+_pc_DataBndl4GBRec,316,,316:or:3#4#5#6:::;,477,0,
+HCapMinBill,3315,,3315:>=:1:::;,6091,1,Subscriber relation missing-1;
+_pc_PCDailyRecurrent,2020,,2020:or:3#4#5#6:::;,713,713,BT mapped CIS NWPC Mapping failed-678;Balance_Type match condition failed-34;Balance_Type expired-1;
+_pc_WeeklyRecCombo1,2930,,2930:or:3#4#5#6:::;,290,48,Lifecycle lookup mismatch-1;Balance_Type match condition failed-46;Balance_Type expired-1;
+RoamDataDailyA,1196,,1196:>=:-99999999:::;,5492,0,
+,,Absher,Absher:=:T::::;,57,0,
+Free SMS,25,,25:>=:1:::;SmsBndlType-=-1#SmsBndl1Recur-!=-T,2,0,
+FlexiCamp,1543,,1543:>=:1:::;,5886,27,Balance_Type expired-27;
+_pc_PC_InternatMonthly,1595,,1595:or:7#8#9:::;,1,0,
+NPP PPU Active,1451,,1451:>=:1:::;,35392,0,
+_pc_C_HardCapInt50Bespoke_PC,2560,,2560:or:3#4#5#6:::;,249,0,
+Promo SMS ON OFF,1692,,1692:>=:1:::;,932,0,
+,,NewPPBundle,NewPPBundle:=:Monthly3:P:::;,18,1,Lifecycle lookup mismatch-1;
+,,NewPPBundle,NewPPBundle:=:Monthly5:P:::;,5,0,
+NPP Data Social Active,1455,,1455:=:1:::;,82734,0,
+_pc_BCP2NatTopUp9_PC,2034,,2034:or:3#4#5#6:::;,164,0,
+_pc_BCP2NatTopUp12_PC,2994,,2994:or:3#4#5#6:::;,1,0,
+_pc_0250 AED Auto Topup,521,,521:or:3#4#5#6:::;,4,0,
+_pc_NPP VP-3,1460,,1460:or:7#8#9:::;,2,0,
+,,ManRenDateLess1Y,ManRenDateLess1Y:>=:migdate::=:255:;,10710,0,
+_pc_C_HardCapInt25Bespoke_PC,2559,,2559:or:3#4#5#6:::;,119,0,
+,,BstrVINRecur,BstrVINRecur:=:T::::;BstrVceIntNumTree-!=-EMPTY#BstrVceIntNumExp->=-MIGDATE,2,1,Profile Tag match condition Failed-1;
+_pc_C_HardCapIDD200Plan_PC,2563,,2563:or:3#4#5#6:::;,1,0,
+_pc_PC_InternatMonthly,1595,,1595:or:3#4#5#6:::;,15,0,
+One Off Data,1633,,1633:=:2306867:::;,1756,0,
+_pc_BCPNatSMS2_PC,3006,,3006:or:3#4#5#6:::;,19,0,
+RRMCState,1832,,1832:=:3:::;,4011,124,Balance_Type expired-123;Subscriber relation missing-1;
+_pc_PC_CRD_BusAuto40_MRC,599,,599:or:3#4#5#6:::;,17813,0,
+Free SMS,25,,25:>=:1:::;SmsBndlType-=-2#SmsBndl2Recur-=-T,1,0,
+_pc_BCP2NatTopUp11_PC,2993,,2993:or:3#4#5#6:::;,10,0,
+AllValueData,2778,,2778:>=:-99999999:::;,4,1,Balance_Type match condition failed-1;
+_pc_Mercury1D_PC,3303,,3303:or:3#4#5#6:::;,1532,1532,BT mapped CIS NWPC Mapping failed-1480;Balance_Type match condition failed-52;
+_pc_BlackBerry4GB_R,1038,,1038:or:7#8#9:::;,1,0,
+_pc_C_HardCapMinsNat420_PC,2552,,2552:or:3#4#5#6:::;,1642,0,
+_pc_HardCapAlphaIN50_PC,3077,,3077:or:3#4#5#6:::;,3,0,
+International Community,1547,,1547:>=:1:::;,19439,0,
+RRMCState,1832,,1832:=:4:::;,45471,6196,Balance_Type expired-6196;
+_pc_StartStopAutoStopPH2_PC,3308,,3308:or:7#8#9:::;,2,0,
+CreditFlexiCampNew,3072,,3072:>=:1:::;,1,0,
+RoamDataDailyA_Grace,2176,,2176:=:1:::;,151,0,
+_pc_BCPNatSMS1_PC,3005,,3005:or:3#4#5#6:::;,9,0,
+_pc_HardCapAlphaN400_NPC,3084,,3084:or:3#4#5#6:::;,123,0,
+_pc_NPP VP-2,1459,,1459:or:7#8#9:::;,4,0,
+_pc_PC_CRD_BusAuto150_MRC,601,,601:or:3#4#5#6:::;,33,0,
+,,NewPPBundle,NewPPBundle:=:Monthly1:P:::;,7,0,
+PostCall,1324,,1324:>=:1:::;,7242562,393,Service class Ignored-349;Lifecycle lookup mismatch-20;Subscriber relation missing-24;
+_pc_SocialBundleGrace,1322,,1322:or:3#4#5#6#7#8#9:::;,24866,35,Balance_Type match condition failed-24;Balance_Type expired-11;
+GCC Weekly Quota,2316,,2316:>=:-99999999:::;,675,0,
+_pc_0200 AED Auto Topup,1111,,1111:or:3#4#5#6:::;,27,0,
+_pc_NPP Data Bundle D1,1462,,1462:or:7#8#9:::;,30,0,
+Blackberry GB,155,,155:>=:1:::;,41,0,
+_pc_NPP Data Bundle M4,1467,,1467:or:7#8#9:::;,2,0,
+_pc_BCP2DataTopUp15_PC,3004,,3004:or:3#4#5#6:::;,20,0,
+_pc_BronzeDailyGrace_PC,3310,,3310:or:3#4#5#6#7#8#9:::;,23299,77,Balance_Type match condition failed-70;Balance_Type expired-7;
+_pc_OneWayFnFMGrace_PC,3455,,3455:or:3#4#5#6#7#8#9:::;,6557,0,
+_pc_RoamingDataDailyBundle,2192,,2192:or:3#4#5#6:::;,50,0,
+,,Prepaid,Prepaid:=:T::::;,35538,20,Service class Ignored-1;Subscriber relation missing-19;
+_pc_DataBndl1GBRec,819,,819:or:3#4#5#6:::;,582,0,
+_pc_0020 AED Auto Topup,1102,,1102:or:3#4#5#6:::;,54611,12,Balance_Type expired-11;Subscriber relation missing-1;
+AloRechBonusFlag,3298,,3298:>=:1:::;,67009,0,
+Global Zone,1672,,1672:>=:1:::;,2237904,13,Lifecycle lookup mismatch-9;Subscriber relation missing-4;
+_pc_HardCapAlphaN100_PC,3082,,3082:or:3#4#5#6:::;,18,0,
+Dunning Active,3074,,3074:>=:1:::;,12,0,
+,,NewPPBundle,NewPPBundle:=:Monthly10:P:::;,7,0,
+_pc_Mercury15D_PC,3297,,3297:or:3#4#5#6:::;,2103,51,Service class Ignored-1;Balance_Type match condition failed-49;Balance_Type expired-1;
+_pc_RoamDataMonthlyPlus_PC,3134,,3134:or:3#4#5#6:::;,2,0,
+_pc_C_HardCapMinsNat900_PC,2554,,2554:or:3#4#5#6:::;,104,0,
+_pc_PC_CRD_BusAuto200_MRC,602,,602:or:3#4#5#6:::;,124,0,
+TPlus,3280,,3280:>=:1:::;Plan-=-TouristPlus,4942,0,
+_pc_EntBISSocialControl_PC,1086,,1086:or:3#4#5#6:::;,25,24,Balance_Type match condition failed-24;
+_pc_BCP2DataTopUp14_PC,3003,,3003:or:3#4#5#6:::;,6,0,
+_pc_BronzeMonPromo_PC,3326,,3326:or:3#4#5#6:::;,6657,3,Balance_Type match condition failed-3;
+KhaleejiControl,3503,,3503:=:2:::;,220,0,
+_pc_NPP Data Bundle M4,1467,,1467:or:3#4#5#6:::;,32,0,
+_pc_BCP30FLVRNew_PC,2064,,2064:or:3#4#5#6:::;,6,0,
+,,NPPBBSocialDAPDeact,NPPBBSocialDAPDeact:=:T::::;,80,0,
+_pc_0150 AED Auto Topup,520,,520:or:3#4#5#6:::;,9,0,
+_pc_C_HardCapBCC1000Mins_PC,2573,,2573:or:3#4#5#6:::;,35,0,
+ZingerPPU,2112,,2112:=:1:::;,352536,40,Service class Ignored-38;Subscriber relation missing-2;
+_pc_DailyValueBndl_PC,1207,,1207:or:3#4#5#6:::;,14158,19,Service class Ignored-6;Balance_Type expired-13;
+CAMP2_P2P_Block,2292,,2292:>=:1:::;,23372,915,Balance_Type expired-915;
+_pc_C_HardCapIDD100Plan_PC,2562,,2562:or:3#4#5#6:::;,109,0,
+_pc_NPP Data Bundle M2,1465,,1465:or:3#4#5#6:::;,65,0,
+_pc_NPP Data Bundle D2,1463,,1463:or:3#4#5#6:::;,12,0,
+_pc_HardCapAlphaN200_PC,3083,,3083:or:3#4#5#6:::;,2,0,
+_pc_BCP2DataTopUp13_PC,3002,,3002:or:3#4#5#6:::;,180,0,
+Alpha Offer,1268,,1268:=:1:::;,4,0,
+_pc_HardCapBMP50_PC,2439,,2439:or:3#4#5#6:::;,7889,1,Subscriber relation missing-1;
+_pc_BCPComboNat50_PC,2040,,2040:or:3#4#5#6:::;,12433,2,Subscriber relation missing-2;
+DataHighS,759,,759:>=:1:::;MBB10GB-=-T,1,0,
+_pc_MercuryDaily_PC,3400,,3400:or:3#4#5#6:::;,601,2,Subscriber relation missing-2;
+,,TopXCountr1,TopXCountr1:=:T::::;,32,0,
+ZingerPPU,2112,,2112:=:2:::;,76663,7,Service class Ignored-5;Lifecycle lookup mismatch-2;
+_pc_C_HardCapMinsNat100_PC,2550,,2550:or:3#4#5#6:::;,3752,1,Subscriber relation missing-1;
+RRMCState,1832,,1832:=:5:::;,612,0,
+_pc_0040 AED Auto Topup,1103,,1103:or:3#4#5#6:::;,729,0,
+_pc_LifeStyleOneOff_PC,1769,,1769:or:3#4#5#6:::;,60,0,
+_pc_Mercury_PC,3012,,3012:or:3#4#5#6:::;,18647,749,Service class Ignored-4;Balance_Type match condition failed-742;Balance_Type expired-3;
+_pc_OneWayFnFWeekly_PC,3452,,3452:or:3#4#5#6:::;,4827,0,
+One Off Data,1633,,1633:=:409600:::;,5639,0,
+_pc_DataBndl400MBRec,3217,,3217:or:7#8#9:::;,89,0,
+,,TopXCountr3,TopXCountr3:=:T::::;,66,0,
+,,CVM,CVM:=:3::::;,23334,1,Service class Ignored-1;
+_pc_NPP XL-Data Bundle M1,1468,,1468:or:3#4#5#6:::;,1,0,
+_pc_GCCWeeklyBundle,2320,,2320:or:3#4#5#6:::;,18,0,
+_pc_NPP VP-2,1459,,1459:or:3#4#5#6:::;,107,0,
+_pc_ConsBISSocial_PC,839,,839:or:3#4#5#6:::;,147,3,Balance_Type match condition failed-2;Balance_Type expired-1;
+_pc_C_HardCapGMM250_PC,2543,,2543:or:3#4#5#6:::;,3888,1,Subscriber relation missing-1;
+_pc_C_HardCapNatSMS300_PC,2575,,2575:or:3#4#5#6:::;,1,0,
+Camp Int Disc,2152,,2152:or:10#20#25#30#50#65#70#80#85:::;,139964,1020,Lifecycle lookup mismatch-1;Balance_Type expired-1019;
+_pc_BCP2NatTopUp5_PC,1559,,1559:or:3#4#5#6:::;,277,0,
+_pc_PCZingerGrace,2092,,2092:or:3#4#5#6#7#8#9:::;,338,334,Balance_Type match condition failed-334;
+_pc_BCP2DataTopUp9_PC,2038,,2038:or:3#4#5#6:::;,126,0,
+_pc_C_HardCapMinsNat200_PC,2551,,2551:or:3#4#5#6:::;,1837,0,
+_pc_PPU_AB_PC,964,,964:or:3#4#5#6:::;,18,0,
+_pc_BCP2NatTopUp7_PC,1561,,1561:or:3#4#5#6:::;,10,0,
+_pc_BCP2DataTopUp11_PC,3000,,3000:or:3#4#5#6:::;,1,0,
+MonthlyRecSocData,2924,,2924:>=:-99999999:::;,871,871,Balance_Type match condition failed-871;
+Data Pack CVM,1383,,1383:<=:314572800:::;,3,0,
+_pc_NPP Voice Bundle M1,1471,,1471:or:7#8#9:::;,2,0,
+_pc_DataBndl5GBRec,3220,,3220:or:3#4#5#6:::;,16,0,
+_pc_StartStopAutoStop_PC,2677,,2677:or:3#4#5#6:::;,10627,58,Balance_Type expired-58;
+DisabilityFlag,2492,,2492:>=:1:::;,87,0,
+_pc_GraceCombo1,2932,,2932:or:3#4#5#6#7#8#9:::;,7716,9,Balance_Type match condition failed-1;Balance_Type expired-8;
+One Off Data,1633,,1633:=:26214400:::;,308,0,
+_pc_BCP2IDDTopUp3_PC,1565,,1565:or:3#4#5#6:::;,3,0,
+_pc_BCP2NatTopUp4_PC,1558,,1558:or:3#4#5#6:::;,1,0,
+_pc_SF Tier-1,2252,,2252:or:3#4#5#6:::;,4,0,
+_pc_BCP50FLVRNew_PC,2058,,2058:or:3#4#5#6:::;,317,0,
+_pc_BCP2NatTopUp6_PC,1560,,1560:or:3#4#5#6:::;,544,0,
+_pc_NPP VP-4,1461,,1461:or:3#4#5#6:::;,11,0,
+_pc_DataBndl400MBRec,3217,,3217:or:3#4#5#6:::;,1789,0,
+MercuryState,3011,,3011:=:4:::;,791,791,Service class Ignored-1;Balance_Type match condition failed-790;
+_pc_DailyRecSocData1,3293,,3293:or:3#4#5#6:::;,17092,19,Balance_Type match condition failed-4;Balance_Type expired-15;
+_pc_HardCapAlphaIN100_PC,3078,,3078:or:3#4#5#6:::;,29,0,
+_pc_NPP Data Bundle D2,1463,,1463:or:7#8#9:::;,7,0,
+,,Bespoke,Bespoke:=:T::::;,104102,104102,BT mapped CIS Product Mapping failed-104065;Subscriber relation missing-37;
+,,NPPBISDAPMod,NPPBISDAPMod:=:T::::;,20,0,
+_pc_BCP100FLVRNew_PC,2059,,2059:or:3#4#5#6:::;,13,0,
+_pc_BCP2IDDTopUp14_PC,2999,,2999:or:3#4#5#6:::;,1,0,
+_pc_BlackBerry25GB_R,1039,,1039:or:3#4#5#6:::;,10,0,
+_pc_BCP2NatTopUp3_PC,1557,,1557:or:3#4#5#6:::;,149,0,
+_pc_MusicBndlDaily_PC,1858,,1858:or:3#4#5#6:::;,8,0,
+RRMCState,1832,,1832:=:6:::;,6492,6492,Service class Ignored-4;BT mapped CIS Product Mapping failed-6488;
+_pc_RoamDataDailyA_PC,1200,,1200:or:3#4#5#6:::;,7,0,
+,,TP_Social_Deact_Conf,TP_Social_Deact_Conf:=:T::::;,14543,14543,Lifecycle lookup mismatch-2;BT mapped CIS Product Mapping failed-14519;Subscriber relation missing-22;
+_pc_DataBndl1024MBRec,3218,,3218:or:3#4#5#6:::;,907,0,
+_pc_C_HardCapBIntPlus50_PC,2555,,2555:or:3#4#5#6:::;,5,0,
+_pc_BCP200FLVRNew_PC,2060,,2060:or:3#4#5#6:::;,17,0,
+P2PAllowed,1266,,1266:=:0:::;,5,0,
+_pc_MonthlyRecSpecial1,3037,,3037:or:1#2:::;,5151,5151,Periodic Charge is not active-5151;
+_pc_DataBndl4GBRec,316,,316:or:7#8#9:::;,11,0,
+_pc_DataBndl25GBRec,968,,968:or:7#8#9:::;,5,0,
+_pc_DataBndl40MBRec,966,,966:or:7#8#9:::;,3,0,
+One Off Data,1633,,1633:=:5242880:::;,2021,0,
+,,EmiratiPlan,EmiratiPlan:=:T::::;,117670,63,Lifecycle lookup mismatch-5;Subscriber relation missing-58;
+_pc_BCP2IDDTopUp13_PC,2998,,2998:or:3#4#5#6:::;,1,0,
+,,NewPPBundle,NewPPBundle:=:Monthly4:P:::;,11,0,
+_pc_BCP2NatTopUp2_PC,1556,,1556:or:3#4#5#6:::;,15562,1,Subscriber relation missing-1;
+_pc_DVBReset_PC,1208,,1208:or:3#4#5#6:::;,2626,4,Balance_Type expired-4;
+_pc_BCP2IDDTopUp1_PC,1563,,1563:or:3#4#5#6:::;,7,0,
+Premier Plan,1387,,1387:=:1:::;,97,0,
+,,TopXCountr5,TopXCountr5:=:T::::;,27,0,
+_pc_NPP BBService Check,1473,,1473:or:3#4#5#6:::;,187,0,
+IDDBundleOffer,3450,,3450:>=:1:::;,4544,24,Balance_Type expired-24;
+_pc_SF Tier-3,2254,,2254:or:3#4#5#6:::;,111,0,
+,,NewPPBundle,NewPPBundle:=:Monthly6:P:::;,55,0,
+_pc_950 AED Auto Topup,528,,528:or:3#4#5#6:::;,190,0,
+_pc_BCP2IDDTopUp10_PC,2037,,2037:or:3#4#5#6:::;,1,0,
+_pc_0060 AED Auto Topup,1104,,1104:or:3#4#5#6:::;,251,0,
+_pc_Mercury7D_PC,3302,,3302:or:3#4#5#6:::;,2488,300,Service class Ignored-1;Balance_Type match condition failed-299;
+_pc_PCOneOffDailyReset,2022,,2022:or:3#4#5#6:::;,166833,166829,Balance_Type match condition failed-166724;Balance_Type expired-105;
+_pc_HardCapBMP100_PC,2440,,2440:or:3#4#5#6:::;,342,0,
+Offer ID,3212,,3212:>=:1:::;,4007113,6,Lifecycle lookup mismatch-1;Subscriber relation missing-5;
+_pc_PC_CRD_BusAuto100_MRC,600,,600:or:3#4#5#6:::;,922,0,
+_pc_BCP20FLVRNew_PC,2063,,2063:or:3#4#5#6:::;,42,0,
+,,CVM,CVM:=:2::::;,13315,0,
+_pc_BCP2IDDTopUp12_PC,2997,,2997:or:3#4#5#6:::;,7,0,
+_pc_BCP2NatTopUp1_PC,1555,,1555:or:3#4#5#6:::;,3427,0,
+_pc_PC_InternatWeekly,1594,,1594:or:7#8#9:::;,2,0,
+_pc_C_HardCapNatSMS100_PC,2574,,2574:or:3#4#5#6:::;,3,0,
+LocalCamp,1271,,1271:>=:1:::;,5652,44,Balance_Type expired-44;
+_pc_NPP Data Bundle M1,1464,,1464:or:7#8#9:::;,2,0,
+_pc_MonthlyRecCombo1,2931,,2931:or:3#4#5#6:::;,43451,13,Balance_Type match condition failed-1;Balance_Type expired-7;Subscriber relation missing-5;
+RoamingDataWeekly,1198,,1198:>=:-99999999:::;,3200,0,
+NepalOfferActive,2712,,2712:>=:1:::;,116113,5,Lifecycle lookup mismatch-3;Subscriber relation missing-2;
+_pc_DataBndl1024MBRec,3218,,3218:or:7#8#9:::;,39,0,
+TPVoice3,3274,,3274:>=:-99999999:::;,964,15,Lifecycle lookup mismatch-2;Balance_Type match condition failed-6;Balance_Type expired-5;Subscriber relation missing-2;
+more data highspeed,780,,780:>=:1:::;,62,0,
+Srv-PassportActive,700,,700:>=:1:::;,4460,1,Service class Ignored-1;
+CreditFlexiCamp,1281,,1281:>=:1:::;,9890,0,

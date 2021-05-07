@@ -1,0 +1,10 @@
+REJECTION_REASON-REJECTION_COUNT
+Periodic Charge is not active-5151
+BT mapped CIS NWPC Mapping failed-2158
+Profile Tag match condition Failed-3
+Service class Ignored-469
+Lifecycle lookup mismatch-117
+Balance_Type match condition failed-257594
+Balance_Type expired-31618
+BT mapped CIS Product Mapping failed-125072
+Subscriber relation missing-401

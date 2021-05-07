@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+   <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified" attributeFormDefault="unqualified">
+         <!-- XML Schema Generated from XML Document on Wed Apr 11 2018 14:11:51 GMT+0530 (India Standard Time) -->
+         <!-- with XmlGrid.net Free Online Service http://xmlgrid.net -->
+         <xs:element name="account_list">
+               <xs:complexType>
+                     <xs:sequence>
+                           <xs:element name="account_info" minOccurs="0" maxOccurs="unbounded">
+                                 <xs:complexType>
+                                       <xs:all>
+                                             <xs:element name="id" type="xs:string"></xs:element>
+                                             <xs:element name="account_class" type="xs:string"></xs:element>
+                                             <xs:element name="orig_account_class" type="xs:string"></xs:element>
+                                             <xs:element name="account_class_expiry" type="xs:string"></xs:element>
+                                             <xs:element name="units" type="xs:string"></xs:element>
+                                             <xs:element name="activated" type="xs:string"></xs:element>
+                                             <xs:element name="sfee_expiry_date" type="xs:string"></xs:element>
+                                             <xs:element name="sup_expiry_date" type="xs:string"></xs:element>
+                                             <xs:element name="sfee_done_date" type="xs:string"></xs:element>
+                                             <xs:element name="previous_sfee_done_date" type="xs:string"></xs:element>
+                                             <xs:element name="sfee_status" type="xs:string"></xs:element>
+                                             <xs:element name="sup_status" type="xs:string"></xs:element>
+                                             <xs:element name="neg_balance_start" type="xs:string"></xs:element>
+                                             <xs:element name="neg_balance_barred" type="xs:string"></xs:element>
+                                             <xs:element name="account_disconnect" type="xs:string"></xs:element>
+                                             <xs:element name="account_status" type="xs:string"></xs:element>
+                                             <xs:element name="prom_notification" type="xs:string"></xs:element>
+                                             <xs:element name="service_offerings" type="xs:string"></xs:element>
+                                             <xs:element name="account_group_id" type="xs:string"></xs:element>
+                                             <xs:element name="community_id1" type="xs:string"></xs:element>
+                                             <xs:element name="community_id2" type="xs:string"></xs:element>
+                                             <xs:element name="community_id3" type="xs:string"></xs:element>
+                                             <xs:element name="account_home_region" type="xs:string"></xs:element>
+                                             <xs:element name="product_id_counter" type="xs:string"></xs:element>
+											 <xs:element name="account_lock" type="xs:string"></xs:element>
+                                             <xs:element name="account_prepaid_empty_limit" type="xs:string"></xs:element>
+                                       </xs:all>
+                                 </xs:complexType>
+                           </xs:element>
+                     </xs:sequence>
+               </xs:complexType>
+         </xs:element>
+   </xs:schema>

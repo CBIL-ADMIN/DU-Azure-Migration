@@ -1,0 +1,39 @@
+<xs:schema attributeFormDefault="unqualified" elementFormDefault="qualified" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <xs:element name="DEFAULTSERVICES_MAPPING_LIST">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element name="DEFAULTSERVICES_MAPPING_INFO" maxOccurs="unbounded" minOccurs="0">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element type="xs:string" name="Default_ID"/>
+              <xs:element type="xs:string" name="Ignore_Flag"/>
+              <xs:element type="xs:string" name="OFFER_Always_ON_Never_Expiry"/>
+              <xs:element type="xs:string" name="DA_Always_ON_Never_Expiry"/>
+              <xs:element type="xs:string" name="Is_DA_Default"/>
+              <xs:element type="xs:string" name="Is_Attr_Default"/>
+              <xs:element type="xs:string" name="Offer_Id" minOccurs="0"/>
+              <xs:element type="xs:string" name="Offer_Type" minOccurs="0"/>
+              <xs:element type="xs:string" name="Offer_Rule_Id" minOccurs="0"/>
+              <xs:element type="xs:string" name="Attr_Offer_Id" minOccurs="0"/>
+              <xs:element type="xs:string" name="Attr_Name" minOccurs="0"/>
+              <xs:element type="xs:string" name="Attr_Type" minOccurs="0"/>
+              <xs:element type="xs:string" name="Attr_Source" minOccurs="0"/>
+              <xs:element type="xs:string" name="PAM_Class_ID" minOccurs="0"/>
+              <xs:element type="xs:string" name="PAM_Service_ID" minOccurs="0"/>
+              <xs:element type="xs:string" name="Schedule_ID" minOccurs="0"/>
+              <xs:element type="xs:string" name="Current_PAM_Period" minOccurs="0"/>
+              <xs:element type="xs:string" name="Resource" minOccurs="0"/>
+              <xs:element type="xs:string" name="DA_ID" minOccurs="0"/>
+              <xs:element type="xs:string" name="DA_Type" minOccurs="0"/>
+              <xs:element type="xs:string" name="DA_Default_Value" minOccurs="0"/>
+              <xs:element type="xs:string" name="Offer_Start" minOccurs="0"/>
+              <xs:element type="xs:string" name="UA_ID" minOccurs="0"/>
+              <xs:element type="xs:string" name="UA_Value" minOccurs="0"/>
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+</xs:schema>
+

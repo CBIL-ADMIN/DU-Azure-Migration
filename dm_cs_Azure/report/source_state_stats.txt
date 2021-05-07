@@ -1,0 +1,7 @@
+STATE,SOURCE_CNT,DISCARDED_CNT,DISCARDED_REMARK
+A,11181368,12802,SNA Destination number is empty-12317;Service class Ignored-297;Lifecycle lookup mismatch-23;Subscriber relation missing-164;SNA length is less than six Digit-1;
+P,401161,3351,Service class Ignored-3106;Lifecycle lookup mismatch-245;
+D,195059,29,Service class Ignored-29;
+S,2602282,195,Service class Ignored-146;Subscriber relation missing-49;
+F,97232,44764,SNA Destination number is empty-3;Service class Ignored-101;Lifecycle lookup mismatch-44659;Subscriber relation missing-1;
+T,103421,18708,Service class Ignored-18700;Subscriber relation missing-8;

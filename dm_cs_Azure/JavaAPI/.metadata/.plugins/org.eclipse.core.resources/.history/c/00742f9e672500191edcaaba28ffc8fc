@@ -1,0 +1,1252 @@
+package com.ericsson.dm.transform.implementation;
+
+import java.math.BigDecimal;
+import java.math.RoundingMode;
+import java.text.DecimalFormat;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Optional;
+import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+import java.util.stream.Collectors;
+
+import org.apache.log4j.Logger;
+
+import com.ericsson.dm.Utils.CommonUtilities;
+import com.ericsson.dm.inititialization.LoadSubscriberMapping;
+import com.ericsson.dm.transformation.ExecuteTransformation;
+import com.ericsson.jibx.beans.SubscriberXml;
+import com.ericsson.jibx.beans.SubscriberXml.SchemasubscriberbalancesdumpInfo;
+
+public class DedicatedAccount implements Comparator<SchemasubscriberbalancesdumpInfo>{
+
+	SubscriberXml subscriber;
+	String msisdn;
+	String INITIAL_ACTIVATION_DATE;
+	String[] ExceptionBalances = {"2112","1387","1219","21","1832","3011","1512","2432"};
+	
+	private int indx;
+	Map<String,String> DAValues;
+	final static Logger LOG = Logger.getLogger(DedicatedAccount.class);
+	// private Map<String, Map<String, String>> mapOfOfferId2ProductId;
+    
+	Set<String> rejectAndLog;
+	Set<String> onlyLog;
+	Set<String> RoundOffLog;
+	public CopyOnWriteArrayList<SchemasubscriberbalancesdumpInfo> SortedBalanceInput;
+	
+	public DedicatedAccount()
+	{
+		
+	}
+	
+	public DedicatedAccount(SubscriberXml subs, Set<String> rejectAndLog, Set<String> onlyLog, Set<String> RoundOffLog, String INITIAL_ACTIVATION_DATE) {
+		
+		// TODO Auto-generated constructor stub
+		this.subscriber=subs;
+		this.indx = 1;
+		this.rejectAndLog=rejectAndLog;
+		this.onlyLog=onlyLog;
+		this.RoundOffLog=RoundOffLog;
+		this.INITIAL_ACTIVATION_DATE = INITIAL_ACTIVATION_DATE;
+		this.DAValues = new ConcurrentHashMap<>(1000, 0.75f, 30);
+		SortedBalanceInput = new CopyOnWriteArrayList<>();
+	}
+
+	public Map<String,String> execute() {
+		// TODO Auto-generated method stub
+		msisdn = subscriber.getSubscriberInfoMSISDN();
+		
+		SortedBalanceInput.addAll(subscriber.getBalancesdumpInfoList());
+		Collections.sort(SortedBalanceInput,new Offer());
+		//Map<String, Map<String, String>> DAmap = new HashMap<>();		
+		Map<String, String> DAmap = new HashMap<>();
+		DAmap.putAll(generateDAFromProductMapping());
+		DAmap.putAll(generateDAFromDefaultSheet());
+		
+		
+		SortedBalanceInput.clear();
+		return DAmap;
+	}
+	@Override
+	public int compare(SchemasubscriberbalancesdumpInfo o1, SchemasubscriberbalancesdumpInfo o2) {
+		int value1 = o1.getBEEXPIRY().compareTo(o2.getBEEXPIRY());
+        if (value1 == 0) {
+        	return o1.getBEBUCKETID().compareTo(o2.getBEBUCKETID());
+        }
+        return value1;
+
+	}
+	
+
+	private Map<String, String> generateDAFromProductMapping() {
+		
+		
+		Date currDate = new Date();
+		SimpleDateFormat sdfDaily = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		
+		Set<String> CompletedGroup = new HashSet<>();
+		Set<String> CompletedBT_ID = new HashSet<>();
+		
+		for(com.ericsson.jibx.beans.SubscriberXml.SchemasubscriberbalancesdumpInfo balanceInput : SortedBalanceInput)
+		{			
+			String Balance_ID = balanceInput.getBALANCETYPE();
+			//System.out.println("Master Balance_ID: " + Balance_ID);
+			String Balance_Value = balanceInput.getBEBUCKETVALUE();
+			String Balance_StartDate = balanceInput.getBEBUCKETSTARTDATE();
+			String Balance_ExpiryDate = balanceInput.getBEEXPIRY();
+			
+			if(CompletedBT_ID.contains(balanceInput.getBEBUCKETID()))
+				continue;
+			
+			if((LoadSubscriberMapping.ProductMappingIgnoreFlag.get(Balance_ID) != null) && LoadSubscriberMapping.ProductMappingIgnoreFlag.get(Balance_ID) == "Y")
+			{
+				CompletedBT_ID.add(balanceInput.getBEBUCKETID());
+				continue;
+			}
+			
+			if(!Balance_ExpiryDate.equals("1970-01-01 00:00:00") && CommonUtilities.convertDateToEpoch(Balance_ExpiryDate) < CommonUtilities.convertDateToEpoch(sdfDaily.format(currDate)))
+			{
+				CompletedBT_ID.add(balanceInput.getBEBUCKETID());
+				continue;
+			}						
+							
+			if(LoadSubscriberMapping.BalanceEmptyBTGroupIdentifierMap.get(Balance_ID + "|") != null)
+			{
+				String DA_ID = LoadSubscriberMapping.BalanceEmptyBTGroupIdentifierMap.get(Balance_ID + "|").getDAID();
+				String Symbol = LoadSubscriberMapping.BalanceEmptyBTGroupIdentifierMap.get(Balance_ID + "|").getSymbols();
+				String BT_Value = LoadSubscriberMapping.BalanceEmptyBTGroupIdentifierMap.get(Balance_ID + "|").getBTValue();
+				//String Product_Private = LoadSubscriberMapping.BalanceEmptyBTGroupIdentifierMapForDA.get(Balance_ID + "|").getProductPrivate();
+				String Resource = 	LoadSubscriberMapping.BalanceEmptyBTGroupIdentifierMap.get(Balance_ID + "|").getResource();		
+				//String DA_Type = LoadSubscriberMapping.BalanceEmptyBTGroupIdentifierMapForDA.get(Balance_ID + "|" ).getDAType();
+				
+				if(!DA_ID.isEmpty())
+				{					
+					if(Symbol.isEmpty() && BT_Value.isEmpty())
+					{
+						if(CheckIfDAAvailable(DA_ID))
+						{
+							String CalculatedBalance = CalculateBalance((Balance_Value),Resource,Balance_ID,balanceInput.getBEBUCKETID());
+							DAValues.put("ID_" + indx, DA_ID);
+							DAValues.put("BALANCE_" + indx, String.valueOf(CalculatedBalance));
+							if(Balance_StartDate.equals("1970-01-01 00:00:00"))
+								DAValues.put("START_DATE_" + indx,LoadSubscriberMapping.CommonConfigMap.get("default_NULL").toString());
+							else
+								DAValues.put("START_DATE_" + indx,String.valueOf(CommonUtilities.convertDateToEpoch(Balance_StartDate)));
+							if(Balance_ExpiryDate.equals("1970-01-01 00:00:00"))
+								DAValues.put("EXPIRY_DATE_" + indx,LoadSubscriberMapping.CommonConfigMap.get("default_NULL").toString());
+							else
+								DAValues.put("EXPIRY_DATE_" + indx, String.valueOf(CommonUtilities.convertDateToEpoch(Balance_ExpiryDate)));
+							
+							DAValues.put("PAM_SERVICE_ID_" + indx,LoadSubscriberMapping.CommonConfigMap.get("default_ZERO"));
+							DAValues.put("PRODUCT_ID_" + indx, LoadSubscriberMapping.CommonConfigMap.get("default_ZERO"));							
+							this.indx++;
+							CompletedBT_ID.add(balanceInput.getBEBUCKETID());
+						}
+					}
+					else
+					{
+						boolean GenerateDA = false;
+						if(Symbol.equals(">=") && Integer.parseInt(Balance_Value) >= Integer.parseInt(BT_Value))
+							GenerateDA = true;
+						else if(Symbol.equals(">") && Integer.parseInt(Balance_Value) > Integer.parseInt(BT_Value))
+							GenerateDA = true;
+						else if(Symbol.equals("=") && Integer.parseInt(Balance_Value) == Integer.parseInt(BT_Value))
+							GenerateDA = true;
+						else
+							onlyLog.add("INC4004:Balance_Type match condition failed:MSISDN=" + msisdn + ":BALANCE_TYPE=" + Balance_ID + ":BE_BUCKET_VALUE=" + Balance_Value + ":BE_BUCKET_ID=" + balanceInput.getBEBUCKETID() +":ACTION=Logging");
+						
+						CompletedBT_ID.add(balanceInput.getBEBUCKETID());
+						
+						if(GenerateDA)
+						{	
+							if(CheckIfDAAvailable(DA_ID))
+							{
+								String CalculatedBalance = CalculateBalance((Balance_Value),Resource,Balance_ID,balanceInput.getBEBUCKETID());
+								DAValues.put("ID_" + indx, DA_ID);
+								DAValues.put("BALANCE_" + indx, String.valueOf(CalculatedBalance));
+								if(Balance_StartDate.equals("1970-01-01 00:00:00"))
+									DAValues.put("START_DATE_" + indx,LoadSubscriberMapping.CommonConfigMap.get("default_NULL").toString());
+								else
+									DAValues.put("START_DATE_" + indx,String.valueOf(CommonUtilities.convertDateToEpoch(Balance_StartDate)));
+								if(Balance_ExpiryDate.equals("1970-01-01 00:00:00"))
+									DAValues.put("EXPIRY_DATE_" + indx,LoadSubscriberMapping.CommonConfigMap.get("default_NULL").toString());
+								else
+									DAValues.put("EXPIRY_DATE_" + indx, String.valueOf(CommonUtilities.convertDateToEpoch(Balance_ExpiryDate)));
+								
+								DAValues.put("PAM_SERVICE_ID_" + indx,LoadSubscriberMapping.CommonConfigMap.get("default_ZERO"));
+								DAValues.put("PRODUCT_ID_" + indx, LoadSubscriberMapping.CommonConfigMap.get("default_ZERO"));
+								
+								this.indx++;
+								//CompletedBT_ID.add(balanceInput.getBEBUCKETID());
+							}
+						}
+					}
+				}	
+			}
+			else
+			{
+				if(Arrays.stream(ExceptionBalances).anyMatch(Balance_ID::equals))
+				{					
+					if(Balance_ID.equals("21"))
+					{
+						for (String BTGrp: LoadSubscriberMapping.MainBalanceGroupingList)
+						{
+							List<String> DAList = new ArrayList<>();
+							if(BTGrp.equals("DUMMY_21_1") && !subscriber.getSubscriberInfoCCSACCTTYPEID().equals("334"))
+							{
+								String DA_ID = LoadSubscriberMapping.MainBalanceNonBTGroupIdentifierMap.get(Balance_ID + "|334|" + BTGrp).getDAID();
+								String Resource = 	LoadSubscriberMapping.MainBalanceNonBTGroupIdentifierMap.get(Balance_ID + "|334|" + BTGrp).getResource();
+								CompletedGroup.add(BTGrp);
+								
+								String CalculatedBalance = CalculateBalance((Balance_Value),Resource,Balance_ID,balanceInput.getBEBUCKETID());
+								//if(!DA.containsValue(DA_ID))
+								if(CheckIfDAAvailable(DA_ID))
+								{
+									DAValues.put("ID_" + indx, DA_ID);
+									DAValues.put("BALANCE_" + indx, String.valueOf(CalculatedBalance));
+									if(Balance_StartDate.equals("1970-01-01 00:00:00"))
+										DAValues.put("START_DATE_" + indx,LoadSubscriberMapping.CommonConfigMap.get("default_NULL").toString());
+									else
+										DAValues.put("START_DATE_" + indx,String.valueOf(CommonUtilities.convertDateToEpoch(Balance_StartDate)));
+									if(Balance_ExpiryDate.equals("1970-01-01 00:00:00"))
+										DAValues.put("EXPIRY_DATE_" + indx,LoadSubscriberMapping.CommonConfigMap.get("default_NULL").toString());
+									else
+										DAValues.put("EXPIRY_DATE_" + indx, String.valueOf(CommonUtilities.convertDateToEpoch(Balance_ExpiryDate)));
+									DAValues.put("PAM_SERVICE_ID_" + indx,LoadSubscriberMapping.CommonConfigMap.get("default_ZERO"));
+									DAValues.put("PRODUCT_ID_" + indx, LoadSubscriberMapping.CommonConfigMap.get("default_ZERO"));
+									
+									this.indx++;
+									CompletedBT_ID.add(balanceInput.getBEBUCKETID());
+								}
+							
+							}
+							else if(LoadSubscriberMapping.MainBalanceNonBTGroupIdentifierMap.get(Balance_ID + "|" + subscriber.getSubscriberInfoCCSACCTTYPEID() + '|' + BTGrp) != null)
+							{	
+								boolean ValidDA = false;
+								
+								String DA_ID = LoadSubscriberMapping.MainBalanceNonBTGroupIdentifierMap.get(Balance_ID + "|" + subscriber.getSubscriberInfoCCSACCTTYPEID() + '|' + BTGrp).getDAID();
+								String Symbol = LoadSubscriberMapping.MainBalanceNonBTGroupIdentifierMap.get(Balance_ID + "|" + subscriber.getSubscriberInfoCCSACCTTYPEID() + '|' + BTGrp).getSymbols();
+								String DA_Type = LoadSubscriberMapping.MainBalanceNonBTGroupIdentifierMap.get(Balance_ID + "|" + subscriber.getSubscriberInfoCCSACCTTYPEID() + '|' + BTGrp).getDAType();
+								String BT_Value = LoadSubscriberMapping.MainBalanceNonBTGroupIdentifierMap.get(Balance_ID + "|" + subscriber.getSubscriberInfoCCSACCTTYPEID() + '|' + BTGrp).getBTValue();
+								String Resource = 	LoadSubscriberMapping.MainBalanceNonBTGroupIdentifierMap.get(Balance_ID + "|" + subscriber.getSubscriberInfoCCSACCTTYPEID() + '|' + BTGrp).getResource();
+								CompletedBT_ID.add(balanceInput.getBEBUCKETID());
+								if(Symbol.equals("<") && Double.parseDouble(Balance_Value) < Double.parseDouble(BT_Value))
+								{
+									CompletedGroup.add(BTGrp);
+									ValidDA = true;
+									//break;
+								}
+								else if(Symbol.equals(">=") && Double.parseDouble(Balance_Value) > Double.parseDouble(BT_Value))
+								{
+									CompletedGroup.add(BTGrp);
+									ValidDA = true;
+									//break;
+								}
+								else if(Symbol.equals("=") && Long.parseLong(Balance_Value) == Long.parseLong(BT_Value))
+								{
+									CompletedGroup.add(BTGrp);
+									ValidDA = true;
+									//break;
+								}
+								else if(Symbol.equals("or"))
+								{
+									//Integer.parseInt(Balance_Value) == Integer.parseInt(BT_Value)
+									String[] values = BT_Value.split(",");											
+									if(Arrays.stream(values).anyMatch(Balance_Value::equals))
+									{
+										CompletedGroup.add(BTGrp);
+										ValidDA = true;
+									}
+									//else
+									//	onlyLog.add("INC4004:Balance_Type match condition failed:MSISDN=" + msisdn + ":BALANCE_TYPE=" + Balance_ID + ":BE_BUCKET_VALUE=" + Balance_Value + ":BE_BUCKET_ID=" + balanceInput.getBEBUCKETID() +":ACTION=Logging");
+								}
+								/*else
+								{
+									if(Double.parseDouble(Balance_Value) > 120.024 && Double.parseDouble(Balance_Value) < 320.064)
+										onlyLog.add("INC4004:Balance_Type match condition failed:MSISDN=" + msisdn + ":BALANCE_TYPE=" + Balance_ID + ":BE_BUCKET_VALUE=" + Balance_Value + ":BE_BUCKET_ID=" + balanceInput.getBEBUCKETID() +":ACTION=Logging");
+								}*/
+								
+								if(ValidDA)
+								{
+									String CalculatedBalance = CalculateBalance((Balance_Value),Resource,Balance_ID,balanceInput.getBEBUCKETID());
+									if(CheckIfDAAvailable(DA_ID))
+									{
+										DAValues.put("ID_" + indx, DA_ID);
+										DAValues.put("BALANCE_" + indx, String.valueOf(CalculatedBalance));
+										if(Balance_StartDate.equals("1970-01-01 00:00:00"))
+											DAValues.put("START_DATE_" + indx,LoadSubscriberMapping.CommonConfigMap.get("default_NULL").toString());
+										else
+											DAValues.put("START_DATE_" + indx,String.valueOf(CommonUtilities.convertDateToEpoch(Balance_StartDate)));
+										if(Balance_ExpiryDate.equals("1970-01-01 00:00:00"))
+											DAValues.put("EXPIRY_DATE_" + indx,LoadSubscriberMapping.CommonConfigMap.get("default_NULL").toString());
+										else
+											DAValues.put("EXPIRY_DATE_" + indx, String.valueOf(CommonUtilities.convertDateToEpoch(Balance_ExpiryDate)));
+										
+										DAValues.put("PAM_SERVICE_ID_" + indx,LoadSubscriberMapping.CommonConfigMap.get("default_ZERO"));
+										DAValues.put("PRODUCT_ID_" + indx, LoadSubscriberMapping.CommonConfigMap.get("default_ZERO"));
+										
+										this.indx++;
+									}
+								}
+							}
+						}
+					}
+				}
+				else
+				{
+					String GroupName = "";
+					List<String> DAList = new ArrayList<>();
+					List<String> FinalDAList = new ArrayList<>();
+					List<String> CurrentGroupBalance = new ArrayList<>();
+					boolean ExtraOfferFlag = false;
+					for(Set<String> valueList : LoadSubscriberMapping.BalanceGroupingMap.values()) {					
+						if(valueList.contains(Balance_ID)){
+							GroupName = LoadSubscriberMapping.getKey(LoadSubscriberMapping.BalanceGroupingMap, valueList);
+							if(GroupName.startsWith("D-"))
+							{
+								GroupName = ComputeDGroup(Balance_ID,GroupName);
+								CurrentGroupBalance.addAll(LoadSubscriberMapping.BalanceGroupingMap.get(GroupName));
+							}
+							if(GroupName.startsWith("A-"))
+							{
+								GroupName = ComputeAGroup(Balance_ID,GroupName);
+								CurrentGroupBalance.addAll(LoadSubscriberMapping.BalanceGroupingMap.get(GroupName));
+							}							
+							/*if(GroupName.startsWith("C-"))
+							{
+								GroupName = ComputeCGroup(Balance_ID,GroupName);
+								CurrentGroupBalance.addAll(LoadSubscriberMapping.BalanceGroupingMap.get(GroupName));
+							}
+							if(GroupName.startsWith("F-"))
+							{
+								GroupName = ComputeFGroup(Balance_ID,GroupName);
+								CurrentGroupBalance.addAll(LoadSubscriberMapping.BalanceGroupingMap.get(GroupName));
+							}*/
+							else
+							{
+								CurrentGroupBalance.addAll(valueList);									
+							}
+							break;
+						}
+					}	
+					
+					if(!CompletedGroup.contains(GroupName))
+					{
+						//System.out.println(Balance_ID + "----" +GroupName);						
+						if(CurrentGroupBalance.size() > 0)
+						{
+							String FinalGroupName = GroupName;
+							//System.out.println(FinalGroupName);	
+							for(String id : CurrentGroupBalance)
+							{
+								//System.out.println(id);
+								for(com.ericsson.jibx.beans.SubscriberXml.SchemasubscriberbalancesdumpInfo TempbalanceInput :  SortedBalanceInput){
+									String TempBalance_ID = TempbalanceInput.getBALANCETYPE();
+									String TempBalance_Name = TempbalanceInput.getBALANCETYPENAME();
+									String TempBalance_Value = TempbalanceInput.getBEBUCKETVALUE();
+									String TempBalance_StartDate = TempbalanceInput.getBEBUCKETSTARTDATE();
+									String TempBalance_ExpiryDate = TempbalanceInput.getBEEXPIRY();							
+									if(CompletedBT_ID.contains(TempBalance_ID))
+										continue;
+									if(id.equals(TempBalance_ID))
+									{
+										if(LoadSubscriberMapping.BalanceNonEmptyBTGroupIdentifierMap.get(id + "|" + FinalGroupName) != null)
+										{
+											String DA_ID = LoadSubscriberMapping.BalanceNonEmptyBTGroupIdentifierMap.get(TempBalance_ID + "|" + FinalGroupName).getDAID();
+											String Symbol = LoadSubscriberMapping.BalanceNonEmptyBTGroupIdentifierMap.get(TempBalance_ID + "|" + FinalGroupName).getSymbols();
+											String BT_Value = LoadSubscriberMapping.BalanceNonEmptyBTGroupIdentifierMap.get(TempBalance_ID + "|" + FinalGroupName).getBTValue();
+											String Product_Private = LoadSubscriberMapping.BalanceNonEmptyBTGroupIdentifierMap.get(TempBalance_ID + "|" + FinalGroupName).getProductPrivate();
+											String DA_Type = LoadSubscriberMapping.BalanceNonEmptyBTGroupIdentifierMap.get(TempBalance_ID + "|" + FinalGroupName).getDAType();
+											String Resource = LoadSubscriberMapping.BalanceNonEmptyBTGroupIdentifierMap.get(TempBalance_ID + "|" + FinalGroupName).getResource();
+											String ExtraOffer = LoadSubscriberMapping.BalanceNonEmptyBTGroupIdentifierMap.get(TempBalance_ID + "|" + FinalGroupName).getAddOffer();
+											String BT_Type = LoadSubscriberMapping.BalanceNonEmptyBTGroupIdentifierMap.get(TempBalance_ID + "|" + FinalGroupName).getBTTYPE();
+											if(!ExtraOffer.isEmpty())
+											{
+												ExtraOfferFlag = true;
+											}
+											CompletedBT_ID.add(TempbalanceInput.getBEBUCKETID());
+											if(Symbol.equals(">=") && Integer.parseInt(TempBalance_Value) >= Integer.parseInt(BT_Value))
+											{
+												CompletedGroup.add(FinalGroupName);
+												DAList.add(BT_Type + ";" + TempBalance_Name + ";" + TempBalance_ID + ";" + TempBalance_Value +"|" + DA_ID + ";" + DA_Type + ";" + Resource  + ";" + TempBalance_StartDate + ";" + TempBalance_ExpiryDate  + ";" + Product_Private);
+												if(!DA_ID.isEmpty())
+													FinalDAList.add(TempBalance_Name + ";" + TempBalance_ID + ";" + TempBalance_Value +"|" + DA_ID + ";" + DA_Type + ";" + Resource  + ";" + TempBalance_StartDate + ";" + TempBalance_ExpiryDate  + ";" + Product_Private);
+												break;
+											}
+											else if(Symbol.equals(">") && Integer.parseInt(TempBalance_Value) > Integer.parseInt(BT_Value))
+											{
+												CompletedGroup.add(FinalGroupName);
+												DAList.add(BT_Type + ";" + TempBalance_Name + ";" + TempBalance_ID + ";" + TempBalance_Value +"|" + DA_ID + ";" + DA_Type + ";" + Resource  + ";" + TempBalance_StartDate + ";" + TempBalance_ExpiryDate  + ";" + Product_Private);
+												if(!DA_ID.isEmpty())
+													FinalDAList.add(TempBalance_Name + ";" + TempBalance_ID + ";" + TempBalance_Value +"|" + DA_ID + ";" + DA_Type + ";" + Resource  + ";" + TempBalance_StartDate + ";" + TempBalance_ExpiryDate  + ";" + Product_Private);
+												break;
+											}
+											else if(Symbol.equals("=") && Integer.parseInt(TempBalance_Value) == Integer.parseInt(BT_Value))
+											{
+												CompletedGroup.add(FinalGroupName);
+												if(!DA_ID.isEmpty())
+													FinalDAList.add(BT_Type + ";" + TempBalance_Name + ";" + TempBalance_ID + ";" + TempBalance_Value +"|" + DA_ID + ";" + DA_Type + ";" + Resource  + ";" + TempBalance_StartDate + ";" + TempBalance_ExpiryDate  + ";" + Product_Private);
+												DAList.add(TempBalance_Name + ";" + TempBalance_ID + ";" + TempBalance_Value +"|" + DA_ID + ";" + DA_Type + ";" + Resource  + ";" + TempBalance_StartDate + ";" + TempBalance_ExpiryDate  + ";" + Product_Private);
+												break;
+											}
+											else if(Symbol.equals("or"))
+											{
+												//Integer.parseInt(Balance_Value) == Integer.parseInt(BT_Value)
+												String[] values = BT_Value.split("\\|");											
+												if(Arrays.stream(values).anyMatch(TempBalance_Value::equals))
+												{
+													CompletedGroup.add(FinalGroupName);
+													DAList.add(BT_Type + ";" + TempBalance_Name + ";" + TempBalance_ID + ";" + TempBalance_Value +"|" + DA_ID + ";" + DA_Type + ";" + Resource  + ";" + TempBalance_StartDate + ";" + TempBalance_ExpiryDate  + ";" + Product_Private);
+													if(!DA_ID.isEmpty())
+														FinalDAList.add(TempBalance_Name + ";" + TempBalance_ID + ";" + TempBalance_Value +"|" + DA_ID + ";" + DA_Type + ";" + Resource  + ";" + TempBalance_StartDate + ";" + TempBalance_ExpiryDate  + ";" + Product_Private);
+													break;
+												}
+												//else
+												//	onlyLog.add("INC4004:Balance_Type match condition failed:MSISDN=" + msisdn + ":BALANCE_TYPE=" + Balance_ID + ":BE_BUCKET_VALUE=" + Balance_Value + ":BE_BUCKET_ID=" + balanceInput.getBEBUCKETID() +":ACTION=Logging");
+											}
+											//else
+												//onlyLog.add("INC4004:Balance_Type match condition failed:MSISDN=" + msisdn + ":BALANCE_TYPE=" + Balance_ID + ":BE_BUCKET_VALUE=" + Balance_Value + ":BE_BUCKET_ID=" + balanceInput.getBEBUCKETID() +":ACTION=Logging");
+										}
+									}
+								}
+							}
+							if(FinalGroupName.startsWith("A-") || FinalGroupName.startsWith("C-"))
+							{
+								if(DAList.size() == CurrentGroupBalance.size())
+								{
+									FinalDAList.forEach(item->{
+										String Resource = item.split("\\|")[1].split(";")[2];
+										if(Resource.length() > 1)
+										{
+											if(CheckIfDAAvailable(item.split("\\|")[1].split(";")[0]))
+											{
+												String CalculatedBalance = CalculateBalance((item.split("\\|")[0].split(";")[2]),Resource,item.split("\\|")[0].split(";")[1],"");
+												DAValues.put("ID_" + indx, item.split("\\|")[1].split(";")[0]);
+												DAValues.put("BALANCE_" + indx, String.valueOf(CalculatedBalance));
+												if(item.split("\\|")[1].split(";")[3].equals("1970-01-01 00:00:00"))
+													DAValues.put("START_DATE_" + indx,LoadSubscriberMapping.CommonConfigMap.get("default_NULL").toString());
+												else
+													DAValues.put("START_DATE_" + indx,String.valueOf(CommonUtilities.convertDateToEpoch(item.split("\\|")[1].split(";")[3])));
+												
+												if(item.split("\\|")[1].split(";")[4].equals("1970-01-01 00:00:00"))
+													DAValues.put("EXPIRY_DATE_" + indx,LoadSubscriberMapping.CommonConfigMap.get("default_NULL").toString());
+												else
+													DAValues.put("EXPIRY_DATE_" + indx, String.valueOf(CommonUtilities.convertDateToEpoch(item.split("\\|")[1].split(";")[4])));
+												
+												DAValues.put("PAM_SERVICE_ID_" + indx,LoadSubscriberMapping.CommonConfigMap.get("default_ZERO"));
+												DAValues.put("PRODUCT_ID_" + indx, LoadSubscriberMapping.CommonConfigMap.get("default_ZERO"));
+												
+												this.indx++;
+											}
+										}										
+									});
+									//CompletedBT_ID.addAll(CurrentGroupBalance);
+								}
+								else
+								{
+									for(String item: FinalDAList)
+									{
+										String SourceValue =  item.split("\\|")[0];
+										String TargetValue = item.split("\\|")[1];
+										if(LoadSubscriberMapping.BalanceNonEmptyBTGroupIdentifierMap.get(SourceValue.split(";")[1] + "|M") != null)
+										{
+											String DA_ID = LoadSubscriberMapping.BalanceNonEmptyBTGroupIdentifierMap.get(SourceValue.split(";")[1] + "|M").getDAID();
+											String Resource = LoadSubscriberMapping.BalanceNonEmptyBTGroupIdentifierMap.get(SourceValue.split(";")[1] + "|M").getResource();
+											String Symbol = LoadSubscriberMapping.BalanceNonEmptyBTGroupIdentifierMap.get(SourceValue.split(";")[1] + "|M").getSymbols();
+											String BT_VALUE = LoadSubscriberMapping.BalanceNonEmptyBTGroupIdentifierMap.get(SourceValue.split(";")[1] + "|M").getBTValue();
+											
+																							
+											if(CheckIfDAAvailable(DA_ID))
+											{
+												if(Resource.length() > 1 && Symbol.equals(">") && Integer.parseInt(item.split("\\|")[0].split(";")[2]) > Integer.parseInt(BT_VALUE))
+												{
+													String CalculatedBalance = CalculateBalance((item.split("\\|")[0].split(";")[2]),Resource,item.split("\\|")[0].split(";")[1],"");
+													DAValues.put("ID_" + indx, DA_ID);
+													DAValues.put("BALANCE_" + indx, String.valueOf(CalculatedBalance));
+													if(item.split("\\|")[1].split(";")[3].equals("1970-01-01 00:00:00"))
+														DAValues.put("START_DATE_" + indx,LoadSubscriberMapping.CommonConfigMap.get("default_NULL").toString());
+													else
+														DAValues.put("START_DATE_" + indx,String.valueOf(CommonUtilities.convertDateToEpoch(item.split("\\|")[1].split(";")[3])));
+													
+													if(item.split("\\|")[1].split(";")[4].equals("1970-01-01 00:00:00"))
+														DAValues.put("EXPIRY_DATE_" + indx,LoadSubscriberMapping.CommonConfigMap.get("default_NULL").toString());
+													else
+														DAValues.put("EXPIRY_DATE_" + indx, String.valueOf(CommonUtilities.convertDateToEpoch(item.split("\\|")[1].split(";")[4])));
+													
+													
+													DAValues.put("PAM_SERVICE_ID_" + indx,LoadSubscriberMapping.CommonConfigMap.get("default_ZERO"));
+													DAValues.put("PRODUCT_ID_" + indx, LoadSubscriberMapping.CommonConfigMap.get("default_ZERO"));
+													
+													this.indx++;
+												}
+												else
+													//onlyLog.add("INC4004:Balance_Type match condition failed:MSISDN=" + msisdn + ":BALANCE_TYPE=" + TargetOffer.split(";")[2] + ":BE_BUCKET_VALUE=" + TargetOffer.split(";")[3] + ":BE_BUCKET_ID="+ CurrentGroupBalanceID.get(TargetOffer.split(";")[2] + "," + TargetOffer.split(";")[3])  +":ACTION=Logging");
+													onlyLog.add("INC4004:Balance_Type match condition failed:MSISDN=" + msisdn + ":BALANCE_TYPE=" + item.split("\\|")[0].split(";")[1] + ":BE_BUCKET_VALUE=" + item.split("\\|")[0].split(";")[2] + ":BE_BUCKET_ID=:ACTION=Logging");
+											}		
+										}
+										/*else
+										{
+											onlyLog.add("INC4002:Balance_Type lookup failed:MSISDN=" + msisdn + ":BALANCE_TYPE=" + TargetValue.split(";")[2] + ":BE_BUCKET_VALUE=" + TargetValue.split(";")[3] + ":BE_BUCKET_ID=:ACTION=Logging");
+										}*/		
+									}																			
+									//CompletedBT_ID.addAll(CurrentGroupBalance);	
+									
+								}								
+							}
+							if(FinalGroupName.startsWith("B-"))
+							{
+								if(DAList.size() == CurrentGroupBalance.size())
+								{
+									FinalDAList.forEach(item->{
+										String Resource = item.split("\\|")[1].split(";")[2];
+										if(Resource.length() > 1)
+										{
+											if(CheckIfDAAvailable(item.split("\\|")[1].split(";")[0]))
+											{
+												String CalculatedBalance = CalculateBalance((item.split("\\|")[0].split(";")[2]),Resource,item.split("\\|")[0].split(";")[1],"");
+												DAValues.put("ID_" + indx, item.split("\\|")[1].split(";")[0]);
+												DAValues.put("BALANCE_" + indx, String.valueOf(CalculatedBalance));
+												if(item.split("\\|")[1].split(";")[3].equals("1970-01-01 00:00:00"))
+													DAValues.put("START_DATE_" + indx,LoadSubscriberMapping.CommonConfigMap.get("default_NULL").toString());
+												else
+													DAValues.put("START_DATE_" + indx,String.valueOf(CommonUtilities.convertDateToEpoch(item.split("\\|")[1].split(";")[3])));
+												
+												if(item.split("\\|")[1].split(";")[4].equals("1970-01-01 00:00:00"))
+													DAValues.put("EXPIRY_DATE_" + indx,LoadSubscriberMapping.CommonConfigMap.get("default_NULL").toString());
+												else
+													DAValues.put("EXPIRY_DATE_" + indx, String.valueOf(CommonUtilities.convertDateToEpoch(item.split("\\|")[1].split(";")[4])));
+												
+												
+												DAValues.put("PAM_SERVICE_ID_" + indx,LoadSubscriberMapping.CommonConfigMap.get("default_ZERO"));
+												DAValues.put("PRODUCT_ID_" + indx, LoadSubscriberMapping.CommonConfigMap.get("default_ZERO"));
+												
+												this.indx++;
+											}
+										}										
+									});
+									//CompletedBT_ID.addAll(CurrentGroupBalance);
+								}
+								/*else
+								{
+									for(String Str : ValidGroupBalanceOffer)
+									{
+										String TargetOffer =  Str.split("\\|")[0];
+										onlyLog.add("INC4004:Balance_Type match condition failed:MSISDN=" + msisdn + ":BALANCE_TYPE=" + TargetOffer.split(";")[2] + ":BE_BUCKET_VALUE=" + TargetOffer.split(";")[3] + ":BE_BUCKET_ID=:ACTION=Logging");
+									}							
+								}*/
+							}
+						}
+						else
+						{
+							CompletedBT_ID.add(balanceInput.getBEBUCKETID());
+						}
+					}
+				}
+			}
+		}		
+		//CompletedBT_ID.forEach((k->System.out.println(k)));
+		return DAValues;
+	}
+	
+	private boolean CheckIfDAAvailable(String DA_ID) {
+		boolean isDAPresent = true;		
+		//Map.Entry<String,String> entry : gfg.entrySet()
+		/*for (Map.Entry<String,String> entry: DAValues.entrySet().stream().filter(e -> e.getKey().startsWith("ID_")).entrySet()) {
+			System.out.println(entry);
+			if(entry.getValue() == DA_ID)
+				return false;
+		}*/		
+		/*
+		DAValues.entrySet().stream().filter(e -> e.getKey().startsWith("ID_")).forEach(item->{
+			System.out.println(item);
+			boolean isDAResult = true;
+			if(item.getValue() == DA_ID)
+				return;
+		});*/
+		
+		Entry<String, String> result = DAValues.entrySet().stream().filter(e -> e.getKey().startsWith("ID_"))
+				.filter(x->x.getValue().equals(DA_ID)).findFirst().orElse(null);
+		
+		if(result != null)
+			return false;
+		
+		return isDAPresent;
+	}
+	
+	public String ComputeAGroup(String inputBalance_ID, String inputGroupName) {
+		// TODO Auto-generated method stub
+		String FinalGroupName ="";
+		
+		List<String>AllAvailableGroup = new ArrayList<>();
+		
+		for(Set<String> valueList : LoadSubscriberMapping.BalanceGroupingMap.values()) {					
+			if(valueList.contains(inputBalance_ID)){
+				AllAvailableGroup.add(LoadSubscriberMapping.getKey(LoadSubscriberMapping.BalanceGroupingMap, valueList));	
+			}
+		}
+		
+		for(String A_ID: AllAvailableGroup)
+		{
+			if(LoadSubscriberMapping.BalanceOnlyAGroupMap.containsKey(A_ID))
+			{
+				Set<String> A_Items = Arrays.stream(LoadSubscriberMapping.BalanceOnlyAGroupMap.get(A_ID).split(",")).collect(Collectors.toSet());
+				int i =0;
+				for(com.ericsson.jibx.beans.SubscriberXml.SchemasubscriberbalancesdumpInfo balanceInput : SortedBalanceInput){
+					if(A_Items.contains(balanceInput.getBALANCETYPE()))
+					{
+						i++;
+						FinalGroupName = A_ID;
+						continue;
+					}
+					if(A_Items.size() == i)
+					{
+						FinalGroupName = A_ID;
+						break;
+					}						
+				}
+			}
+		}		
+		return FinalGroupName;
+	}
+	
+	public String ComputeCGroup(String inputBalance_ID, String inputGroupName) {
+		// TODO Auto-generated method stub
+		String FinalGroupName ="";
+		
+		List<String>AllAvailableGroup = new ArrayList<>();
+		
+		for(Set<String> valueList : LoadSubscriberMapping.BalanceGroupingMap.values()) {					
+			if(valueList.contains(inputBalance_ID)){
+				AllAvailableGroup.add(LoadSubscriberMapping.getKey(LoadSubscriberMapping.BalanceGroupingMap, valueList));	
+			}
+		}
+		
+		for(String C_ID: AllAvailableGroup)
+		{
+			if(LoadSubscriberMapping.BalanceOnlyAGroupMap.containsKey(C_ID))
+			{
+				Set<String> C_Items = Arrays.stream(LoadSubscriberMapping.BalanceOnlyAGroupMap.get(C_ID).split(",")).collect(Collectors.toSet());
+				int i =0;
+				for(com.ericsson.jibx.beans.SubscriberXml.SchemasubscriberbalancesdumpInfo balanceInput : SortedBalanceInput){
+					if(C_Items.contains(balanceInput.getBALANCETYPE()))
+					{
+						i++;
+						FinalGroupName = C_ID;
+						continue;
+					}
+					if(C_Items.size() == i)
+					{
+						FinalGroupName = C_ID;
+						break;
+					}						
+				}
+			}
+		}		
+		return FinalGroupName;
+	}
+	
+	public String ComputeFGroup(String inputBalance_ID, String inputGroupName) {
+		// TODO Auto-generated method stub
+		String FinalGroupName ="";
+		
+		List<String>AllAvailableGroup = new ArrayList<>();
+		
+		for(Set<String> valueList : LoadSubscriberMapping.BalanceGroupingMap.values()) {					
+			if(valueList.contains(inputBalance_ID)){
+				AllAvailableGroup.add(LoadSubscriberMapping.getKey(LoadSubscriberMapping.BalanceGroupingMap, valueList));	
+			}
+		}
+		
+		for(String F_ID: AllAvailableGroup)
+		{
+			if(LoadSubscriberMapping.BalanceOnlyAGroupMap.containsKey(F_ID))
+			{
+				Set<String> F_Items = Arrays.stream(LoadSubscriberMapping.BalanceOnlyAGroupMap.get(F_ID).split(",")).collect(Collectors.toSet());
+				int i =0;
+				for(com.ericsson.jibx.beans.SubscriberXml.SchemasubscriberbalancesdumpInfo balanceInput : SortedBalanceInput){
+					if(F_Items.contains(balanceInput.getBALANCETYPE()))
+					{
+						i++;
+						FinalGroupName = F_ID;
+						continue;
+					}
+					if(F_Items.size() == i)
+					{
+						FinalGroupName = F_ID;
+						break;
+					}						
+				}
+			}
+		}		
+		return FinalGroupName;
+	}
+	
+	public String ComputeDGroup(String inputBalance_ID, String inputGroupName) {
+		// TODO Auto-generated method stub
+		String FinalGroupName ="";
+		
+		List<String>AllAvailableGroup = new ArrayList<>();
+		
+		for(Set<String> valueList : LoadSubscriberMapping.BalanceGroupingMap.values()) {					
+			if(valueList.contains(inputBalance_ID)){
+				AllAvailableGroup.add(LoadSubscriberMapping.getKey(LoadSubscriberMapping.BalanceGroupingMap, valueList));	
+			}
+		}
+		
+		for(String D_ID: AllAvailableGroup)
+		{
+			if(LoadSubscriberMapping.BalanceOnlyDGroupMap.containsKey(D_ID))
+			{
+				Set<String> D_Items = Arrays.stream(LoadSubscriberMapping.BalanceOnlyDGroupMap.get(D_ID).split(",")).collect(Collectors.toSet());
+				int i =0;
+				for(com.ericsson.jibx.beans.SubscriberXml.SchemasubscriberbalancesdumpInfo balanceInput : SortedBalanceInput){
+					if(D_Items.contains(balanceInput.getBALANCETYPE()))
+					{
+						i++;
+						FinalGroupName = D_ID;
+						continue;
+					}
+					if(D_Items.size() == i)
+					{
+						FinalGroupName = D_ID;
+						break;
+					}						
+				}
+			}
+		}		
+		return FinalGroupName;
+	}
+
+	private String CalculateBalance(String balance_Value, String Resource, String balance_ID, String bucket_ID) {
+		
+		String CalculatedValue = "";
+		
+		//Calculation for integer
+		String regexInteger = "[+-]?[0-9][0-9]*"; 
+        Pattern pInteger = Pattern.compile(regexInteger); 
+        Matcher mInteger = pInteger.matcher(balance_Value);          
+        
+        //Calculation for float
+        String regexFloat = "[+-]?[0-9]+(\\.[0-9]+)"; 
+        Pattern pFloat = Pattern.compile(regexFloat); 
+        Matcher mFloat = pFloat.matcher(balance_Value); 
+          
+        // If match found and equal to input1 
+        
+        if(mInteger.find() && mInteger.group().equals(balance_Value)) 
+        {        	
+        	CalculatedValue = String.valueOf(CalculateBalanceForInteger(Long.parseLong(balance_Value), Resource, balance_ID, bucket_ID));
+        }
+        else if(mFloat.find() && mFloat.group().equals(balance_Value))
+        {
+        	CalculatedValue = (CalculateBalanceForFloat(Double.parseDouble(balance_Value), Resource, balance_ID, bucket_ID));
+        } 
+		return CalculatedValue;
+	}
+	
+	private String CalculateBalanceForInteger(Long balance_Value, String Resource, String balance_ID, String bucket_ID) {
+		// TODO Auto-generated method stub
+		String TotalBalance = "";
+		
+		DecimalFormat df = new DecimalFormat("#");
+        df.setMaximumFractionDigits(3);
+		String[] aBalanceID = {"21","1439"};
+		
+		if(Resource.equals("DA") || Resource.equals("DATO6"))
+		{
+			String RoundOff = LoadSubscriberMapping.ConversionLogicMap.get(Resource).split("\\|")[2];
+			if(RoundOff.equals("Y"))
+			{
+				BigDecimal bd = new BigDecimal(Double.toString((balance_Value) * 100));
+				TotalBalance = String.valueOf(Long.parseLong(bd.setScale(0, RoundingMode.HALF_UP).toPlainString()));
+			}
+			else if(RoundOff.equals("N"))
+			{
+				TotalBalance = String.valueOf((balance_Value) * 100);				
+			}
+			
+			/*if(LoadSubscriberMapping.CommonConfigMap.get("Enable_Logging_for_RoundOff").equals("Y"))
+			{	
+				long diffValue = Math.round((balance_Value) * 100) - ((balance_Value) * 100);
+				GenerateRoundOffDocument(balance_ID, String.valueOf(balance_Value), String.valueOf(TotalBalance), String.valueOf(diffValue) );
+				onlyLog.add("INC4007:DA Monetary value RoundOff:MSISDN=" + msisdn + ":BALANCE_TYPE=" + balance_ID + ":BE_BUCKET_VALUE=" + balance_Value + ":BE_BUCKET_ID="+ bucket_ID + "ROUNDED_VALUE="+ String.valueOf(diffValue) +":ACTION=Logging");
+			}*/
+		}
+		else if(Resource.equals("DATO1"))
+		{
+			return df.format((balance_Value/0.1667) * 60);
+		}
+		else if(Resource.equals("DATO2"))
+		{
+			TotalBalance = String.valueOf((balance_Value) * 1024);
+		}
+		else if(Resource.equals("DATO3"))
+		{
+			TotalBalance = String.valueOf(((balance_Value)/10000)*1048576);
+		}
+		else if(Resource.equals("DATO4"))
+		{
+			TotalBalance = String.valueOf((balance_Value)/100);
+		}
+		else if(Resource.equals("DATO5"))
+		{
+			TotalBalance = String.valueOf((balance_Value));
+		}
+		else if(Resource.equals("DATO6"))
+		{
+			TotalBalance = String.valueOf((balance_Value)/100);
+		}
+		//Arrays.stream(ExceptionBalances).anyMatch(Balance_ID::equals)
+		if(Long.parseLong(TotalBalance) < 0 && !Arrays.stream(aBalanceID).anyMatch(balance_ID::equals))
+		{
+			TotalBalance = "0";
+			onlyLog.add("INC4005:Negative BT_Value Found will be migrated as Zero:MSISDN=" + msisdn + ":BALANCE_TYPE_ID=" + balance_ID + ":BE_BUCKET_VALUE=" + balance_Value + ":BE_BUCKET_ID=:"+ bucket_ID +":ACTION=Logging");
+		}
+		
+		return TotalBalance;
+	}
+	
+	private String CalculateBalanceForFloat(double balance_Value, String Resource, String balance_ID, String bucket_ID) {
+		// TODO Auto-generated method stub
+		double TotalBalance = 0;
+		
+		DecimalFormat df = new DecimalFormat("#");
+        df.setMaximumFractionDigits(3);
+		
+		String[] aBalanceID = {"21","1439"};
+		
+		if(Resource.equals("DA") || Resource.equals("DATO6"))
+		{
+			String RoundOff = LoadSubscriberMapping.ConversionLogicMap.get(Resource).split("\\|")[2];
+			if(RoundOff.equals("Y"))
+			{
+				BigDecimal bd = new BigDecimal(Double.toString((balance_Value) * 100));
+				TotalBalance = (Long.parseLong(bd.setScale(0, RoundingMode.HALF_UP).toPlainString()));
+			}
+			else if(RoundOff.equals("N"))
+			{
+				TotalBalance = ((balance_Value) * 100);				
+			}
+			
+			if(LoadSubscriberMapping.CommonConfigMap.get("Enable_Logging_for_RoundOff").equals("Y"))
+			{
+				BigDecimal tempBalance = new BigDecimal(df.format(balance_Value * 100));
+				
+				BigDecimal bd = new BigDecimal(Double.toString((balance_Value) * 100));
+				long TotalBal = (Long.parseLong(bd.setScale(0, RoundingMode.HALF_UP).toPlainString()));
+				
+				double diffValue = TotalBal - Double.valueOf(tempBalance.toPlainString());
+				
+				GenerateRoundOffDocument(balance_ID, String.valueOf(balance_Value), df.format(TotalBalance), String.format("%.3f", diffValue));
+				onlyLog.add("INC4007:DA Monetary value RoundOff:MSISDN=" + msisdn + ":BALANCE_TYPE=" + balance_ID + ":BE_BUCKET_VALUE=" + balance_Value + ":BE_BUCKET_ID="+ bucket_ID + ":ROUNDED_VALUE="+ String.format("%.3f", diffValue) +":ACTION=Logging");
+			}
+		}
+		else if(Resource.equals("DATO1"))
+		{
+			return df.format((balance_Value/0.1667) * 60);
+		}
+		else if(Resource.equals("DATO2"))
+		{
+			TotalBalance = ((balance_Value) * 1024);
+		}
+		else if(Resource.equals("DATO3"))
+		{
+			TotalBalance = ((balance_Value)/10000)*1048576;
+		}
+		else if(Resource.equals("DATO4"))
+		{
+			TotalBalance = ((balance_Value)/100);
+		}
+		else if(Resource.equals("DATO5"))
+		{
+			TotalBalance = ((balance_Value));
+		}
+		else if(Resource.equals("DATO6"))
+		{
+			TotalBalance = ((balance_Value)/100);
+		}
+		//Arrays.stream(ExceptionBalances).anyMatch(Balance_ID::equals)
+		if(TotalBalance < 0 && !Arrays.stream(aBalanceID).anyMatch(balance_ID::equals))
+		{
+			TotalBalance = 0;
+			onlyLog.add("INC4005:Negative BT_Value Found will be migrated as Zero:MSISDN=" + msisdn + ":BALANCE_TYPE_ID=" + balance_ID + ":BE_BUCKET_VALUE=" + balance_Value + ":BE_BUCKET_ID=:"+ bucket_ID +":ACTION=Logging");
+		}
+		
+		return df.format(TotalBalance);
+	}
+
+	private void GenerateRoundOffDocument(String balance_ID, String balance_Value, String round_value, String Diff_Value) {
+		
+		Date currDate = new Date();
+		SimpleDateFormat sdfDaily = new SimpleDateFormat("yyyyMMddHHmmss");		
+		String RoundOffValue = "SDPID" + "," + "" + "," +"SequenceNumber"+ "," + "5" + "," + sdfDaily.format(currDate) + 
+				"," + "" + "," + "" + "," + "" + "," + "" + "," + "" + "," + "" + "," + LoadSubscriberMapping.ProductMappingNameIDMap.get(balance_ID) +
+				"," + "" + "," + "," + "S" + "," + sdfDaily.format(currDate) + "," + balance_ID + "," + balance_Value + "," + 
+				round_value +  "," + subscriber.getSubscriberInfoCCSACCTTYPEID() +  "," + "Account" + "," + "" + "," + 
+				Diff_Value + "," + "NULL" + "," + "NULL" + "," + "NULL" + "," + "NULL" + "," + "NULL" + "," + "NULL" + "" + "," + subscriber.getSubscriberInfoMSISDN();
+				
+		this.RoundOffLog.add(RoundOffValue);		
+	}
+
+	private Map<String, String> generateDAFromDefaultSheet() {
+		Map<String,String> DA = new HashMap<>();
+		//System.out.println("Inside defaultSheet");
+		LoadSubscriberMapping.DefaultServicesMap.forEach((k,v)->{
+			//System.out.println("Item : " + k + " Count : " + v);
+			
+			if (v.split(",",-1)[1].trim().equals("N"))
+			{
+				//System.out.println(v);
+				if (v.split(",",-1)[19] != "" && v.split(",",-1)[19].length() != 0)
+				{
+					String CCS_ID = v.split(",",-1)[21];
+					//System.out.println(CCS_ID);
+					//String SourceCCS_ID = subscriber.getSubscriberInfoCCSACCTTYPEID();
+					if(subscriber.getSubscriberInfoCCSACCTTYPEID().equals(CCS_ID))
+					{
+						DA.put("ID_" + indx, v.split(",",-1)[19]);
+						DA.put("BALANCE_" + indx, v.split(",",-1)[23]);
+						DA.put("START_DATE_" + indx, LoadSubscriberMapping.CommonConfigMap.get("default_EMPTY"));
+						DA.put("EXPIRY_DATE_" + indx, LoadSubscriberMapping.CommonConfigMap.get("default_NULL"));
+						DA.put("PAM_SERVICE_ID_" + indx,LoadSubscriberMapping.CommonConfigMap.get("default_ZERO"));
+						DA.put("PRODUCT_ID_" + indx, LoadSubscriberMapping.CommonConfigMap.get("default_ZERO"));
+						
+						this.indx++;
+					}
+				}
+			}
+		});				
+		return DA;
+	}
+	
+	/*private Map<String, String> generateDAFromProductMapping() {
+		Map<String,String> DA = new HashMap<>();
+		
+		Set<String> CompletedGroup = new HashSet<>();
+		for(com.ericsson.jibx.beans.SubscriberXml.SchemasubscriberbalancesdumpInfo balanceInput :  subscriber.getBalancesdumpInfoList())
+		{
+			String Balance_ID = balanceInput.getBALANCETYPE();
+			//System.out.println("Master Balance_ID: " + Balance_ID);
+			String Balance_Value = balanceInput.getBEBUCKETVALUE();
+			String Balance_StartDate = balanceInput.getBEBUCKETSTARTDATE();
+			String Balance_ExpiryDate = balanceInput.getBEEXPIRY();
+			
+			if(LoadSubscriberMapping.BalanceEmptyBTGroupIdentifierMapForDA.get(Balance_ID + "|") != null)
+			{
+				String DA_ID = LoadSubscriberMapping.BalanceEmptyBTGroupIdentifierMapForDA.get(Balance_ID + "|").getOfferID();
+				String Symbol = LoadSubscriberMapping.BalanceEmptyBTGroupIdentifierMapForDA.get(Balance_ID + "|").getSymbols();
+				String BT_Value = LoadSubscriberMapping.BalanceEmptyBTGroupIdentifierMapForDA.get(Balance_ID + "|").getBTValue();
+				//String Product_Private = LoadSubscriberMapping.BalanceEmptyBTGroupIdentifierMapForDA.get(Balance_ID + "|").getProductPrivate();
+				String Resource = 	LoadSubscriberMapping.BalanceEmptyBTGroupIdentifierMapForDA.get(Balance_ID + "|").getResource();		
+				//String DA_Type = LoadSubscriberMapping.BalanceEmptyBTGroupIdentifierMapForDA.get(Balance_ID + "|" ).getDAType();
+				
+				if(!DA_ID.isEmpty())
+				{					
+					if(Symbol.isEmpty() && BT_Value.isEmpty())
+					{
+						if(!DA.containsValue(DA_ID))
+						{
+							long CalculatedBalance = CalculateBalance(Long.parseLong(Balance_Value),Resource,Balance_ID);
+							DA.put("ID_" + indx, DA_ID);
+							DA.put("BALANCE_" + indx, String.valueOf(CalculatedBalance));
+							DA.put("START_DATE_" + indx,String.valueOf(CommonUtilities.convertDateToEpoch(Balance_StartDate)));
+							DA.put("EXPIRY_DATE_" + indx, String.valueOf(CommonUtilities.convertDateToEpoch(Balance_ExpiryDate)));
+							DA.put("PAM_SERVICE_ID_" + indx,LoadSubscriberMapping.CommonConfigMap.get("default_EMPTY"));
+							DA.put("PRODUCT_ID_" + indx, LoadSubscriberMapping.CommonConfigMap.get("default_ZERO"));
+							
+							this.indx++;
+						}
+					}
+					else
+					{
+						boolean GenerateDA = false;
+						if(Symbol.equals(">=") && Integer.parseInt(Balance_Value) >= Integer.parseInt(BT_Value))
+							GenerateDA = true;
+						else if(Symbol.equals(">") && Integer.parseInt(Balance_Value) > Integer.parseInt(BT_Value))
+							GenerateDA = true;
+						else if(Symbol.equals("=") && Integer.parseInt(Balance_Value) == Integer.parseInt(BT_Value))
+							GenerateDA = true;
+						else
+							onlyLog.add("INC4004:Balance_Type lookup failed in Product_Mapping:MSISDN=" + msisdn + ":BALANCE_TYPE_ID=" + Balance_ID + ":BE_BUCKET_VALUE=" + Balance_Value + ":ACTION=Logging");
+						
+						if(GenerateDA)
+						{
+							
+							if(!DA.containsValue(DA_ID))
+							{
+								long CalculatedBalance = CalculateBalance(Long.parseLong(Balance_Value),Resource,Balance_ID);
+								DA.put("ID_" + indx, DA_ID);
+								DA.put("BALANCE_" + indx, String.valueOf(CalculatedBalance));
+								DA.put("START_DATE_" + indx,String.valueOf(CommonUtilities.convertDateToEpoch(Balance_StartDate)));
+								DA.put("EXPIRY_DATE_" + indx, String.valueOf(CommonUtilities.convertDateToEpoch(Balance_ExpiryDate)));DA.put("PAM_SERVICE_ID_" + indx,LoadSubscriberMapping.CommonConfigMap.get("default_EMPTY"));
+								DA.put("PRODUCT_ID_" + indx, LoadSubscriberMapping.CommonConfigMap.get("default_ZERO"));
+								
+								this.indx++;
+							}
+						}
+					}
+				}	
+			}
+			else
+			{
+				if(Arrays.stream(ExceptionBalances).anyMatch(Balance_ID::equals))
+				{
+					if(Balance_ID.equals("1832"))
+					{
+						if(LoadSubscriberMapping.SpecialBalanceNonBTGroupIdentifierMap.get(Balance_ID + "|" + Balance_Value) != null)
+						{
+							String Offer_ID = LoadSubscriberMapping.SpecialBalanceNonBTGroupIdentifierMap.get(Balance_ID + "|" + Balance_Value).getOfferID();
+							String Offer_Type = LoadSubscriberMapping.SpecialBalanceNonBTGroupIdentifierMap.get(Balance_ID + "|" + Balance_Value).getOfferType();
+							boolean startFlag = LoadSubscriberMapping.SpecialBalanceNonBTGroupIdentifierMap.get(Balance_ID + "|" + Balance_Value).getOfferStartDate().length() > 0 ? true:false;
+							boolean expiryFalg = LoadSubscriberMapping.SpecialBalanceNonBTGroupIdentifierMap.get(Balance_ID + "|" + Balance_Value).getOfferExpiryDate().length() > 0 ? true:false;
+							BalanceOfferList.add(PopulateOffer(Offer_ID,Offer_Type,startFlag,expiryFalg,"", "","",""));
+						}
+						else
+						{
+							onlyLog.add("INC4004:Balance_Type lookup failed in Product_Mapping:MSISDN=" + msisdn + ":BALANCE_TYPE_ID=" + Balance_ID + ":BE_BUCKET_VALUE=" + Balance_Value + ":ACTION=Logging");
+						}
+					}
+					if(Balance_ID.equals("21"))
+					{
+						for (String BTGrp: LoadSubscriberMapping.MainBalanceGroupingList)
+						{
+							List<String> DAList = new ArrayList<>();
+							if(BTGrp.equals("DUMMY_21_1") && !subscriber.getSubscriberInfoCCSACCTTYPEID().equals("334"))
+							{
+								String DA_ID = LoadSubscriberMapping.MainBalanceNonBTGroupIdentifierMapForDA.get(Balance_ID + "|334|" + BTGrp).getDAID();
+								String Resource = 	LoadSubscriberMapping.MainBalanceNonBTGroupIdentifierMapForDA.get(Balance_ID + "|334|" + BTGrp).getResource();
+								CompletedGroup.add(BTGrp);
+								
+								long CalculatedBalance = CalculateBalance(Long.parseLong(Balance_Value),Resource,Balance_ID);
+								if(!DA.containsValue(DA_ID))
+								{
+									DA.put("ID_" + indx, DA_ID);
+									DA.put("BALANCE_" + indx, String.valueOf(CalculatedBalance));
+									DA.put("START_DATE_" + indx,String.valueOf(CommonUtilities.convertDateToEpoch(Balance_StartDate)));
+									DA.put("EXPIRY_DATE_" + indx, String.valueOf(CommonUtilities.convertDateToEpoch(Balance_ExpiryDate)));
+									DA.put("PAM_SERVICE_ID_" + indx,LoadSubscriberMapping.CommonConfigMap.get("default_EMPTY"));
+									DA.put("PRODUCT_ID_" + indx, LoadSubscriberMapping.CommonConfigMap.get("default_ZERO"));
+									
+									this.indx++;
+								}
+							
+							}
+							else if(LoadSubscriberMapping.MainBalanceNonBTGroupIdentifierMapForDA.get(Balance_ID + "|" + subscriber.getSubscriberInfoCCSACCTTYPEID() + '|' + BTGrp) != null)
+							{	
+								boolean ValidDA = false;
+								
+								String DA_ID = LoadSubscriberMapping.MainBalanceNonBTGroupIdentifierMapForDA.get(Balance_ID + "|" + subscriber.getSubscriberInfoCCSACCTTYPEID() + '|' + BTGrp).getDAID();
+								String Symbol = LoadSubscriberMapping.MainBalanceNonBTGroupIdentifierMapForDA.get(Balance_ID + "|" + subscriber.getSubscriberInfoCCSACCTTYPEID() + '|' + BTGrp).getSymbols();
+								String DA_Type = LoadSubscriberMapping.MainBalanceNonBTGroupIdentifierMapForDA.get(Balance_ID + "|" + subscriber.getSubscriberInfoCCSACCTTYPEID() + '|' + BTGrp).getDAType();
+								String BT_Value = LoadSubscriberMapping.MainBalanceNonBTGroupIdentifierMapForDA.get(Balance_ID + "|" + subscriber.getSubscriberInfoCCSACCTTYPEID() + '|' + BTGrp).getBTValue();
+								String Resource = 	LoadSubscriberMapping.MainBalanceNonBTGroupIdentifierMapForDA.get(Balance_ID + "|" + subscriber.getSubscriberInfoCCSACCTTYPEID() + '|' + BTGrp).getResource();
+								
+								if(Symbol.equals("<") && Double.parseDouble(Balance_Value) < Double.parseDouble(BT_Value))
+								{
+									CompletedGroup.add(BTGrp);
+									ValidDA = true;
+									//break;
+								}
+								else if(Symbol.equals(">") && Double.parseDouble(Balance_Value) > Double.parseDouble(BT_Value))
+								{
+									CompletedGroup.add(BTGrp);
+									ValidDA = true;
+									//break;
+								}
+								else if(Symbol.equals("=") && Long.parseLong(Balance_Value) == Long.parseLong(BT_Value))
+								{
+									CompletedGroup.add(BTGrp);
+									ValidDA = true;
+									//break;
+								}
+								else if(Symbol.equals("or"))
+								{
+									//Integer.parseInt(Balance_Value) == Integer.parseInt(BT_Value)
+									String[] values = BT_Value.split(",");											
+									if(Arrays.stream(values).anyMatch(Balance_Value::equals))
+									{
+										CompletedGroup.add(BTGrp);
+										ValidDA = true;
+									}
+									else
+										onlyLog.add("INC4004:Balance_Type lookup failed in Product_Mapping:MSISDN=" + msisdn + ":BALANCE_TYPE_ID=" + Balance_ID + ":BE_BUCKET_VALUE=" + Balance_Value + ":ACTION=Logging");
+								}
+								else
+								{
+									if(Double.parseDouble(Balance_Value) > 120.024 && Double.parseDouble(Balance_Value) < 320.064)
+										onlyLog.add("INC4004:Balance_Type lookup failed in Product_Mapping:MSISDN=" + msisdn + ":BALANCE_TYPE_ID=" + Balance_ID + ":BE_BUCKET_VALUE=" + Balance_Value + ":ACTION=Logging");
+								}
+								
+								if(ValidDA)
+								{
+									long CalculatedBalance = CalculateBalance(Long.parseLong(Balance_Value),Resource,Balance_ID);
+									if(!DA.containsValue(DA_ID))
+									{
+										DA.put("ID_" + indx, DA_ID);
+										DA.put("BALANCE_" + indx, String.valueOf(CalculatedBalance));
+										DA.put("START_DATE_" + indx,String.valueOf(CommonUtilities.convertDateToEpoch(Balance_StartDate)));
+										DA.put("EXPIRY_DATE_" + indx, String.valueOf(CommonUtilities.convertDateToEpoch(Balance_ExpiryDate)));
+										DA.put("PAM_SERVICE_ID_" + indx,LoadSubscriberMapping.CommonConfigMap.get("default_EMPTY"));
+										DA.put("PRODUCT_ID_" + indx, LoadSubscriberMapping.CommonConfigMap.get("default_ZERO"));
+										
+										this.indx++;
+									}
+								}
+							}
+						}
+					}
+				}
+				else
+				{
+					String GroupName = "";
+					List<String> CurrentGroupBalance = new ArrayList<>();
+					List<String> DAList = new ArrayList<>();
+					for(Set<String> valueList : LoadSubscriberMapping.BalanceGroupingMap.values()) {					
+						if(valueList.contains(Balance_ID)){
+							GroupName = LoadSubscriberMapping.getKey(LoadSubscriberMapping.BalanceGroupingMap, valueList);
+							for (String x : valueList)
+								CurrentGroupBalance.add(x); 
+							break;
+						}
+					}	
+					
+					if(!CompletedGroup.contains(GroupName))
+					{
+						if(CurrentGroupBalance.size() > 0)
+						{
+							String FinalGroupName = GroupName;
+							//System.out.println(FinalGroupName);	
+							for(String id : CurrentGroupBalance)
+							{
+								//System.out.println(id);
+								for(com.ericsson.jibx.beans.SubscriberXml.SchemasubscriberbalancesdumpInfo TempbalanceInput :  subscriber.getBalancesdumpInfoList()){
+									String TempBalance_ID = TempbalanceInput.getBALANCETYPE();
+									String TempBalance_Name = TempbalanceInput.getBALANCETYPENAME();
+									String TempBalance_Value = TempbalanceInput.getBEBUCKETVALUE();
+									String TempBalance_StartDate = TempbalanceInput.getBEBUCKETSTARTDATE();
+									String TempBalance_ExpiryDate = TempbalanceInput.getBEEXPIRY();							
+									if(id.equals(TempBalance_ID))
+									{
+										if(LoadSubscriberMapping.BalanceNonEmptyBTGroupIdentifierMapForDA.get(id + "|" + FinalGroupName) != null)
+										{
+											String DA_ID = LoadSubscriberMapping.BalanceNonEmptyBTGroupIdentifierMapForDA.get(TempBalance_ID + "|" + FinalGroupName).getDAID();
+											String Symbol = LoadSubscriberMapping.BalanceNonEmptyBTGroupIdentifierMapForDA.get(TempBalance_ID + "|" + FinalGroupName).getSymbols();
+											String BT_Value = LoadSubscriberMapping.BalanceNonEmptyBTGroupIdentifierMapForDA.get(TempBalance_ID + "|" + FinalGroupName).getBTValue();
+											String Product_Private = LoadSubscriberMapping.BalanceNonEmptyBTGroupIdentifierMapForDA.get(TempBalance_ID + "|" + FinalGroupName).getProductPrivate();
+											String DA_Type = LoadSubscriberMapping.BalanceNonEmptyBTGroupIdentifierMapForDA.get(TempBalance_ID + "|" + FinalGroupName).getDAType();
+											String Resource = LoadSubscriberMapping.BalanceNonEmptyBTGroupIdentifierMapForDA.get(TempBalance_ID + "|" + FinalGroupName).getResource();
+											
+											if(Symbol.equals(">=") && Integer.parseInt(TempBalance_Value) >= Integer.parseInt(BT_Value))
+											{
+												CompletedGroup.add(FinalGroupName);
+												DAList.add(TempBalance_Name + ";" + TempBalance_ID + ";" + TempBalance_Value +"|" + DA_ID + ";" + DA_Type + ";" + Resource  + ";" + TempBalance_StartDate + ";" + TempBalance_ExpiryDate  + ";" + Product_Private);
+												break;
+											}
+											else if(Symbol.equals(">") && Integer.parseInt(TempBalance_Value) > Integer.parseInt(BT_Value))
+											{
+												CompletedGroup.add(FinalGroupName);
+												DAList.add(TempBalance_Name + ";" + TempBalance_ID + ";" + TempBalance_Value +"|" + DA_ID + ";" + DA_Type + ";" + Resource  + ";" + TempBalance_StartDate + ";" + TempBalance_ExpiryDate  + ";" + Product_Private);
+												break;
+											}
+											else if(Symbol.equals("=") && Integer.parseInt(TempBalance_Value) == Integer.parseInt(BT_Value))
+											{
+												CompletedGroup.add(FinalGroupName);
+												DAList.add(TempBalance_Name + ";" + TempBalance_ID + ";" + TempBalance_Value +"|" + DA_ID + ";" + DA_Type + ";" + Resource  + ";" + TempBalance_StartDate + ";" + TempBalance_ExpiryDate  + ";" + Product_Private);
+												break;
+											}
+											else if(Symbol.equals("or"))
+											{
+												//Integer.parseInt(Balance_Value) == Integer.parseInt(BT_Value)
+												String[] values = BT_Value.split(",");											
+												if(Arrays.stream(values).anyMatch(TempBalance_Value::equals))
+												{
+													CompletedGroup.add(FinalGroupName);
+													DAList.add(TempBalance_Name + ";" + TempBalance_ID + ";" + TempBalance_Value +"|" + DA_ID + ";" + DA_Type + ";" + Resource  + ";" + TempBalance_StartDate + ";" + TempBalance_ExpiryDate  + ";" + Product_Private);
+													break;
+												}
+												else
+													onlyLog.add("INC4004:Balance_Type lookup failed in Product_Mapping:MSISDN=" + msisdn + ":BALANCE_TYPE_ID=" + TempBalance_ID + ":BE_BUCKET_VALUE=" + TempBalance_Value + ":ACTION=Logging");
+											}
+											else
+												onlyLog.add("INC4004:Balance_Type lookup failed in Product_Mapping:MSISDN=" + msisdn + ":BALANCE_TYPE_ID=" + TempBalance_ID + ":BE_BUCKET_VALUE=" + TempBalance_Value + ":ACTION=Logging");
+										}
+										else
+										{
+											//System.out.println("Discarded Logs: " + id);
+											onlyLog.add("INC4004:Balance_Type lookup failed in Product_Mapping:MSISDN=" + msisdn + ":BALANCE_TYPE_ID=" + TempBalance_ID + ":BE_BUCKET_VALUE=" + TempBalance_Value + ":ACTION=Logging");
+										}
+									}
+								}
+							}
+							if(FinalGroupName.startsWith("A") || FinalGroupName.startsWith("B") || FinalGroupName.startsWith("P"))
+							{
+								//DAList.add(TempBalance_Name + ";" + TempBalance_ID + ";" + TempBalance_Value +"|" + DA_ID + ";" + DA_Type + ";" + Resource  + ";" + TempBalance_StartDate + ";" + TempBalance_ExpiryDate  + ";" + Product_Private);
+								if(DAList.size() == CurrentGroupBalance.size())
+								{
+									DAList.forEach(item->{
+										String Resource = item.split("\\|")[1].split(";")[2];
+										if(Resource.length() > 1)
+										{
+											if(!DA.containsValue(item.split("\\|")[1].split(";")[0]))
+											{
+												long CalculatedBalance = CalculateBalance(Long.parseLong(item.split("\\|")[0].split(";")[2]),Resource,item.split("\\|")[0].split(";")[1]);
+												DA.put("ID_" + indx, item.split("\\|")[1].split(";")[0]);
+												DA.put("BALANCE_" + indx, String.valueOf(CalculatedBalance));
+												DA.put("START_DATE_" + indx,String.valueOf(CommonUtilities.convertDateToEpoch(item.split("\\|")[1].split(";")[3])));
+												DA.put("EXPIRY_DATE_" + indx, String.valueOf(CommonUtilities.convertDateToEpoch(item.split("\\|")[1].split(";")[4])));
+												DA.put("PAM_SERVICE_ID_" + indx,LoadSubscriberMapping.CommonConfigMap.get("default_EMPTY"));
+												DA.put("PRODUCT_ID_" + indx, LoadSubscriberMapping.CommonConfigMap.get("default_ZERO"));
+												
+												this.indx++;
+											}
+										}										
+									});
+								}
+								else
+								{
+									if(FinalGroupName.startsWith("A"))
+									{
+										DAList.forEach(item->{
+											String TargetBalanceName = item.split("\\|")[0].split(";")[0];
+											String Resource = item.split("\\|")[1].split(";")[2];
+											if(TargetBalanceName.equals("HardCap Cash"))
+											{
+												if(!DA.containsValue("1025"))
+												{
+													long CalculatedBalance = CalculateBalance(Long.parseLong(item.split("\\|")[0].split(";")[2]),Resource,item.split("\\|")[0].split(";")[1]);
+													DA.put("ID_" + indx, "1025");
+													DA.put("BALANCE_" + indx, String.valueOf(CalculatedBalance));
+													DA.put("START_DATE_" + indx,String.valueOf(CommonUtilities.convertDateToEpoch(item.split("\\|")[1].split(";")[3])));
+													DA.put("EXPIRY_DATE_" + indx, String.valueOf(CommonUtilities.convertDateToEpoch(item.split("\\|")[1].split(";")[4])));
+													DA.put("PAM_SERVICE_ID_" + indx,LoadSubscriberMapping.CommonConfigMap.get("default_EMPTY"));
+													DA.put("PRODUCT_ID_" + indx, LoadSubscriberMapping.CommonConfigMap.get("default_ZERO"));
+													
+													this.indx++;
+												}
+											}											
+										});
+									}
+								}
+							}	
+						}
+					}
+				}
+			}
+		}
+		return DA;
+	}*/
+
+}

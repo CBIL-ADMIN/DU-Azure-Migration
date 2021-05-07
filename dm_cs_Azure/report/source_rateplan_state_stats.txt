@@ -1,0 +1,128 @@
+RATEPLAN_NAME,RATE_PLAN_ID-STATE,SOURCE_CNT,DISCARDED_CNT,DISCARDED_REMARK
+du FUT Vanilla Data,136-P,1,1,Service class Ignored-1;
+du FUT Vanilla,110-P,12,12,Service class Ignored-12;
+Du TEST 800,394-A,1,1,Service class Ignored-1;
+Tourist SIM Extra,561-F,68,0,
+CS POST C,109-F,225,197,Lifecycle lookup mismatch-197;
+Du Basic 900,456-A,2,2,Service class Ignored-2;
+du FUT Vanilla Data,136-T,1,1,Service class Ignored-1;
+du FUT Vanilla,110-S,2,2,Service class Ignored-2;
+du FUT Vanilla,110-T,10,10,Service class Ignored-10;
+Visitor Mobile Line,5-P,52,52,Service class Ignored-52;
+Du Basic 900,456-F,1,1,Service class Ignored-1;
+Home Cam Pay as you Go,195-S,2,2,Service class Ignored-2;
+Home Cam Pay as you Go,195-T,1,1,Service class Ignored-1;
+Visitor Mobile Line,5-S,31,31,Service class Ignored-31;
+Visitor Mobile Line,5-T,214,214,Service class Ignored-214;
+Test Ionut and Marcel,105-A,4,4,Service class Ignored-4;
+Tourist SIM Extra,561-P,1381,6,Lifecycle lookup mismatch-6;
+CS POST C,109-P,38971,0,
+Test Ionut and Marcel,105-D,12,12,Service class Ignored-12;
+Tourist SIM Extra,561-S,1056710,29,Subscriber relation missing-29;
+CS POST C,109-S,3687,0,
+CS POST C,109-T,1,0,
+Tourist SIM Extra,561-T,532,1,Subscriber relation missing-1;
+Test Ionut and Marcel,105-F,2,2,Service class Ignored-2;
+Pay as you Go Million,196-A,3136,0,
+Pay as you Go Million,196-D,1,0,
+Du Basic 900,456-S,5,5,Service class Ignored-5;
+Pay as you Go Million,196-F,5,4,Lifecycle lookup mismatch-4;
+Test Ionut and Marcel,105-P,6,6,Service class Ignored-6;
+Test Ionut and Marcel,105-S,11,11,Service class Ignored-11;
+Test Ionut and Marcel,105-T,13,13,Service class Ignored-13;
+Visitor Data Line,6-S,2,2,Service class Ignored-2;
+Visitor Data Line,6-T,14,14,Service class Ignored-14;
+CS Testprod,106-D,2,2,Service class Ignored-2;
+Roaming_PT,415-A,4,4,Service class Ignored-4;
+Roaming_PT,415-D,15,15,Service class Ignored-15;
+Postpaid Consumer,557-A,494514,72,Lifecycle lookup mismatch-1;Subscriber relation missing-71;
+Postpaid Consumer,557-F,1,0,
+CS Testprod,106-S,1,1,Service class Ignored-1;
+CS Testprod,106-T,1,1,Service class Ignored-1;
+Business Mobile PostPaid,172-A,1672,0,
+Roaming_PT,415-S,4,4,Service class Ignored-4;
+du Family Prepaid,193-A,566,1,Lifecycle lookup mismatch-1;
+Roaming_PT,415-T,4,4,Service class Ignored-4;
+Alo,255-A,858837,0,
+MCR,276-A,479726,31,Subscriber relation missing-31;
+Alo,255-D,1107,0,
+Alo,255-F,706,4,Lifecycle lookup mismatch-4;
+Homephone recharge,107-A,63,63,Service class Ignored-63;
+Postpaid Consumer,557-S,25,0,
+MCR,276-F,31444,0,
+Postpaid Consumer,557-T,9,0,
+Homephone recharge,107-F,85,85,Service class Ignored-85;
+Business Mobile PostPaid,172-P,1,1,Lifecycle lookup mismatch-1;
+du Family Prepaid,193-P,11,0,
+Alo,255-P,31033,8,Lifecycle lookup mismatch-8;
+Business Mobile PostPaid,172-S,261871,1,Subscriber relation missing-1;
+NPP Value,558-A,18118,0,
+du Family Prepaid,193-S,34,0,
+Alo,255-S,179939,1,Subscriber relation missing-1;
+Alo,255-T,29003,4,Subscriber relation missing-4;
+MCR,276-S,14996,0,
+du BSIM Holiday,62-F,1,1,Service class Ignored-1;
+Homephone recharge,107-P,3029,3029,Service class Ignored-3029;
+MCR,276-T,94,0,
+NPP Value,558-F,130,0,
+Homephone recharge,107-S,85,85,Service class Ignored-85;
+Business mobile Pay as you Go plus,25-A,32646,0,
+Homephone recharge,107-T,18440,18440,Service class Ignored-18440;
+Business Mobile PaYG plus 2,194-A,351522,5,Subscriber relation missing-5;
+Business mobile Pay as you Go plus,25-D,14,0,
+Pay as you Go Data Line,4-A,15913,0,
+Business Mobile PaYG plus 2,194-D,1,0,
+EMP,277-A,59360,0,
+Business mobile Pay as you Go plus,25-F,179,1,Lifecycle lookup mismatch-1;
+du BSIM Holiday,62-P,1,1,Service class Ignored-1;
+Business Mobile PaYG plus 2,194-F,1370,3,Lifecycle lookup mismatch-3;
+Pay as you Go Data Line,4-D,485,0,
+NPP Value,558-P,14,0,
+EMP,277-D,76112,0,
+Pay as you Go Data Line,4-F,7,0,
+CS POST E,108-A,446558,0,
+Non DU WiFi Prepaid,334-A,100002,0,
+NPP Value,558-S,325,0,
+EMP,277-F,33,16,Lifecycle lookup mismatch-16;
+NPP Value,558-T,8578,0,
+CS POST E,108-D,2,0,
+Non DU WiFi Prepaid,334-F,1,0,
+CS POST E,108-F,946,691,Lifecycle lookup mismatch-691;
+Pay as you Go 2,214-A,8177147,31,Lifecycle lookup mismatch-13;Subscriber relation missing-18;
+Business mobile Pay as you Go plus,25-P,196,0,
+Business Mobile PaYG plus 2,194-P,36521,19,Lifecycle lookup mismatch-19;
+Business Data PaYG plus,235-A,11,11,Service class Ignored-11;
+Business mobile Pay as you Go plus,25-S,11,0,
+Pay as you Go 2,214-D,117308,0,
+du BSIM Vanilla,63-A,1,1,Service class Ignored-1;
+Pay as you Go Data Line,4-P,7100,2,Lifecycle lookup mismatch-2;
+Business mobile Pay as you Go plus,25-T,4,0,
+NPP Special,559-A,39339,0,
+Pay as you Go 2,214-F,61679,43744,Lifecycle lookup mismatch-43743;Subscriber relation missing-1;
+EMP,277-P,56932,0,
+Business Mobile PaYG plus 2,194-S,2577,0,
+Business Mobile PaYG plus 2,194-T,12,0,
+Pay as you Go Data Line,4-S,34182,0,
+EMP,277-S,6995,0,
+Pay as you Go Data Line,4-T,3732,0,
+EMP,277-T,2,0,
+CS POST E,108-P,87294,0,
+NPP Special,559-F,326,0,
+du FUT Vanilla,110-A,3,3,Service class Ignored-3;
+CS POST E,108-S,22560,0,
+CS POST E,108-T,804,0,
+Pay as you Go 2,214-P,138591,209,Lifecycle lookup mismatch-209;
+Business Data PaYG plus,235-P,5,5,Service class Ignored-5;
+Visitor Mobile Line,5-A,204,204,Service class Ignored-204;
+Pay as you Go 2,214-S,1017557,18,Subscriber relation missing-18;
+Pay as you Go 2,214-T,24844,3,Subscriber relation missing-3;
+duCC Access,314-A,4,4,Service class Ignored-4;
+NPP Special,559-P,10,0,
+Business Data PaYG plus,235-S,3,3,Service class Ignored-3;
+HotelPrepaid,602-A,2,0,
+CS POST C,109-A,75422,0,
+Tourist SIM Extra,561-A,10578,47,Lifecycle lookup mismatch-8;Subscriber relation missing-39;
+Visitor Mobile Line,5-F,12,12,Service class Ignored-12;
+du BSIM Vanilla,63-T,2,2,Service class Ignored-2;
+NPP Special,559-S,598,0,
+NPP Special,559-T,17106,0,

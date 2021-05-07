@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+ <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified" attributeFormDefault="unqualified">
+  <xs:element name="PROFILE_TAG_LIST">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element name="PROFILE_TAG_INFO"  maxOccurs="unbounded">
+          <xs:complexType>
+            <xs:all>
+				<xs:element type="xs:string" name="Profile_Tag_Name"/>
+				<xs:element type="xs:string" name="Symbols"/>
+				<xs:element type="xs:string" name="Profile_Tag_Value"/>
+				<xs:element type="xs:string" name="PT_Group_Identifier"/>
+				<xs:element type="xs:string" name="Sub_State"/>
+				<xs:element type="xs:string" name="RatePlan_Operator"/>
+				<xs:element type="xs:string" name="RatePlan_ID"/>
+				<xs:element type="xs:string" name="Additional_PT_Check"/>
+				<xs:element type="xs:string" name="Resource"/>
+				<xs:element type="xs:string" name="Ignore_Flag"/>
+				<xs:element type="xs:string" name="Offer_Always_No_Never_Expiry"/>
+				<xs:element type="xs:string" name="Product_Private"/>
+				<xs:element type="xs:string" name="Offer_Id"/>
+				<xs:element type="xs:string" name="Offer_Type"/>
+				<xs:element type="xs:string" name="Offer_Start"/>
+				<xs:element type="xs:string" name="Offer_End"/>
+				<xs:element type="xs:string" name="Attr1_Offer_id"/>
+				<xs:element type="xs:string" name="Attr1_name"/>
+				<xs:element type="xs:string" name="Attr1_Type"/>
+				<xs:element type="xs:string" name="Attr1_Value"/>
+				<xs:element type="xs:string" name="UA_Type"/>
+				<xs:element type="xs:string" name="UA_ID"/>
+				<xs:element type="xs:string" name="UA_Value"/>
+				<xs:element type="xs:string" name="Faf_called_number"/>
+				<xs:element type="xs:string" name="Faf_Indicator"/>
+				<xs:element type="xs:string" name="CIS_Reference"/>
+				<xs:element type="xs:string" name="UC_Type"/>
+				<xs:element type="xs:string" name="UC_ID"/>
+				<xs:element type="xs:string" name="UT_ID"/>
+				<xs:element type="xs:string" name="UT_Value"/>
+				<xs:element type="xs:string" name="PAM_CLASS_ID"/>
+				<xs:element type="xs:string" name="PAM_SERV_ID"/>
+				<xs:element type="xs:string" name="Add_Offer"/>
+				<xs:element type="xs:string" name="Add_UA"/>
+				<xs:element type="xs:string" name="Add_DA"/>
+				<xs:element type="xs:string" name="Add_UC"/>
+            </xs:all>
+          </xs:complexType>
+        </xs:element>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+</xs:schema>

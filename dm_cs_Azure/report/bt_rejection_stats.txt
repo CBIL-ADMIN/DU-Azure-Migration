@@ -1,0 +1,11 @@
+REJECTION_REASON-REJECTION_COUNT
+Periodic Charge is not active-4369076
+Balance_Type Ignored-37178767
+Service class Ignored-132342
+SNA subs balance record ignored-112640
+NetworkBundle specific BT ignored-243217
+Lifecycle lookup mismatch-315404
+Balance_Type match condition failed-79379308
+Balance_Type expired-2892364
+Subscriber relation missing-2477
+Balance_Type lookup failed-594563

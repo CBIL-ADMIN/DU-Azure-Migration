@@ -1,0 +1,7 @@
+REJECTION_REASON-REJECTION_COUNT
+SNA subs profiletag ignored-4764
+Profile Tag match condition Failed-1673085
+Service class Ignored-29307
+Lifecycle lookup mismatch-200294
+Default service mapped attribute lookup failed-44
+Subscriber relation missing-5919

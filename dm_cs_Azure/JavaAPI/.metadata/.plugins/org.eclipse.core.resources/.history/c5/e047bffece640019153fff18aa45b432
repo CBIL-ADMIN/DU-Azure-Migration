@@ -1,0 +1,1147 @@
+package com.ericsson.dm.transformation;
+
+import java.io.BufferedReader;
+import java.io.ByteArrayInputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.stream.Collectors;
+import java.util.zip.GZIPInputStream;
+
+import org.apache.commons.io.FileUtils;
+import org.apache.log4j.Logger;
+import org.jibx.runtime.BindingDirectory;
+import org.jibx.runtime.IBindingFactory;
+import org.jibx.runtime.IUnmarshallingContext;
+import org.jibx.runtime.JiBXException;
+
+import com.ericsson.dm.inititialization.LoadSubscriberMapping;
+import com.ericsson.dm.transform.implementation.Account;
+import com.ericsson.dm.transform.implementation.Accumulator;
+import com.ericsson.dm.transform.implementation.CISOutputs;
+import com.ericsson.dm.transform.implementation.DedicatedAccount;
+import com.ericsson.dm.transform.implementation.Offer;
+import com.ericsson.dm.transform.implementation.OfferAttribute;
+import com.ericsson.dm.transform.implementation.ServiceNumberApplication;
+import com.ericsson.dm.transform.implementation.Subscriber;
+import com.ericsson.dm.transform.implementation.SubscriberFaf;
+import com.ericsson.dm.transform.implementation.UsageCounter;
+import com.ericsson.jibx.beans.SubscriberXml;
+
+public class ExecuteTransformation {
+
+	private IBindingFactory bindingFactorySubuscriber;
+	private IUnmarshallingContext UnmarshallingContextSubuscriber;
+	
+	private String pathOfOutputFolder;
+	public String INITIAL_ACTIVATION_DATE;
+	private String pathOfLogFolder;
+	final static Logger LOG = Logger.getLogger(ExecuteTransformation.class);
+	private String pathtoApplicationContext;
+	private int uniqueNumber;
+	private List<String> accountListBuffer;
+	private List<String> subscriberListBuffer;
+	private List<String> offerListBuffer;
+	private List<String> offerAttributeListBuffer;
+	private List<String> pamListBuffer;
+	private List<String> accumulatorBuffer;	
+	private List<String> ucBuffer;
+	private List<String> daBuffer;
+	private List<String> cisOnceOff;
+	private List<String> cisRenewal;
+	private List<String> cisParking;
+	private List<String> cisNwpc;
+	private List<String> subscriberFaFBuffer;
+	private List<String> servicenumberBuffer;
+	private Set<String> rejectAndLog;
+	private Set<String> onlyLog;
+	private Set<String> roundOffLog;
+	private Set<String> trackLog;
+
+	
+	private SubscriberXml subs;
+	//public CopyOnWriteArrayList<SchemasubscriberbalancesdumpInfo> SortedBalanceInput;
+	
+	private static final Object ThreadLock = new Object();
+	
+	// private List<String> smallFiles;
+
+	private static final String DACOLUMNS = "ID_1,BALANCE_1,EXPIRY_DATE_1,ID_2,BALANCE_2,EXPIRY_DATE_2,ID_3,BALANCE_3,EXPIRY_DATE_3,ID_4,BALANCE_4,EXPIRY_DATE_4,ID_5,BALANCE_5,EXPIRY_DATE_5,ID_6,BALANCE_6,EXPIRY_DATE_6,ID_7,BALANCE_7,EXPIRY_DATE_7,ID_8,BALANCE_8,EXPIRY_DATE_8,ID_9,BALANCE_9,EXPIRY_DATE_9,ID_10,BALANCE_10,EXPIRY_DATE_10,START_DATE_10,PRODUCT_ID_1,PRODUCT_ID_2,PRODUCT_ID_3,PRODUCT_ID_4,START_DATE_1,PRODUCT_ID_10,PRODUCT_ID_5,START_DATE_2,PRODUCT_ID_6,START_DATE_3,PRODUCT_ID_7,START_DATE_4,PRODUCT_ID_8,START_DATE_5,PRODUCT_ID_9,START_DATE_6,START_DATE_7,START_DATE_8,START_DATE_9,PAM_SERVICE_ID_1,PAM_SERVICE_ID_2,PAM_SERVICE_ID_3,PAM_SERVICE_ID_4,PAM_SERVICE_ID_5,PAM_SERVICE_ID_6,PAM_SERVICE_ID_7,PAM_SERVICE_ID_8,PAM_SERVICE_ID_9,PAM_SERVICE_ID_10";
+	private static final String DACOLUMNS2 = "ID_11,BALANCE_11,EXPIRY_DATE_11,ID_12,BALANCE_12,EXPIRY_DATE_12,ID_13,BALANCE_13,EXPIRY_DATE_13,ID_14,BALANCE_14,EXPIRY_DATE_14,ID_15,BALANCE_15,EXPIRY_DATE_15,ID_16,BALANCE_16,EXPIRY_DATE_16,ID_17,BALANCE_17,EXPIRY_DATE_17,ID_18,BALANCE_18,EXPIRY_DATE_18,ID_19,BALANCE_19,EXPIRY_DATE_19,ID_20,BALANCE_20,EXPIRY_DATE_20,START_DATE_20,PRODUCT_ID_11,PRODUCT_ID_12,PRODUCT_ID_13,PRODUCT_ID_14,START_DATE_11,PRODUCT_ID_20,PRODUCT_ID_15,START_DATE_12,PRODUCT_ID_16,START_DATE_13,PRODUCT_ID_17,START_DATE_14,PRODUCT_ID_18,START_DATE_15,PRODUCT_ID_19,START_DATE_16,START_DATE_17,START_DATE_18,START_DATE_19,PAM_SERVICE_ID_11,PAM_SERVICE_ID_12,PAM_SERVICE_ID_13,PAM_SERVICE_ID_14,PAM_SERVICE_ID_15,PAM_SERVICE_ID_16,PAM_SERVICE_ID_17,PAM_SERVICE_ID_18,PAM_SERVICE_ID_19,PAM_SERVICE_ID_20";
+	private static final String DACOLUMNS3 = "ID_21,BALANCE_21,EXPIRY_DATE_21,ID_22,BALANCE_22,EXPIRY_DATE_22,ID_23,BALANCE_23,EXPIRY_DATE_23,ID_24,BALANCE_24,EXPIRY_DATE_24,ID_25,BALANCE_25,EXPIRY_DATE_25,ID_26,BALANCE_26,EXPIRY_DATE_26,ID_27,BALANCE_27,EXPIRY_DATE_27,ID_28,BALANCE_28,EXPIRY_DATE_28,ID_29,BALANCE_29,EXPIRY_DATE_29,ID_30,BALANCE_30,EXPIRY_DATE_30,START_DATE_30,PRODUCT_ID_21,PRODUCT_ID_22,PRODUCT_ID_23,PRODUCT_ID_24,START_DATE_21,PRODUCT_ID_30,PRODUCT_ID_25,START_DATE_22,PRODUCT_ID_26,START_DATE_23,PRODUCT_ID_27,START_DATE_24,PRODUCT_ID_28,START_DATE_25,PRODUCT_ID_29,START_DATE_26,START_DATE_27,START_DATE_28,START_DATE_29,PAM_SERVICE_ID_21,PAM_SERVICE_ID_22,PAM_SERVICE_ID_23,PAM_SERVICE_ID_24,PAM_SERVICE_ID_25,PAM_SERVICE_ID_26,PAM_SERVICE_ID_27,PAM_SERVICE_ID_28,PAM_SERVICE_ID_29,PAM_SERVICE_ID_30";
+	private static final String DACOLUMNS4 = "ID_31,BALANCE_31,EXPIRY_DATE_31,ID_32,BALANCE_32,EXPIRY_DATE_32,ID_33,BALANCE_33,EXPIRY_DATE_33,ID_34,BALANCE_34,EXPIRY_DATE_34,ID_35,BALANCE_35,EXPIRY_DATE_35,ID_36,BALANCE_36,EXPIRY_DATE_36,ID_37,BALANCE_37,EXPIRY_DATE_37,ID_38,BALANCE_38,EXPIRY_DATE_38,ID_39,BALANCE_39,EXPIRY_DATE_39,ID_40,BALANCE_40,EXPIRY_DATE_40,START_DATE_40,PRODUCT_ID_31,PRODUCT_ID_32,PRODUCT_ID_33,PRODUCT_ID_34,START_DATE_31,PRODUCT_ID_40,PRODUCT_ID_35,START_DATE_32,PRODUCT_ID_36,START_DATE_33,PRODUCT_ID_37,START_DATE_34,PRODUCT_ID_38,START_DATE_35,PRODUCT_ID_39,START_DATE_36,START_DATE_37,START_DATE_38,START_DATE_39,PAM_SERVICE_ID_31,PAM_SERVICE_ID_32,PAM_SERVICE_ID_33,PAM_SERVICE_ID_34,PAM_SERVICE_ID_35,PAM_SERVICE_ID_36,PAM_SERVICE_ID_37,PAM_SERVICE_ID_38,PAM_SERVICE_ID_39,PAM_SERVICE_ID_40";
+	private static final String ACMCOLUMNS = "ACCOUNT_ID,SEQUENCE_ID,ID_1,VALUE_1,CLEARING_DATE_1,ID_2,VALUE_2,CLEARING_DATE_2,ID_3,VALUE_3,CLEARING_DATE_3,ID_4,VALUE_4,CLEARING_DATE_4,ID_5,VALUE_5,CLEARING_DATE_5,ID_6,VALUE_6,CLEARING_DATE_6,ID_7,VALUE_7,CLEARING_DATE_7,ID_8,VALUE_8,CLEARING_DATE_8,ID_9,VALUE_9,CLEARING_DATE_9,ID_10,VALUE_10,CLEARING_DATE_10";
+	private static final String ACMCOLUMNS2 = "ACCOUNT_ID,SEQUENCE_ID,ID_11,VALUE_11,CLEARING_DATE_11,ID_12,VALUE_12,CLEARING_DATE_12,ID_13,VALUE_13,CLEARING_DATE_13,ID_14,VALUE_14,CLEARING_DATE_14,ID_15,VALUE_15,CLEARING_DATE_15,ID_16,VALUE_16,CLEARING_DATE_16,ID_17,VALUE_17,CLEARING_DATE_17,ID_18,VALUE_18,CLEARING_DATE_18,ID_19,VALUE_19,CLEARING_DATE_19,ID_20,VALUE_20,CLEARING_DATE_20";
+	
+	public ExecuteTransformation()
+	{
+		
+	}
+	
+	public ExecuteTransformation(String pathOfOutputFolder, final String pathtoApplicationContext, String pathOfLogFolder) {
+		this.pathOfOutputFolder = pathOfOutputFolder;
+		this.pathOfLogFolder = "/" + pathOfLogFolder;
+
+		this.pathtoApplicationContext = pathtoApplicationContext;
+		accountListBuffer = new ArrayList<>();
+		subscriberListBuffer = new ArrayList<>();
+		offerListBuffer = new ArrayList<>();
+		offerAttributeListBuffer = new ArrayList<>();
+		pamListBuffer = new ArrayList<>();
+		ucBuffer = new ArrayList<>();
+		daBuffer = new ArrayList<>();
+		cisOnceOff = new ArrayList<>();
+		cisRenewal = new ArrayList<>();
+		cisParking = new ArrayList<>();
+		cisNwpc = new ArrayList<>();
+		subscriberFaFBuffer = new ArrayList<>();
+		servicenumberBuffer = new ArrayList<>();
+		accountListBuffer = new ArrayList<>();
+		accumulatorBuffer= new ArrayList<>();
+		INITIAL_ACTIVATION_DATE = "";
+		
+		//SortedBalanceInput = new CopyOnWriteArrayList<>(); //ArrayList<>();
+		
+		rejectAndLog = Collections.synchronizedSet(new HashSet<String>());
+		onlyLog = Collections.synchronizedSet(new HashSet<String>());
+		roundOffLog = Collections.synchronizedSet(new HashSet<String>());
+		trackLog = Collections.synchronizedSet(new HashSet<String>());
+		
+		try {
+
+			bindingFactorySubuscriber = BindingDirectory.getFactory(SubscriberXml.class);
+			UnmarshallingContextSubuscriber = bindingFactorySubuscriber.createUnmarshallingContext();
+	
+
+			// Generate random integers in range 0 to 999999
+			uniqueNumber = LoadSubscriberMapping.rand.nextInt(1000000);
+
+		} catch (JiBXException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			LOG.error("JIBX Exception ", e); 
+		}
+
+	}
+
+	private boolean IsSubuscriberDiscarded(String MSISDN, String CCS_ACCT_TYPE_NAME, String SERVICE_STATE, String INITIAL_ACTIVATION_DATE, String INITIAL_ACTIVATION_DATE_FLAG)
+	{
+		boolean IsServiceClassDiscarded = false;
+		boolean IsLifecycleNotDiscarded = false;
+		
+		if(LoadSubscriberMapping.ServiceClassMap.containsKey(CCS_ACCT_TYPE_NAME))
+		{
+			String Value = LoadSubscriberMapping.ServiceClassMap.get(CCS_ACCT_TYPE_NAME);
+			if(Value.split("\\|")[1].equals("N"))
+			{
+				IsServiceClassDiscarded = true;
+			}
+			else
+			{
+				if(Arrays.stream(LoadSubscriberMapping.CommonConfigMap.get("SNA_Rate_Plan_ID_Identifier").split("\\|")).anyMatch(CCS_ACCT_TYPE_NAME::equals))
+				{
+					ServiceNumberApplication sna = new ServiceNumberApplication(subs,rejectAndLog, onlyLog);
+					rejectAndLog.add("INC1002:Service class Ignored:MSISDN=" + MSISDN + ":CCS_ACCT_TYPE_ID="+CCS_ACCT_TYPE_NAME+ ":SERVICE_STATE=" + SERVICE_STATE + ":ACTION=Discard and log");
+					servicenumberBuffer.addAll(sna.execute());
+					return false;
+				}
+				
+				rejectAndLog.add("INC1002:Service class Ignored:MSISDN=" + MSISDN + ":CCS_ACCT_TYPE_ID="+CCS_ACCT_TYPE_NAME+ ":SERVICE_STATE=" + SERVICE_STATE + ":ACTION=Discard and log");
+				return false;
+			}
+			IsServiceClassDiscarded = true;
+		}
+		else
+		{
+			rejectAndLog.add("INC1001:Service class Lookup Failed:MSISDN=" + MSISDN + ":CCS_ACCT_TYPE_ID="+CCS_ACCT_TYPE_NAME+ ":SERVICE_STATE=" + SERVICE_STATE + ":ACTION=Discard and log");
+			return false;
+		}
+		
+		if (IsServiceClassDiscarded)
+		{
+			if(INITIAL_ACTIVATION_DATE_FLAG.equals("N"))
+			{
+				String[] values = {"A","S","F","D","T"};
+				if (Arrays.stream(values).anyMatch(SERVICE_STATE::equals))
+				{
+					IsLifecycleNotDiscarded = true;
+				}
+				else
+				{
+					rejectAndLog.add("INC1004:Lifecycle lookup mismatch:MSISDN=" + MSISDN + ":SERVICE_STATE=" + SERVICE_STATE + ":ACTION=Discard and log");	
+					return false;
+				}
+				
+			}
+			else if(INITIAL_ACTIVATION_DATE_FLAG.equals("Y"))
+			{
+				String[] values = {"P","S"};
+				if (Arrays.stream(values).anyMatch(SERVICE_STATE::equals))
+				{
+					IsLifecycleNotDiscarded = true;					
+				}
+				else
+				{
+					rejectAndLog.add("INC1004:Lifecycle lookup mismatch:MSISDN=" + MSISDN + ":SERVICE_STATE=" + SERVICE_STATE + ":ACTION=Discard and log");
+					return false;
+				}
+			}
+			if(IsLifecycleNotDiscarded)
+			{
+				if((subs.getUsmsdumpInfoList().size() == 0) || (subs.getProfiledumpInfoList().size() == 0))
+				{
+					rejectAndLog.add("INC1003:Subscriber relation data missing:MSISDN=" + MSISDN + ":ACTION=Discard and log");
+					return false;
+				}
+				else
+				{
+					IsLifecycleNotDiscarded = true;
+				}
+			}
+		}
+		return IsLifecycleNotDiscarded;
+	}
+	
+	/*public void populateInput(String xml)
+	{
+		//System.out.println(xml);
+		inputXMLList.add(xml);
+	}
+	
+	public void GenerateOutput()
+	{
+		System.out.println("Record to Write: " + inputXMLList.size());
+		
+		inputXMLList.forEach(action->{
+			try 
+			{				
+				businessLogicImplementation(action);
+			} 
+			catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		});
+		generateCsv();		
+	}*/
+	
+	public synchronized void businessLogicImplementation(String xml) throws JiBXException, IOException {
+		//synchronized (ThreadLock)
+		{		
+			try {
+				
+				//System.out.println(xml);
+				//System.out.println("Start of transformation Thread: " + Thread.currentThread().getName() + " ThreadID: " + Thread.currentThread().getId());
+				
+				subs = (SubscriberXml) UnmarshallingContextSubuscriber.unmarshalDocument(new ByteArrayInputStream(xml.getBytes()), null);
+				
+				String MSISDN = subs.getSubscriberInfoMSISDN();
+				String CCS_ACCT_TYPE_ID = subs.getSubscriberInfoCCSACCTTYPEID();
+				String SERVICE_STATE = subs.getSubscriberInfoSERVICESTATE();
+				//getting intial_activation_date form USMS input
+				if(subs.getUsmsdumpInfoList().size() == 1 && subs.getUsmsdumpInfoList().get(0).getINITIALACTIVATIONDATE() != null)
+				{
+					this.INITIAL_ACTIVATION_DATE = subs.getUsmsdumpInfoList().get(0).getINITIALACTIVATIONDATE();
+				}
+				
+				String INITIAL_ACTIVATION_DATE_FLAG;
+				
+				if(this.INITIAL_ACTIVATION_DATE.length() == 0)
+					INITIAL_ACTIVATION_DATE_FLAG = "Y";
+				else
+					INITIAL_ACTIVATION_DATE_FLAG = "N";
+				
+				
+				if(IsSubuscriberDiscarded(MSISDN, CCS_ACCT_TYPE_ID, SERVICE_STATE, INITIAL_ACTIVATION_DATE,INITIAL_ACTIVATION_DATE_FLAG))
+				{
+					boolean AccountProductIDFlag = false;
+					List<String> offerList = new ArrayList<>();
+					List<String> offerAttrList = new ArrayList<>();
+					List<String> UCCounterList = new ArrayList<>();
+
+					//Populate Subuscriber output				
+					Subscriber subscriber = new Subscriber(subs , rejectAndLog, onlyLog ,INITIAL_ACTIVATION_DATE);
+					subscriberListBuffer.addAll(subscriber.execute());
+					
+					//System.out.println("Going to Write Output for subuscriber: " + onlyLog.size());
+					//Populate PAM and oFFEr output
+					
+					Offer offer = new Offer(subs, rejectAndLog, onlyLog, trackLog, INITIAL_ACTIVATION_DATE);
+					Map<String, List<String>> offerMap = offer.execute();
+					offerListBuffer.addAll(offerMap.get("Offer"));
+					pamListBuffer.addAll(offerMap.get("Pam"));
+					
+					//System.out.println("Going to Write Output for offer: " + onlyLog.size());
+					
+					//Populate Offer Attribute output
+					OfferAttribute offerattr = new OfferAttribute(subs, rejectAndLog, onlyLog,INITIAL_ACTIVATION_DATE);
+					Map<String, List<String>> offerAttrMap = offerattr.execute();
+					offerAttributeListBuffer.addAll(offerAttrMap.get("OfferAttribute"));
+					
+					//Populate DedicatedAccount output
+					DedicatedAccount da = new DedicatedAccount(subs, rejectAndLog, onlyLog,trackLog, roundOffLog, INITIAL_ACTIVATION_DATE);
+					//Map<String, String> daMap = (da.execute());
+					Map<String, String> daMap = SortDABasedOnValue(da.execute());				
+					
+					
+					//System.out.println("Going to Write Output for da: " + onlyLog.size());
+					//Populate UsageCounter output
+					UsageCounter uc = new UsageCounter(subs, rejectAndLog, onlyLog, trackLog);
+					ucBuffer.addAll(uc.execute());
+					
+					/*uctempBuffer.addAll(UCCounterList);
+					//Creating a list and then updating it to make sure no duplicates.
+					offerAttributeListBuffer.addAll(offerAttrList);
+					
+					Set<String> offerAttrProductIDAdded = new HashSet<>();
+					
+					//System.out.println("Going to Write Output for uc: " + onlyLog.size());				
+					//Polulate the ProductID to DA,offer and UC
+					Set<String> UCCompleted = new HashSet<>();
+					int ProductId = 100;
+					for(String item : offerList)
+					{
+						String OfferID = item.split(",")[1];
+						
+						int CompleteGroup = 0;
+						if(LoadSubscriberMapping.BalanceProductIDMap.containsKey(OfferID))
+						{
+							//System.out.println(item);
+							String value = item.replace("toBePopulated",String.valueOf(ProductId));
+							offerListBuffer.add(value);
+							
+							Map<String, List<String>> ProductIDUADA = LoadSubscriberMapping.BalanceProductIDMap.get(OfferID);
+							List<String>DA_ProductID = ProductIDUADA.get("DAValue");
+							List<String>UC_ProductID = ProductIDUADA.get("UCValue");
+							List<String>OffAttr_ProductID = ProductIDUADA.get("OffAttrValue");
+							
+							if(DA_ProductID.size() > 0)
+							{
+								for(Map.Entry<String,String> entry: daMap.entrySet())
+								{
+									//System.out.println(entry.getValue());
+									if(entry.getKey().toString().startsWith("ID_"))
+									{
+										String ID_Number = entry.getKey().toString().split("_")[1];
+										if(DA_ProductID.contains(entry.getValue().toString()) && daMap.get("PRODUCT_ID_"+ID_Number).equals("0"))
+										{
+											daMap.put("PRODUCT_ID_"+ID_Number,String.valueOf(ProductId));
+											break;
+										}
+									}
+								}
+							}	
+							if(OffAttr_ProductID.size() > 0)
+							{
+								for(String offAttr :offerAttrList)
+								{
+									String Attr_ID = offAttr.split(",")[1];
+									if(OffAttr_ProductID.contains(Attr_ID) && !offerAttrProductIDAdded.contains(offAttr))
+									{
+										offerAttributeListBuffer.remove(offAttr);
+										String temp = offAttr.substring(0, offAttr.lastIndexOf(","));
+										
+										offerAttributeListBuffer.add(temp+ "," + ProductId );	
+										offerAttrProductIDAdded.add(offAttr);
+										break;
+									}
+								}
+							}
+							
+							if(UC_ProductID.size() > 0)
+							{																	
+								if(CheckIfUCGroupPresent(UC_ProductID))
+								{
+									for(String counter :UCCounterList)
+									{
+										String CounterID = counter.split(",")[1];
+										
+										if(UC_ProductID.contains(CounterID))
+										{
+											
+											for(Iterator<String> i = uctempBuffer.iterator(); i.hasNext();)
+											{
+											    if (i.next().equals(counter))
+											    {
+											    	CompleteGroup++;
+											        i.remove();
+											        ucBuffer.add(MSISDN + "," + CounterID + "," + counter.split(",")[2]+ "," + counter.split(",")[3]
+															+ "," + ProductId + "," + counter.split(",")[5] + "," + counter.split(",")[6]);
+													
+											        break;
+											    }
+											    else if(uctempBuffer.size() == 1 && uctempBuffer.contains(counter) )
+											    {
+											    	i.remove();
+											    	CompleteGroup++;
+											    	ucBuffer.add(MSISDN + "," + CounterID + "," + counter.split(",")[2]+ "," + counter.split(",")[3]
+															+ "," + ProductId + "," + counter.split(",")[5] + "," + counter.split(",")[6]);
+													
+											    	break;
+											    }
+											}
+											if(CompleteGroup == UC_ProductID.size())
+												break;
+										}
+									}
+								}
+								else
+								{
+									for(String counter :UCCounterList)
+									{
+										String CounterID = counter.split(",")[1];
+										if(UC_ProductID.contains(CounterID)) // && !UCCompleted.contains(counter))
+										{
+											UCCompleted.add(counter);
+											//ucBuffer.remove(counter);
+											for(Iterator<String> i = uctempBuffer.iterator(); i.hasNext();)
+											{
+											    if (i.next().equals(counter))
+											    {
+											        i.remove();
+											        ucBuffer.add(MSISDN + "," + CounterID + "," + counter.split(",")[2]+ "," + counter.split(",")[3]
+															+ "," + ProductId + "," + counter.split(",")[5] + "," + counter.split(",")[6]);
+													
+											        break;
+											    }
+											    else if(uctempBuffer.size() == 1 && uctempBuffer.contains(counter) )
+											    {
+											    	i.remove();
+											    	ucBuffer.add(MSISDN + "," + CounterID + "," + counter.split(",")[2]+ "," + counter.split(",")[3]
+															+ "," + ProductId + "," + counter.split(",")[5] + "," + counter.split(",")[6]);
+													
+											    	break;
+											    }
+											}
+											break;
+										}								
+									}
+								}	
+							}							
+							AccountProductIDFlag = true;
+							ProductId ++;
+						}
+						else
+						{
+							String value = item.replace("toBePopulated",LoadSubscriberMapping.CommonConfigMap.get("default_ZERO"));
+							offerListBuffer.add(value);
+							
+							//update its UC as well
+							for(String counter :tempUCList)
+							{
+								String CounterID = counter.split(",")[1];
+								if(CounterID.contains(OfferID))
+								{
+									ucFinalBuffer.add(counter);
+									break;
+								}
+							}
+						}
+					}		
+					
+					ucBuffer.addAll(uctempBuffer);*/
+					
+					//from DA map populate the 63 columns for Dedicated acount
+					List<String> daList = new ArrayList<>();
+					
+					//Fill the DA as per SDP server
+					if(daMap.size() >= 1)
+					{
+						StringBuffer sb = new StringBuffer();
+						StringBuffer sb2 = new StringBuffer();
+						StringBuffer sb3 = new StringBuffer();
+						StringBuffer sb4 = new StringBuffer();
+						String[] splittedColumns = DACOLUMNS.split(",");
+						int columnCount = 1;						
+						if (daMap.containsKey("ID_1")) {
+							sb.append(MSISDN).append(",");
+							sb.append(1).append(",");
+	
+							for (String column : splittedColumns) {
+								if (columnCount <= splittedColumns.length - 1) {
+									if (daMap.containsKey(column)) {
+										sb.append(daMap.get(column)).append(",");
+									} else {
+										if (column.startsWith("ID") || column.startsWith("BALANCE")) {
+											sb.append("0,");
+										} else {
+											if (column.startsWith("PAM_SERVICE_ID")) {
+											sb.append("0,");
+											}
+											else {
+												if (column.startsWith("EXPIRY_DATE") || column.startsWith("START_DATE")) {
+												sb.append("NULL,");
+												}
+												else
+												{
+												if (column.startsWith("PRODUCT_ID")) {
+													sb.append("0,");
+													}	
+												}
+											} 
+										}
+									}
+								} else {
+									if (daMap.containsKey(column)) {
+										sb.append(daMap.get(column));
+									} else {
+	
+										sb.append("NULL");
+									}
+								}
+								if(columnCount == 60)
+									break;
+								columnCount++;								
+							}														
+						}
+						if (daMap.containsKey("ID_1")) {
+							daList.add(sb.toString());
+						}
+						sb = null;
+						
+						//it means we have more DA to be added so populate Sequence ID=2
+						if(daMap.size() > 60)
+						{
+							String[] splittedColumns2 = DACOLUMNS2.split(",");
+							int columnCount2 = 1;						
+							if (daMap.containsKey("ID_11")) {
+								sb2.append(MSISDN).append(",");
+								sb2.append(2).append(",");
+		
+								for (String column : splittedColumns2) {
+									if (columnCount2 <= splittedColumns2.length - 1) {
+										if (daMap.containsKey(column)) {
+											sb2.append(daMap.get(column)).append(",");
+										} else {
+											if (column.startsWith("ID") || column.startsWith("BALANCE")) {
+												sb2.append("0,");
+											} else {
+												if (column.startsWith("PAM_SERVICE_ID")) {
+													sb2.append("0,");
+												}
+												else {
+													if (column.startsWith("EXPIRY_DATE") || column.startsWith("START_DATE")) {
+														sb2.append("NULL,");
+													}
+													else
+													{
+													if (column.startsWith("PRODUCT_ID")) {
+														sb2.append("0,");
+														}	
+													}
+												} 
+											}
+										}
+									} else {
+										if (daMap.containsKey(column)) {
+											sb2.append(daMap.get(column));
+										} else {
+		
+											sb2.append("NULL");
+										}
+									}
+									columnCount2++;										
+								}			
+							}
+						}
+						if (daMap.containsKey("ID_11")) {
+							daList.add(sb2.toString());
+						}
+						
+						////it means we have more DA to be added so populate Sequence ID=3
+						if(daMap.size() > 90)
+						{
+							String[] splittedColumns3 = DACOLUMNS3.split(",");
+							int columnCount3 = 1;						
+							if (daMap.containsKey("ID_21")) {
+								sb3.append(MSISDN).append(",");
+								sb3.append(3).append(",");
+		
+								for (String column : splittedColumns3) {
+									if (columnCount3 <= splittedColumns3.length - 1) {
+										if (daMap.containsKey(column)) {
+											sb3.append(daMap.get(column)).append(",");
+										} else {
+											if (column.startsWith("ID") || column.startsWith("BALANCE")) {
+												sb3.append("0,");
+											} else {
+												if (column.startsWith("PAM_SERVICE_ID")) {
+													sb3.append("0,");
+												}
+												else {
+													if (column.startsWith("EXPIRY_DATE") || column.startsWith("START_DATE")) {
+														sb3.append("NULL,");
+													}
+													else
+													{
+													if (column.startsWith("PRODUCT_ID")) {
+														sb3.append("0,");
+														}	
+													}
+												} 
+											}
+										}
+									} else {
+										if (daMap.containsKey(column)) {
+											sb3.append(daMap.get(column));
+										} else {
+		
+											sb3.append("NULL");
+										}
+									}
+									columnCount3++;										
+								}			
+							}
+						}
+						if (daMap.containsKey("ID_21")) {
+							daList.add(sb3.toString());
+						}
+						
+						////it means we have more DA to be added so populate Sequence ID=4
+						if(daMap.size() > 120)
+						{
+							String[] splittedColumns4 = DACOLUMNS4.split(",");
+							int columnCount4 = 1;						
+							if (daMap.containsKey("ID_31")) {
+								sb4.append(MSISDN).append(",");
+								sb4.append(4).append(",");
+		
+								for (String column : splittedColumns4) {
+									if (columnCount4 <= splittedColumns4.length - 1) {
+										if (daMap.containsKey(column)) {
+											sb4.append(daMap.get(column)).append(",");
+										} else {
+											if (column.startsWith("ID") || column.startsWith("BALANCE")) {
+												sb4.append("0,");
+											} else {
+												if (column.startsWith("PAM_SERVICE_ID")) {
+													sb4.append("0,");
+												}
+												else {
+													if (column.startsWith("EXPIRY_DATE") || column.startsWith("START_DATE")) {
+														sb4.append("NULL,");
+													}
+													else
+													{
+													if (column.startsWith("PRODUCT_ID")) {
+														sb4.append("0,");
+														}	
+													}
+												} 
+											}
+										}
+									} else {
+										if (daMap.containsKey(column)) {
+											sb4.append(daMap.get(column));
+										} else {
+		
+											sb4.append("NULL");
+										}
+									}
+									columnCount4++;										
+								}			
+							}
+						}
+						if (daMap.containsKey("ID_31")) {
+						}
+					}
+					
+					daBuffer.addAll(daList);
+					
+					Account account = new Account(subs,rejectAndLog, onlyLog,INITIAL_ACTIVATION_DATE,AccountProductIDFlag);
+					accountListBuffer.addAll(account.execute());
+					
+					//System.out.println("Going to Write Output for account: " + onlyLog.size());
+					//Populate SNA output
+					Accumulator ac = new Accumulator(subs, rejectAndLog, onlyLog,INITIAL_ACTIVATION_DATE);
+					//Map<String, String> accMap = ac.execute(); 
+					Map<String, String> accMap = SortACCMBasedOnValue(ac.execute());
+					
+					List<String> uaList = new ArrayList<>();
+					
+					if(accMap.size() >= 1)
+					{
+						StringBuffer sb = new StringBuffer();
+						StringBuffer sb2 = new StringBuffer();
+						String[] splittedColumns = ACMCOLUMNS.split(",");
+						int columnCount = 1;
+						if (accMap.containsKey("ID_1")) {
+							sb.append(MSISDN).append(",");
+							sb.append(1).append(",");
+	
+							for (String column : splittedColumns) {
+								if (columnCount <= splittedColumns.length-1) {
+									if (accMap.containsKey(column)) {
+										sb.append(accMap.get(column)).append(",");
+									} else {
+										if (column.startsWith("ID") || column.startsWith("VALUE")) {
+											sb.append("0,");
+										} else {
+											if (column.startsWith("CLEARING_DATE")) {
+											sb.append(LoadSubscriberMapping.CommonConfigMap.get("default_last_reset_Date") +",");
+											}										
+										}
+									}
+								} else {
+									if (accMap.containsKey(column)) {
+										sb.append(accMap.get(column));
+									} else {
+	
+										sb.append(LoadSubscriberMapping.CommonConfigMap.get("default_last_reset_Date"));
+									}
+								}
+								columnCount++;
+							}
+						}
+						if (accMap.containsKey("ID_1")) {
+							uaList.add(sb.toString());
+						}
+						sb = null;
+						//it means we have more DA to be added so populate Sequence ID=2
+						if(accMap.size() > 30)
+						{
+							String[] splittedColumns2 = ACMCOLUMNS2.split(",");
+							int columnCount2 = 1;
+							if (accMap.containsKey("ID_1")) {
+								sb2.append(MSISDN).append(",");
+								sb2.append(2).append(",");
+		
+								for (String column : splittedColumns2) {
+									if (columnCount2 <= splittedColumns2.length-1) {
+										if (accMap.containsKey(column)) {
+											sb2.append(accMap.get(column)).append(",");
+										} else {
+											if (column.startsWith("ID") || column.startsWith("VALUE")) {
+												sb2.append("0,");
+											} else {
+												if (column.startsWith("CLEARING_DATE")) {
+													sb2.append(LoadSubscriberMapping.CommonConfigMap.get("default_last_reset_Date") +",");
+												}										
+											}
+										}
+									} else {
+										if (accMap.containsKey(column)) {
+											sb2.append(accMap.get(column));
+										} else {		
+											sb2.append(LoadSubscriberMapping.CommonConfigMap.get("default_last_reset_Date"));
+										}
+									}
+									columnCount2++;
+								}
+							}
+							if (accMap.containsKey("ID_1")) {
+								uaList.add(sb2.toString());
+							}
+							sb2 = null;
+						}						
+						
+					}
+					
+					accumulatorBuffer.addAll(uaList);
+					
+					//System.out.println("Going to Write Output for Accumulator: " + onlyLog.size());
+					//Populate CIS output
+					CISOutputs cis = new CISOutputs(subs, rejectAndLog, onlyLog,INITIAL_ACTIVATION_DATE);
+					Map<String, List<String>> CISMap = cis.execute();
+					cisOnceOff.addAll(CISMap.get("CIS_OnceOff_Bundles"));
+					cisRenewal.addAll(CISMap.get("CIS_Renewal_Bundles"));
+					cisParking.addAll(CISMap.get("CIS_Parking_Bundles"));
+					cisNwpc.addAll(CISMap.get("CIS_nwpc_Bundles"));
+					
+					//Populate SNA output
+					/*ServiceNumberApplication sna = new ServiceNumberApplication(subs,rejectAndLog, onlyLog);
+					servicenumberBuffer.addAll(sna.execute());*/
+					
+					//Populate subuscriberFaf output
+					SubscriberFaf subsfaf = new SubscriberFaf(subs, rejectAndLog, onlyLog);
+					subscriberFaFBuffer.addAll(subsfaf.execute());
+					
+					//System.out.println("Going to Write Output for FAF: " + onlyLog.size());					
+					//onlyLog.forEach(action->{System.out.println(action);});
+					
+					account = null;
+					subscriber = null;
+					offer = null;
+					subs = null;
+					da = null;
+					uc = null;
+					ac = null;
+					
+					//System.out.println("**********Size of Balanace input: " + SortedBalanceInput.size());
+					//SortedBalanceInput.clear();
+					//System.out.println("**********Size of Balanace input: " + SortedBalanceInput.size());
+				}
+	
+			} catch (JiBXException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+				LOG.error("JIBX Exception ", e);
+				LOG.error(xml);
+				// System.out.println(xml);
+			}
+		}
+		// return fulllist;
+	}
+	
+	/*private boolean CheckIfUCGroupPresent(List<String> ucList) {
+		// TODO Auto-generated method stub
+		boolean GroupPresent = false;
+		int counter = 0;
+		for(String uc : ucList)
+		{
+			for(String val : uctempBuffer)
+			{
+				String CounterID = val.split(",")[1];
+				if(CounterID.equals(uc))
+				{
+					counter++;
+					GroupPresent = false;
+					break;
+				}				
+			}
+		}
+		if(counter >= 2)
+			return true;
+		
+		return GroupPresent;
+	}*/
+
+	private Map<String, String> SortDABasedOnValue(Map<String, String> unsortedDA) {
+		Map<String,String> sortedDA = new ConcurrentHashMap<>();
+		
+		int index = 1;
+		List<String> sDA_Value = unsortedDA.entrySet().stream().filter(e -> e.getKey().startsWith("ID_"))
+				.map(Map.Entry::getValue).collect(Collectors.toList());
+		
+		List<Integer> DA_Value = sDA_Value.stream().map(Integer::parseInt).collect(Collectors.toList());
+		
+		Collections.sort(DA_Value);
+		
+		Set<String> CompletedDAID = new HashSet<>();
+		for(int DAID : DA_Value)
+		{
+			for(Map.Entry<String, String> entry : unsortedDA.entrySet())
+			{				
+				if(entry.getKey().startsWith("ID_") && DAID == Integer.parseInt(entry.getValue()) && !CompletedDAID.contains(entry.getKey()))
+				{
+					String IDName = entry.getKey().split("_")[1];
+					
+					sortedDA.put("ID_" + index, String.valueOf(DAID));
+					sortedDA.put("BALANCE_" + index, unsortedDA.get("BALANCE_" + IDName));
+					sortedDA.put("START_DATE_" + index,unsortedDA.get("START_DATE_" + IDName));
+					sortedDA.put("EXPIRY_DATE_" + index,unsortedDA.get("EXPIRY_DATE_" + IDName));
+					sortedDA.put("PAM_SERVICE_ID_" + index,unsortedDA.get("PAM_SERVICE_ID_" + IDName));
+					sortedDA.put("PRODUCT_ID_" + index, unsortedDA.get("PRODUCT_ID_" + IDName));
+					index++;
+					CompletedDAID.add(entry.getKey());
+					break;
+				}
+			}
+		}				
+		
+		return sortedDA;
+	}
+	
+	private Map<String, String> SortACCMBasedOnValue(Map<String, String> unsortedDA) {
+		Map<String,String> sortedACCM = new ConcurrentHashMap<>();
+		
+		int index = 1;
+		List<String> sACC_Value = unsortedDA.entrySet().stream().filter(e -> e.getKey().startsWith("ID_"))
+				.map(Map.Entry::getValue).collect(Collectors.toList());
+		
+		List<Integer> ACCM_Value = sACC_Value.stream().map(Integer::parseInt).collect(Collectors.toList());
+		
+		Collections.sort(ACCM_Value);
+		
+		Set<String> CompletedACCMID = new HashSet<>();
+		for(int ACCMID : ACCM_Value)
+		{
+			for(Map.Entry<String, String> entry : unsortedDA.entrySet())
+			{				
+				if(entry.getKey().startsWith("ID_") && ACCMID == Integer.parseInt(entry.getValue()) && !CompletedACCMID.contains(entry.getKey()))
+				{
+					String IDName = entry.getKey().split("_")[1];
+					sortedACCM.put("ID_" + index, String.valueOf(ACCMID));
+					sortedACCM.put("VALUE_" + index, unsortedDA.get("VALUE_" + IDName));
+					sortedACCM.put("CLEARING_DATE_" + index, unsortedDA.get("CLEARING_DATE_" + IDName));
+					
+					index++;
+					CompletedACCMID.add(entry.getKey());
+					break;
+				}
+			}
+		}
+				
+		
+		return sortedACCM;
+	}
+
+	public static void main(String args[]) throws IOException, JiBXException, Exception {
+		System.out.println("start the Execution!!!");
+	
+		//**********this xml can be used for profile tags
+		
+		//Both are for productID
+		//String xml = "<subscriber_xml><subscriber_info><SUBSCRIBER><MSISDN>139551769608</MSISDN><CCS_ACCT_TYPE_NAME>Alo</CCS_ACCT_TYPE_NAME><CCS_ACCT_TYPE_ID>255</CCS_ACCT_TYPE_ID><SERVICE_STATE>A</SERVICE_STATE><CREATION_DATE>2011-02-18 17:37:25</CREATION_DATE><WALLET_EXPIRY>2019-06-23 23:04:12</WALLET_EXPIRY></SUBSCRIBER></subscriber_info><balancesdump_info><schemasubscriberbalancesdump_info><MSISDN>139551769608</MSISDN><WALLET_ID>17264638</WALLET_ID><BALANCE_TYPE>398</BALANCE_TYPE><BE_BUCKET_ID>-1913129012</BE_BUCKET_ID><BALANCE_TYPE_NAME>Smart Monthly Usage</BALANCE_TYPE_NAME><BE_BUCKET_VALUE>0</BE_BUCKET_VALUE><BE_BUCKET_START_DATE></BE_BUCKET_START_DATE><BE_NEVER_EXPIRES>0</BE_NEVER_EXPIRES><BE_EXPIRY>2019-02-04 04:00:00</BE_EXPIRY><BE_BUCKET_NEVER_USED>1</BE_BUCKET_NEVER_USED><BE_BUCKET_LAST_USE>1970-01-01 04:00:00</BE_BUCKET_LAST_USE><BE_BUCKET_REFERENCE></BE_BUCKET_REFERENCE><WALLET_TYPE>21</WALLET_TYPE></schemasubscriberbalancesdump_info><schemasubscriberbalancesdump_info><MSISDN>139551769608</MSISDN><WALLET_ID>17264638</WALLET_ID><BALANCE_TYPE>435</BALANCE_TYPE><BE_BUCKET_ID>1827179900</BE_BUCKET_ID><BALANCE_TYPE_NAME>LifeTimePAYG</BALANCE_TYPE_NAME><BE_BUCKET_VALUE>0</BE_BUCKET_VALUE><BE_BUCKET_START_DATE></BE_BUCKET_START_DATE><BE_NEVER_EXPIRES>1</BE_NEVER_EXPIRES><BE_EXPIRY>1970-01-01 04:00:00</BE_EXPIRY><BE_BUCKET_NEVER_USED>0</BE_BUCKET_NEVER_USED><BE_BUCKET_LAST_USE>2018-06-23 20:18:05</BE_BUCKET_LAST_USE><BE_BUCKET_REFERENCE></BE_BUCKET_REFERENCE><WALLET_TYPE>21</WALLET_TYPE></schemasubscriberbalancesdump_info><schemasubscriberbalancesdump_info><MSISDN>139551769608</MSISDN><WALLET_ID>17264638</WALLET_ID><BALANCE_TYPE>1835</BALANCE_TYPE><BE_BUCKET_ID>-1889293940</BE_BUCKET_ID><BALANCE_TYPE_NAME>_pc_RRMCContReset_PC</BALANCE_TYPE_NAME><BE_BUCKET_VALUE>6</BE_BUCKET_VALUE><BE_BUCKET_START_DATE>2019-01-14 06:18:01</BE_BUCKET_START_DATE><BE_NEVER_EXPIRES>0</BE_NEVER_EXPIRES><BE_EXPIRY>2019-01-15 06:18:50</BE_EXPIRY><BE_BUCKET_NEVER_USED>1</BE_BUCKET_NEVER_USED><BE_BUCKET_LAST_USE>1970-01-01 04:00:00</BE_BUCKET_LAST_USE><BE_BUCKET_REFERENCE>17767526:21</BE_BUCKET_REFERENCE><WALLET_TYPE>21</WALLET_TYPE></schemasubscriberbalancesdump_info><schemasubscriberbalancesdump_info><MSISDN>139551769608</MSISDN><WALLET_ID>17264638</WALLET_ID><BALANCE_TYPE>2312</BALANCE_TYPE><BE_BUCKET_ID>-1889293892</BE_BUCKET_ID><BALANCE_TYPE_NAME>RRMCMessageCountSMS</BALANCE_TYPE_NAME><BE_BUCKET_VALUE>10</BE_BUCKET_VALUE><BE_BUCKET_START_DATE></BE_BUCKET_START_DATE><BE_NEVER_EXPIRES>0</BE_NEVER_EXPIRES><BE_EXPIRY>2019-01-15 06:18:01</BE_EXPIRY><BE_BUCKET_NEVER_USED>0</BE_BUCKET_NEVER_USED><BE_BUCKET_LAST_USE>2019-01-14 06:18:01</BE_BUCKET_LAST_USE><BE_BUCKET_REFERENCE></BE_BUCKET_REFERENCE><WALLET_TYPE>21</WALLET_TYPE></schemasubscriberbalancesdump_info><schemasubscriberbalancesdump_info><MSISDN>139551769608</MSISDN><WALLET_ID>17264638</WALLET_ID><BALANCE_TYPE>3387</BALANCE_TYPE><BE_BUCKET_ID>-1889293844</BE_BUCKET_ID><BALANCE_TYPE_NAME>RRMCMessageIVR</BALANCE_TYPE_NAME><BE_BUCKET_VALUE>1</BE_BUCKET_VALUE><BE_BUCKET_START_DATE></BE_BUCKET_START_DATE><BE_NEVER_EXPIRES>0</BE_NEVER_EXPIRES><BE_EXPIRY>2019-01-15 06:18:01</BE_EXPIRY><BE_BUCKET_NEVER_USED>0</BE_BUCKET_NEVER_USED><BE_BUCKET_LAST_USE>2019-01-14 06:18:01</BE_BUCKET_LAST_USE><BE_BUCKET_REFERENCE></BE_BUCKET_REFERENCE><WALLET_TYPE>21</WALLET_TYPE></schemasubscriberbalancesdump_info><schemasubscriberbalancesdump_info><MSISDN>139551769608</MSISDN><WALLET_ID>17264638</WALLET_ID><BALANCE_TYPE>1833</BALANCE_TYPE><BE_BUCKET_ID>-1889293796</BE_BUCKET_ID><BALANCE_TYPE_NAME>RRMCMessageCont</BALANCE_TYPE_NAME><BE_BUCKET_VALUE>0</BE_BUCKET_VALUE><BE_BUCKET_START_DATE></BE_BUCKET_START_DATE><BE_NEVER_EXPIRES>0</BE_NEVER_EXPIRES><BE_EXPIRY>2019-01-15 06:18:01</BE_EXPIRY><BE_BUCKET_NEVER_USED>0</BE_BUCKET_NEVER_USED><BE_BUCKET_LAST_USE>2019-01-14 15:22:36</BE_BUCKET_LAST_USE><BE_BUCKET_REFERENCE></BE_BUCKET_REFERENCE><WALLET_TYPE>21</WALLET_TYPE></schemasubscriberbalancesdump_info><schemasubscriberbalancesdump_info><MSISDN>139551769608</MSISDN><WALLET_ID>17264638</WALLET_ID><BALANCE_TYPE>3212</BALANCE_TYPE><BE_BUCKET_ID>2113741340</BE_BUCKET_ID><BALANCE_TYPE_NAME>Offer ID</BALANCE_TYPE_NAME><BE_BUCKET_VALUE>16</BE_BUCKET_VALUE><BE_BUCKET_START_DATE></BE_BUCKET_START_DATE><BE_NEVER_EXPIRES>1</BE_NEVER_EXPIRES><BE_EXPIRY>1970-01-01 04:00:00</BE_EXPIRY><BE_BUCKET_NEVER_USED>0</BE_BUCKET_NEVER_USED><BE_BUCKET_LAST_USE>2018-09-27 11:24:10</BE_BUCKET_LAST_USE><BE_BUCKET_REFERENCE></BE_BUCKET_REFERENCE><WALLET_TYPE>21</WALLET_TYPE></schemasubscriberbalancesdump_info><schemasubscriberbalancesdump_info><MSISDN>139551769608</MSISDN><WALLET_ID>17264638</WALLET_ID><BALANCE_TYPE>1614</BALANCE_TYPE><BE_BUCKET_ID>1130006492</BE_BUCKET_ID><BALANCE_TYPE_NAME>Micro Data</BALANCE_TYPE_NAME><BE_BUCKET_VALUE>0</BE_BUCKET_VALUE><BE_BUCKET_START_DATE></BE_BUCKET_START_DATE><BE_NEVER_EXPIRES>1</BE_NEVER_EXPIRES><BE_EXPIRY>1970-01-01 04:00:00</BE_EXPIRY><BE_BUCKET_NEVER_USED>0</BE_BUCKET_NEVER_USED><BE_BUCKET_LAST_USE>2017-10-01 08:30:25</BE_BUCKET_LAST_USE><BE_BUCKET_REFERENCE></BE_BUCKET_REFERENCE><WALLET_TYPE>21</WALLET_TYPE></schemasubscriberbalancesdump_info><schemasubscriberbalancesdump_info><MSISDN>139551769608</MSISDN><WALLET_ID>17264638</WALLET_ID><BALANCE_TYPE>1616</BALANCE_TYPE><BE_BUCKET_ID>1127762252</BE_BUCKET_ID><BALANCE_TYPE_NAME>MicroRechCheck</BALANCE_TYPE_NAME><BE_BUCKET_VALUE>0</BE_BUCKET_VALUE><BE_BUCKET_START_DATE></BE_BUCKET_START_DATE><BE_NEVER_EXPIRES>1</BE_NEVER_EXPIRES><BE_EXPIRY>1970-01-01 04:00:00</BE_EXPIRY><BE_BUCKET_NEVER_USED>0</BE_BUCKET_NEVER_USED><BE_BUCKET_LAST_USE>2017-09-30 08:30:41</BE_BUCKET_LAST_USE><BE_BUCKET_REFERENCE></BE_BUCKET_REFERENCE><WALLET_TYPE>21</WALLET_TYPE></schemasubscriberbalancesdump_info><schemasubscriberbalancesdump_info><MSISDN>139551769608</MSISDN><WALLET_ID>17264638</WALLET_ID><BALANCE_TYPE>21</BALANCE_TYPE><BE_BUCKET_ID>36270236</BE_BUCKET_ID><BALANCE_TYPE_NAME>General Cash</BALANCE_TYPE_NAME><BE_BUCKET_VALUE>24365</BE_BUCKET_VALUE><BE_BUCKET_START_DATE></BE_BUCKET_START_DATE><BE_NEVER_EXPIRES>1</BE_NEVER_EXPIRES><BE_EXPIRY>1970-01-01 04:00:00</BE_EXPIRY><BE_BUCKET_NEVER_USED>0</BE_BUCKET_NEVER_USED><BE_BUCKET_LAST_USE>2019-01-14 20:49:14</BE_BUCKET_LAST_USE><BE_BUCKET_REFERENCE></BE_BUCKET_REFERENCE><WALLET_TYPE>21</WALLET_TYPE></schemasubscriberbalancesdump_info><schemasubscriberbalancesdump_info><MSISDN>139551769608</MSISDN><WALLET_ID>17264638</WALLET_ID><BALANCE_TYPE>25</BALANCE_TYPE><BE_BUCKET_ID>36270284</BE_BUCKET_ID><BALANCE_TYPE_NAME>Free SMS</BALANCE_TYPE_NAME><BE_BUCKET_VALUE>0</BE_BUCKET_VALUE><BE_BUCKET_START_DATE></BE_BUCKET_START_DATE><BE_NEVER_EXPIRES>1</BE_NEVER_EXPIRES><BE_EXPIRY>1970-01-01 04:00:00</BE_EXPIRY><BE_BUCKET_NEVER_USED>1</BE_BUCKET_NEVER_USED><BE_BUCKET_LAST_USE>1970-01-01 04:00:00</BE_BUCKET_LAST_USE><BE_BUCKET_REFERENCE></BE_BUCKET_REFERENCE><WALLET_TYPE>21</WALLET_TYPE></schemasubscriberbalancesdump_info><schemasubscriberbalancesdump_info><MSISDN>139551769608</MSISDN><WALLET_ID>17264638</WALLET_ID><BALANCE_TYPE>55</BALANCE_TYPE><BE_BUCKET_ID>36270332</BE_BUCKET_ID><BALANCE_TYPE_NAME>Data</BALANCE_TYPE_NAME><BE_BUCKET_VALUE>0</BE_BUCKET_VALUE><BE_BUCKET_START_DATE></BE_BUCKET_START_DATE><BE_NEVER_EXPIRES>1</BE_NEVER_EXPIRES><BE_EXPIRY>1970-01-01 04:00:00</BE_EXPIRY><BE_BUCKET_NEVER_USED>1</BE_BUCKET_NEVER_USED><BE_BUCKET_LAST_USE>1970-01-01 04:00:00</BE_BUCKET_LAST_USE><BE_BUCKET_REFERENCE></BE_BUCKET_REFERENCE><WALLET_TYPE>21</WALLET_TYPE></schemasubscriberbalancesdump_info><schemasubscriberbalancesdump_info><MSISDN>139551769608</MSISDN><WALLET_ID>17264638</WALLET_ID><BALANCE_TYPE>436</BALANCE_TYPE><BE_BUCKET_ID>36270572</BE_BUCKET_ID><BALANCE_TYPE_NAME>_pc_PAYGLifeTimeRenewal</BALANCE_TYPE_NAME><BE_BUCKET_VALUE>3</BE_BUCKET_VALUE><BE_BUCKET_START_DATE>2012-06-23 20:18:31</BE_BUCKET_START_DATE><BE_NEVER_EXPIRES>0</BE_NEVER_EXPIRES><BE_EXPIRY>2019-06-20 04:00:04</BE_EXPIRY><BE_BUCKET_NEVER_USED>0</BE_BUCKET_NEVER_USED><BE_BUCKET_LAST_USE>2012-06-23 20:18:31</BE_BUCKET_LAST_USE><BE_BUCKET_REFERENCE>17767526:21</BE_BUCKET_REFERENCE><WALLET_TYPE>21</WALLET_TYPE></schemasubscriberbalancesdump_info><schemasubscriberbalancesdump_info><MSISDN>139551769608</MSISDN><WALLET_ID>17264638</WALLET_ID><BALANCE_TYPE>1060</BALANCE_TYPE><BE_BUCKET_ID>36270716</BE_BUCKET_ID><BALANCE_TYPE_NAME>_WLC_Service</BALANCE_TYPE_NAME><BE_BUCKET_VALUE>-1</BE_BUCKET_VALUE><BE_BUCKET_START_DATE>2018-06-23 23:04:12</BE_BUCKET_START_DATE><BE_NEVER_EXPIRES>0</BE_NEVER_EXPIRES><BE_EXPIRY>2019-06-23 23:04:12</BE_EXPIRY><BE_BUCKET_NEVER_USED>1</BE_BUCKET_NEVER_USED><BE_BUCKET_LAST_USE>1970-01-01 04:00:00</BE_BUCKET_LAST_USE><BE_BUCKET_REFERENCE>17767526:21:255:9</BE_BUCKET_REFERENCE><WALLET_TYPE>21</WALLET_TYPE></schemasubscriberbalancesdump_info><schemasubscriberbalancesdump_info><MSISDN>139551769608</MSISDN><WALLET_ID>17264638</WALLET_ID><BALANCE_TYPE>1266</BALANCE_TYPE><BE_BUCKET_ID>36270764</BE_BUCKET_ID><BALANCE_TYPE_NAME>P2PAllowed</BALANCE_TYPE_NAME><BE_BUCKET_VALUE>1</BE_BUCKET_VALUE><BE_BUCKET_START_DATE></BE_BUCKET_START_DATE><BE_NEVER_EXPIRES>1</BE_NEVER_EXPIRES><BE_EXPIRY>1970-01-01 04:00:00</BE_EXPIRY><BE_BUCKET_NEVER_USED>0</BE_BUCKET_NEVER_USED><BE_BUCKET_LAST_USE>2014-06-23 04:11:36</BE_BUCKET_LAST_USE><BE_BUCKET_REFERENCE></BE_BUCKET_REFERENCE><WALLET_TYPE>21</WALLET_TYPE></schemasubscriberbalancesdump_info><schemasubscriberbalancesdump_info><MSISDN>139551769608</MSISDN><WALLET_ID>17264638</WALLET_ID><BALANCE_TYPE>1324</BALANCE_TYPE><BE_BUCKET_ID>36270812</BE_BUCKET_ID><BALANCE_TYPE_NAME>PostCall</BALANCE_TYPE_NAME><BE_BUCKET_VALUE>1</BE_BUCKET_VALUE><BE_BUCKET_START_DATE></BE_BUCKET_START_DATE><BE_NEVER_EXPIRES>1</BE_NEVER_EXPIRES><BE_EXPIRY>1970-01-01 04:00:00</BE_EXPIRY><BE_BUCKET_NEVER_USED>0</BE_BUCKET_NEVER_USED><BE_BUCKET_LAST_USE>2015-05-21 22:34:48</BE_BUCKET_LAST_USE><BE_BUCKET_REFERENCE></BE_BUCKET_REFERENCE><WALLET_TYPE>21</WALLET_TYPE></schemasubscriberbalancesdump_info><schemasubscriberbalancesdump_info><MSISDN>139551769608</MSISDN><WALLET_ID>17264638</WALLET_ID><BALANCE_TYPE>1511</BALANCE_TYPE><BE_BUCKET_ID>36270860</BE_BUCKET_ID><BALANCE_TYPE_NAME>InterCampIDDFlag</BALANCE_TYPE_NAME><BE_BUCKET_VALUE>1</BE_BUCKET_VALUE><BE_BUCKET_START_DATE></BE_BUCKET_START_DATE><BE_NEVER_EXPIRES>1</BE_NEVER_EXPIRES><BE_EXPIRY>1970-01-01 04:00:00</BE_EXPIRY><BE_BUCKET_NEVER_USED>0</BE_BUCKET_NEVER_USED><BE_BUCKET_LAST_USE>2015-06-08 15:39:02</BE_BUCKET_LAST_USE><BE_BUCKET_REFERENCE></BE_BUCKET_REFERENCE><WALLET_TYPE>21</WALLET_TYPE></schemasubscriberbalancesdump_info><schemasubscriberbalancesdump_info><MSISDN>139551769608</MSISDN><WALLET_ID>17264638</WALLET_ID><BALANCE_TYPE>1832</BALANCE_TYPE><BE_BUCKET_ID>-1889591348</BE_BUCKET_ID><BALANCE_TYPE_NAME>RRMCState</BALANCE_TYPE_NAME><BE_BUCKET_VALUE>1</BE_BUCKET_VALUE><BE_BUCKET_START_DATE></BE_BUCKET_START_DATE><BE_NEVER_EXPIRES>1</BE_NEVER_EXPIRES><BE_EXPIRY>1970-01-01 04:00:00</BE_EXPIRY><BE_BUCKET_NEVER_USED>0</BE_BUCKET_NEVER_USED><BE_BUCKET_LAST_USE>2019-01-13 23:23:17</BE_BUCKET_LAST_USE><BE_BUCKET_REFERENCE></BE_BUCKET_REFERENCE><WALLET_TYPE>21</WALLET_TYPE></schemasubscriberbalancesdump_info><schemasubscriberbalancesdump_info><MSISDN>139551769608</MSISDN><WALLET_ID>17264638</WALLET_ID><BALANCE_TYPE>62</BALANCE_TYPE><BE_BUCKET_ID>-1892006708</BE_BUCKET_ID><BALANCE_TYPE_NAME>Zero Credit Calls</BALANCE_TYPE_NAME><BE_BUCKET_VALUE>1</BE_BUCKET_VALUE><BE_BUCKET_START_DATE></BE_BUCKET_START_DATE><BE_NEVER_EXPIRES>1</BE_NEVER_EXPIRES><BE_EXPIRY>1970-01-01 04:00:00</BE_EXPIRY><BE_BUCKET_NEVER_USED>0</BE_BUCKET_NEVER_USED><BE_BUCKET_LAST_USE>2019-01-12 21:54:31</BE_BUCKET_LAST_USE><BE_BUCKET_REFERENCE></BE_BUCKET_REFERENCE><WALLET_TYPE>21</WALLET_TYPE></schemasubscriberbalancesdump_info><schemasubscriberbalancesdump_info><MSISDN>139551769608</MSISDN><WALLET_ID>17264638</WALLET_ID><BALANCE_TYPE>92</BALANCE_TYPE><BE_BUCKET_ID>1829728268</BE_BUCKET_ID><BALANCE_TYPE_NAME>Yearly Expenditure</BALANCE_TYPE_NAME><BE_BUCKET_VALUE>1396899</BE_BUCKET_VALUE><BE_BUCKET_START_DATE></BE_BUCKET_START_DATE><BE_NEVER_EXPIRES>0</BE_NEVER_EXPIRES><BE_EXPIRY>2019-06-22 23:04:12</BE_EXPIRY><BE_BUCKET_NEVER_USED>0</BE_BUCKET_NEVER_USED><BE_BUCKET_LAST_USE>2019-01-14 19:22:49</BE_BUCKET_LAST_USE><BE_BUCKET_REFERENCE></BE_BUCKET_REFERENCE><WALLET_TYPE>21</WALLET_TYPE></schemasubscriberbalancesdump_info><schemasubscriberbalancesdump_info><MSISDN>139551769608</MSISDN><WALLET_ID>17264638</WALLET_ID><BALANCE_TYPE>661</BALANCE_TYPE><BE_BUCKET_ID>64469948</BE_BUCKET_ID><BALANCE_TYPE_NAME>PeerCounter</BALANCE_TYPE_NAME><BE_BUCKET_VALUE>0</BE_BUCKET_VALUE><BE_BUCKET_START_DATE></BE_BUCKET_START_DATE><BE_NEVER_EXPIRES>1</BE_NEVER_EXPIRES><BE_EXPIRY>1970-01-01 04:00:00</BE_EXPIRY><BE_BUCKET_NEVER_USED>0</BE_BUCKET_NEVER_USED><BE_BUCKET_LAST_USE>2015-12-26 12:10:55</BE_BUCKET_LAST_USE><BE_BUCKET_REFERENCE></BE_BUCKET_REFERENCE><WALLET_TYPE>21</WALLET_TYPE></schemasubscriberbalancesdump_info></balancesdump_info><cugclidump_info>null</cugclidump_info><usmsdump_info><schemasubscriberusmsdump_info><MSISDN>139551769608</MSISDN><INITIAL_ACTIVATION_DATE>2012-04-21 19:13:41</INITIAL_ACTIVATION_DATE><INITIAL_ACCOUNT_BALANCE>100000</INITIAL_ACCOUNT_BALANCE><LAST_ACCOUNT_EXPIRY_PERIOD>2019-06-23 20:18:05</LAST_ACCOUNT_EXPIRY_PERIOD><LAST_BALANCE_BEFORE_RECHARGE>5573</LAST_BALANCE_BEFORE_RECHARGE><LAST_BALANCE_EXPIRY_PERIOD></LAST_BALANCE_EXPIRY_PERIOD><LAST_EXPIRED_AMOUNT>0</LAST_EXPIRED_AMOUNT><LAST_EXPIRY_DATE>2019-01-05 06:34:17</LAST_EXPIRY_DATE><LAST_PRODUCT_TYPE_SWAP_DATE></LAST_PRODUCT_TYPE_SWAP_DATE><LAST_RECHARGE_AMOUNT>50000</LAST_RECHARGE_AMOUNT><FIRST_RECHARGE_DATE>2012-05-28 00:07:03</FIRST_RECHARGE_DATE><LAST_RECHARGE_DATE>2019-01-05 06:34:17</LAST_RECHARGE_DATE><LAST_STATE_CHANGE_DATE>2015-12-16 05:07:11</LAST_STATE_CHANGE_DATE><TOTAL_EXPIRED_AMOUNT>0</TOTAL_EXPIRED_AMOUNT><LAST_STATE_CHANGE_REASON>Dormant to Active</LAST_STATE_CHANGE_REASON><WALLET_ID>17264638</WALLET_ID><WALLET_TYPE>21</WALLET_TYPE></schemasubscriberusmsdump_info></usmsdump_info><profiledump_info><schemasubscriberprofiledump_info><MSISDN>139551769608</MSISDN><Language_ID>12</Language_ID><IMEI></IMEI><IMSI>424030104564603</IMSI><HLRAddress>971550930003</HLRAddress><Wallet_Type>0</Wallet_Type><BstrVceIntNumTree></BstrVceIntNumTree><BstrVceNatNumTree></BstrVceNatNumTree><PeriodicChargeStatus></PeriodicChargeStatus><CSBAR></CSBAR><crbtActReqDate>20181219201427</crbtActReqDate><crtCnfrmd>T</crtCnfrmd><crbtActConfirmDate>20181219201437</crbtActConfirmDate><crbtDeact>F</crbtDeact><crbtDeActReqDate></crbtDeActReqDate><crbtDeActConfirmDate></crbtDeActConfirmDate><cbActConfirmDate></cbActConfirmDate><cbExpDate></cbExpDate><cbCnfdAct></cbCnfdAct><cbWarn1></cbWarn1><cbWarn2></cbWarn2><cbDeActReqDate></cbDeActReqDate><cbDeActConfirmDate></cbDeActConfirmDate><cfActConfirmDate></cfActConfirmDate><cfConfActive></cfConfActive><cfDeActConfirmDate></cfDeActConfirmDate><cfDeActReqDate></cfDeActReqDate><cfLastFailedDate></cfLastFailedDate><cfActReqDate></cfActReqDate><avmActConfirmDate></avmActConfirmDate><avmCnfrmd></avmCnfrmd><avmDeActReqDate></avmDeActReqDate><avmDeActConfirmDate></avmDeActConfirmDate><SprssNtfctn>F</SprssNtfctn><avm></avm><avmActReqDate></avmActReqDate><MssdCallNot></MssdCallNot><VMCIMEI></VMCIMEI><VMCName></VMCName><AcctActiveMonth>20190123161832</AcctActiveMonth><AcctActiveYear>20190623190412</AcctActiveYear><TopXCountr1></TopXCountr1><TopXCountr2></TopXCountr2><TopXCountr3></TopXCountr3><TopXCountr4></TopXCountr4><TopXCountr5></TopXCountr5><Prepaid></Prepaid><entBsnssCrclActv></entBsnssCrclActv><BusMobPayg50></BusMobPayg50><BusMobTopUp></BusMobTopUp><MercuryOptInOutDate></MercuryOptInOutDate><HardCapLabel></HardCapLabel><HardCapAddonLabel></HardCapAddonLabel><Active></Active><Absher></Absher><avmInfSub></avmInfSub><avmPin></avmPin><avmProf></avmProf><BronzeMPromoActDate></BronzeMPromoActDate><BronzeMPromoDeactDate></BronzeMPromoDeactDate><BstrVceIntNumAct></BstrVceIntNumAct><BstrVceNatNumAct></BstrVceNatNumAct><BstrVINActReqDate></BstrVINActReqDate><BstrVINConfirmDate></BstrVINConfirmDate><BstrVINDeActConfDate></BstrVINDeActConfDate><BstrVINDeActReqDate></BstrVINDeActReqDate><BstrVINRecur></BstrVINRecur><BstrVNNActReqDate></BstrVNNActReqDate><BstrVNNConfirmDate></BstrVNNConfirmDate><BstrVNNDeActConfDate></BstrVNNDeActConfDate><BstrVNNDeActReqDate></BstrVNNDeActReqDate><BstrVNNRecur></BstrVNNRecur><cbActReqDate></cbActReqDate><cbAll></cbAll><cbIncom></cbIncom><cbInt></cbInt><cbIntExc></cbIntExc><cbWR></cbWR><cfBusy></cfBusy><cfData></cfData><cfFax></cfFax><cfInt></cfInt><cfNoReply></cfNoReply><cfNotReach></cfNotReach><cfVoice></cfVoice><clir></clir><cllrRngTne>T</cllrRngTne><CVM>1</CVM><CVMCounter>1</CVMCounter><dataGeneric></dataGeneric><Date1></Date1><DisabilityActivationDate></DisabilityActivationDate><DisabilityDectivationDate></DisabilityDectivationDate><EmiratiPlan></EmiratiPlan><EntCust></EntCust><entMssgingActv></entMssgingActv><faxGroup3></faxGroup3><GlobalZoneOptIn></GlobalZoneOptIn><GlobalZoneOptOut></GlobalZoneOptOut><gprsPmail></gprsPmail><IDD2Act>T</IDD2Act><IDD2ActDate>20121025125436</IDD2ActDate><IDD2DeactDate></IDD2DeactDate><IDDCutRateAct>T</IDDCutRateAct><IDDCutRateActDate>20121025125412</IDDCutRateActDate><InternationalMin>2</InternationalMin><Language></Language><odbAll>F</odbAll><odbIncom></odbIncom><odbInt></odbInt><odbIntExc></odbIntExc><odbOnlyVoice></odbOnlyVoice><odbOutVoice></odbOutVoice><odbWR></odbWR><PAYGDataFNL></PAYGDataFNL><PAYGMet></PAYGMet><PCNGlobalOptin></PCNGlobalOptin><PCNGlobalOptout></PCNGlobalOptout><Plan></Plan><ReceivePostCallSMS>T</ReceivePostCallSMS><SocialBndlActChannel></SocialBndlActChannel><SocialBndlDeActChannel></SocialBndlDeActChannel><BstrVceIntNumExp></BstrVceIntNumExp><BstrVceNatNumExp></BstrVceNatNumExp><BstrVINChngsAllwd></BstrVINChngsAllwd><BstrVNNChngsAllwd></BstrVNNChngsAllwd><TranslatedNumber></TranslatedNumber><TransNumber>2228291529</TransNumber><SmsBndl1Recur></SmsBndl1Recur><SmsExpDate></SmsExpDate><SmsBndl2Recur></SmsBndl2Recur><PriceShout></PriceShout><BlckBrryAct></BlckBrryAct><BlckBrryCnfdAct></BlckBrryCnfdAct><BlckBrryActCnfrmDate></BlckBrryActCnfrmDate><BlckBrryExpDate></BlckBrryExpDate><SmsBndl3Recur></SmsBndl3Recur><Bespoke></Bespoke><ManRenDateLess1Y></ManRenDateLess1Y><DataBndl1Recur></DataBndl1Recur><DataBndlType></DataBndlType><DataExpDate></DataExpDate><DataGraceAct></DataGraceAct><DataGraceEnd></DataGraceEnd><DataBndl2Recur></DataBndl2Recur><DataBndl3Recur></DataBndl3Recur><DataBndl4Recur></DataBndl4Recur><DataBndl5Recur></DataBndl5Recur><DataBndl6Recur></DataBndl6Recur><DataBndl8Recur></DataBndl8Recur><DataBndl9Recur></DataBndl9Recur><MBB></MBB><MBBExpDate></MBBExpDate><MBBUnlimited></MBBUnlimited><MBBUnlimExpDate></MBBUnlimExpDate><MBB2GB></MBB2GB><MBB2GBExpDate></MBB2GBExpDate><MBB10GB></MBB10GB><MBB10GBExpDate></MBB10GBExpDate><MBBGraceAct></MBBGraceAct><MBBGraceEnd></MBBGraceEnd><MBBOfferExpDate></MBBOfferExpDate><TP_Social_Deact_Conf></TP_Social_Deact_Conf><cbAct></cbAct><PokeSMSOptoutDate></PokeSMSOptoutDate><PokeSMSOptinDate></PokeSMSOptinDate><BlckBrryActReqDate></BlckBrryActReqDate><BlckBrryDeActReqDate></BlckBrryDeActReqDate><BlckBrryDeactRbkDate></BlckBrryDeactRbkDate><BronzeDeactDate></BronzeDeactDate><BronzeActDate></BronzeActDate><umsCnfrmd></umsCnfrmd><umsInfSub></umsInfSub><ums></ums><umsF2M></umsF2M><umsSMS2F></umsSMS2F><umsVm2MMS></umsVm2MMS><TravSumOptInDate></TravSumOptInDate><PassOptInDate></PassOptInDate><PassOptOutDate></PassOptOutDate><TwinSIMNumber></TwinSIMNumber><FstTimeActivation></FstTimeActivation><Anniversarytopuppromo></Anniversarytopuppromo><AnniversarytopuppromoEnd></AnniversarytopuppromoEnd><SmartPhoneExpiry></SmartPhoneExpiry><DSP_Promo></DSP_Promo><guiBalAdjDate></guiBalAdjDate><guiBalAdjVal></guiBalAdjVal><BBBundName></BBBundName><BBPromo></BBPromo><BSCSAct></BSCSAct><BBPromoSubDate></BBPromoSubDate><BBPromoEndDate></BBPromoEndDate><BlckBrrySprssSMS></BlckBrrySprssSMS><BlckBrryDeActCnfrmDt></BlckBrryDeActCnfrmDt><Payg_Life_Optin>20120623161832</Payg_Life_Optin><gprsBasicSer></gprsBasicSer><gprsWap></gprsWap><smsMtPp></smsMtPp><gprsMms></gprsMms><smsMoPp></smsMoPp><callhold></callhold><callwait></callwait><multiParty></multiParty><IntRoam></IntRoam><clip></clip><VdioCall></VdioCall><DuCS></DuCS><BSCS_account_num></BSCS_account_num><CS_notification_num></CS_notification_num><cbGraceAct></cbGraceAct><cbGraceEnd></cbGraceEnd><cbGraceRenew></cbGraceRenew><gprsCarrier></gprsCarrier><PAYGDataLineOffer></PAYGDataLineOffer><PAYGDataWHSP></PAYGDataWHSP><PAYGDataWH></PAYGDataWH><msisdnChgDate></msisdnChgDate><mainMSISDN></mainMSISDN><CashReturn></CashReturn><NewTopUpValue></NewTopUpValue><bdgtCntrlTopUp></bdgtCntrlTopUp><BlckBrryBundle></BlckBrryBundle><MBB10GBWelcome></MBB10GBWelcome><MBB2GBWelcome></MBB2GBWelcome><MBBUnlimWelcome></MBBUnlimWelcome><MBBWelcome></MBBWelcome><guiBalAdjCount></guiBalAdjCount><LastChangeDateExpiry>20121124125411</LastChangeDateExpiry><NewPPBundle></NewPPBundle><SmsBndlType></SmsBndlType></schemasubscriberprofiledump_info></profiledump_info></subscriber_xml>";
+		//String xml = "<subscriber_xml><subscriber_info><SUBSCRIBER><MSISDN>971527009488</MSISDN><CCS_ACCT_TYPE_NAME>Business Mobile PaYG plus 2</CCS_ACCT_TYPE_NAME><CCS_ACCT_TYPE_ID>194</CCS_ACCT_TYPE_ID><SERVICE_STATE>A</SERVICE_STATE><CREATION_DATE>2017-08-13 12:47:07</CREATION_DATE><WALLET_EXPIRY>1970-01-01 04:00:00</WALLET_EXPIRY></SUBSCRIBER></subscriber_info><balancesdump_info><schemasubscriberbalancesdump_info><MSISDN>971527009488</MSISDN><WALLET_ID>140456530</WALLET_ID><BALANCE_TYPE>398</BALANCE_TYPE><BE_BUCKET_ID>-1921016684</BE_BUCKET_ID><BALANCE_TYPE_NAME>Smart Monthly Usage</BALANCE_TYPE_NAME><BE_BUCKET_VALUE>0</BE_BUCKET_VALUE><BE_BUCKET_START_DATE></BE_BUCKET_START_DATE><BE_NEVER_EXPIRES>0</BE_NEVER_EXPIRES><BE_EXPIRY>2019-01-21 04:00:00</BE_EXPIRY><BE_BUCKET_NEVER_USED>1</BE_BUCKET_NEVER_USED><BE_BUCKET_LAST_USE>1970-01-01 04:00:00</BE_BUCKET_LAST_USE><BE_BUCKET_REFERENCE></BE_BUCKET_REFERENCE><WALLET_TYPE>21</WALLET_TYPE></schemasubscriberbalancesdump_info><schemasubscriberbalancesdump_info><MSISDN>971527009488</MSISDN><WALLET_ID>140456530</WALLET_ID><BALANCE_TYPE>92</BALANCE_TYPE><BE_BUCKET_ID>2005903172</BE_BUCKET_ID><BALANCE_TYPE_NAME>Yearly Expenditure</BALANCE_TYPE_NAME><BE_BUCKET_VALUE>0</BE_BUCKET_VALUE><BE_BUCKET_START_DATE></BE_BUCKET_START_DATE><BE_NEVER_EXPIRES>0</BE_NEVER_EXPIRES><BE_EXPIRY>2019-08-14 04:00:00</BE_EXPIRY><BE_BUCKET_NEVER_USED>1</BE_BUCKET_NEVER_USED><BE_BUCKET_LAST_USE>1970-01-01 04:00:00</BE_BUCKET_LAST_USE><BE_BUCKET_REFERENCE></BE_BUCKET_REFERENCE><WALLET_TYPE>21</WALLET_TYPE></schemasubscriberbalancesdump_info><schemasubscriberbalancesdump_info><MSISDN>971527009488</MSISDN><WALLET_ID>140456530</WALLET_ID><BALANCE_TYPE>2040</BALANCE_TYPE><BE_BUCKET_ID>1039355828</BE_BUCKET_ID><BALANCE_TYPE_NAME>_pc_BCPComboNat50_PC</BALANCE_TYPE_NAME><BE_BUCKET_VALUE>6</BE_BUCKET_VALUE><BE_BUCKET_START_DATE>2017-09-01 01:21:09</BE_BUCKET_START_DATE><BE_NEVER_EXPIRES>0</BE_NEVER_EXPIRES><BE_EXPIRY>2019-01-24 01:21:08</BE_EXPIRY><BE_BUCKET_NEVER_USED>0</BE_BUCKET_NEVER_USED><BE_BUCKET_LAST_USE>2017-09-01 01:21:09</BE_BUCKET_LAST_USE><BE_BUCKET_REFERENCE>141457773:21</BE_BUCKET_REFERENCE><WALLET_TYPE>21</WALLET_TYPE></schemasubscriberbalancesdump_info><schemasubscriberbalancesdump_info><MSISDN>971527009488</MSISDN><WALLET_ID>140456530</WALLET_ID><BALANCE_TYPE>2352</BALANCE_TYPE><BE_BUCKET_ID>1039355876</BE_BUCKET_ID><BALANCE_TYPE_NAME>OOB_Protection</BALANCE_TYPE_NAME><BE_BUCKET_VALUE>49</BE_BUCKET_VALUE><BE_BUCKET_START_DATE></BE_BUCKET_START_DATE><BE_NEVER_EXPIRES>0</BE_NEVER_EXPIRES><BE_EXPIRY>2019-01-25 02:38:04</BE_EXPIRY><BE_BUCKET_NEVER_USED>0</BE_BUCKET_NEVER_USED><BE_BUCKET_LAST_USE>2018-12-25 02:38:04</BE_BUCKET_LAST_USE><BE_BUCKET_REFERENCE></BE_BUCKET_REFERENCE><WALLET_TYPE>21</WALLET_TYPE></schemasubscriberbalancesdump_info><schemasubscriberbalancesdump_info><MSISDN>971527009488</MSISDN><WALLET_ID>140456530</WALLET_ID><BALANCE_TYPE>779</BALANCE_TYPE><BE_BUCKET_ID>-1911320492</BE_BUCKET_ID><BALANCE_TYPE_NAME>more data</BALANCE_TYPE_NAME><BE_BUCKET_VALUE>4641255</BE_BUCKET_VALUE><BE_BUCKET_START_DATE></BE_BUCKET_START_DATE><BE_NEVER_EXPIRES>0</BE_NEVER_EXPIRES><BE_EXPIRY>2019-01-24 02:38:04</BE_EXPIRY><BE_BUCKET_NEVER_USED>0</BE_BUCKET_NEVER_USED><BE_BUCKET_LAST_USE>2019-01-14 11:09:17</BE_BUCKET_LAST_USE><BE_BUCKET_REFERENCE></BE_BUCKET_REFERENCE><WALLET_TYPE>21</WALLET_TYPE></schemasubscriberbalancesdump_info><schemasubscriberbalancesdump_info><MSISDN>971527009488</MSISDN><WALLET_ID>140456530</WALLET_ID><BALANCE_TYPE>779</BALANCE_TYPE><BE_BUCKET_ID>-1911320444</BE_BUCKET_ID><BALANCE_TYPE_NAME>more data</BALANCE_TYPE_NAME><BE_BUCKET_VALUE>5000000</BE_BUCKET_VALUE><BE_BUCKET_START_DATE></BE_BUCKET_START_DATE><BE_NEVER_EXPIRES>0</BE_NEVER_EXPIRES><BE_EXPIRY>2019-01-25 02:38:04</BE_EXPIRY><BE_BUCKET_NEVER_USED>0</BE_BUCKET_NEVER_USED><BE_BUCKET_LAST_USE>2018-12-25 02:38:04</BE_BUCKET_LAST_USE><BE_BUCKET_REFERENCE></BE_BUCKET_REFERENCE><WALLET_TYPE>21</WALLET_TYPE></schemasubscriberbalancesdump_info><schemasubscriberbalancesdump_info><MSISDN>971527009488</MSISDN><WALLET_ID>140456530</WALLET_ID><BALANCE_TYPE>1892</BALANCE_TYPE><BE_BUCKET_ID>-1883137484</BE_BUCKET_ID><BALANCE_TYPE_NAME>MonthlySMSCheck</BALANCE_TYPE_NAME><BE_BUCKET_VALUE>2</BE_BUCKET_VALUE><BE_BUCKET_START_DATE></BE_BUCKET_START_DATE><BE_NEVER_EXPIRES>0</BE_NEVER_EXPIRES><BE_EXPIRY>2019-02-04 09:31:03</BE_EXPIRY><BE_BUCKET_NEVER_USED>0</BE_BUCKET_NEVER_USED><BE_BUCKET_LAST_USE>2019-01-05 09:31:03</BE_BUCKET_LAST_USE><BE_BUCKET_REFERENCE></BE_BUCKET_REFERENCE><WALLET_TYPE>21</WALLET_TYPE></schemasubscriberbalancesdump_info><schemasubscriberbalancesdump_info><MSISDN>971527009488</MSISDN><WALLET_ID>140456530</WALLET_ID><BALANCE_TYPE>1579</BALANCE_TYPE><BE_BUCKET_ID>1039359380</BE_BUCKET_ID><BALANCE_TYPE_NAME>_pc_BCP2DataTopUp1_PC</BALANCE_TYPE_NAME><BE_BUCKET_VALUE>6</BE_BUCKET_VALUE><BE_BUCKET_START_DATE>2017-09-01 02:38:13</BE_BUCKET_START_DATE><BE_NEVER_EXPIRES>0</BE_NEVER_EXPIRES><BE_EXPIRY>2019-01-24 02:38:02</BE_EXPIRY><BE_BUCKET_NEVER_USED>0</BE_BUCKET_NEVER_USED><BE_BUCKET_LAST_USE>2017-09-01 02:38:13</BE_BUCKET_LAST_USE><BE_BUCKET_REFERENCE>141457773:21</BE_BUCKET_REFERENCE><WALLET_TYPE>21</WALLET_TYPE></schemasubscriberbalancesdump_info><schemasubscriberbalancesdump_info><MSISDN>971527009488</MSISDN><WALLET_ID>140456530</WALLET_ID><BALANCE_TYPE>2053</BALANCE_TYPE><BE_BUCKET_ID>1039363412</BE_BUCKET_ID><BALANCE_TYPE_NAME>_pc_BCPNatCUG109_PC</BALANCE_TYPE_NAME><BE_BUCKET_VALUE>6</BE_BUCKET_VALUE><BE_BUCKET_START_DATE>2018-05-01 03:06:33</BE_BUCKET_START_DATE><BE_NEVER_EXPIRES>0</BE_NEVER_EXPIRES><BE_EXPIRY>2019-01-26 03:06:36</BE_EXPIRY><BE_BUCKET_NEVER_USED>0</BE_BUCKET_NEVER_USED><BE_BUCKET_LAST_USE>2018-05-01 03:06:33</BE_BUCKET_LAST_USE><BE_BUCKET_REFERENCE>141457773:21</BE_BUCKET_REFERENCE><WALLET_TYPE>21</WALLET_TYPE></schemasubscriberbalancesdump_info><schemasubscriberbalancesdump_info><MSISDN>971527009488</MSISDN><WALLET_ID>140456530</WALLET_ID><BALANCE_TYPE>1099</BALANCE_TYPE><BE_BUCKET_ID>1039329332</BE_BUCKET_ID><BALANCE_TYPE_NAME>InitialCreditTracker</BALANCE_TYPE_NAME><BE_BUCKET_VALUE>0</BE_BUCKET_VALUE><BE_BUCKET_START_DATE></BE_BUCKET_START_DATE><BE_NEVER_EXPIRES>1</BE_NEVER_EXPIRES><BE_EXPIRY>1970-01-01 04:00:00</BE_EXPIRY><BE_BUCKET_NEVER_USED>1</BE_BUCKET_NEVER_USED><BE_BUCKET_LAST_USE>1970-01-01 04:00:00</BE_BUCKET_LAST_USE><BE_BUCKET_REFERENCE></BE_BUCKET_REFERENCE><WALLET_TYPE>21</WALLET_TYPE></schemasubscriberbalancesdump_info><schemasubscriberbalancesdump_info><MSISDN>971527009488</MSISDN><WALLET_ID>140456530</WALLET_ID><BALANCE_TYPE>21</BALANCE_TYPE><BE_BUCKET_ID>1039329044</BE_BUCKET_ID><BALANCE_TYPE_NAME>General Cash</BALANCE_TYPE_NAME><BE_BUCKET_VALUE>5</BE_BUCKET_VALUE><BE_BUCKET_START_DATE></BE_BUCKET_START_DATE><BE_NEVER_EXPIRES>1</BE_NEVER_EXPIRES><BE_EXPIRY>1970-01-01 04:00:00</BE_EXPIRY><BE_BUCKET_NEVER_USED>0</BE_BUCKET_NEVER_USED><BE_BUCKET_LAST_USE>2019-01-14 09:10:55</BE_BUCKET_LAST_USE><BE_BUCKET_REFERENCE></BE_BUCKET_REFERENCE><WALLET_TYPE>21</WALLET_TYPE></schemasubscriberbalancesdump_info><schemasubscriberbalancesdump_info><MSISDN>971527009488</MSISDN><WALLET_ID>140456530</WALLET_ID><BALANCE_TYPE>23</BALANCE_TYPE><BE_BUCKET_ID>1039329092</BE_BUCKET_ID><BALANCE_TYPE_NAME>Bad Pin</BALANCE_TYPE_NAME><BE_BUCKET_VALUE>0</BE_BUCKET_VALUE><BE_BUCKET_START_DATE></BE_BUCKET_START_DATE><BE_NEVER_EXPIRES>1</BE_NEVER_EXPIRES><BE_EXPIRY>1970-01-01 04:00:00</BE_EXPIRY><BE_BUCKET_NEVER_USED>1</BE_BUCKET_NEVER_USED><BE_BUCKET_LAST_USE>1970-01-01 04:00:00</BE_BUCKET_LAST_USE><BE_BUCKET_REFERENCE></BE_BUCKET_REFERENCE><WALLET_TYPE>21</WALLET_TYPE></schemasubscriberbalancesdump_info><schemasubscriberbalancesdump_info><MSISDN>971527009488</MSISDN><WALLET_ID>140456530</WALLET_ID><BALANCE_TYPE>25</BALANCE_TYPE><BE_BUCKET_ID>1039329140</BE_BUCKET_ID><BALANCE_TYPE_NAME>Free SMS</BALANCE_TYPE_NAME><BE_BUCKET_VALUE>0</BE_BUCKET_VALUE><BE_BUCKET_START_DATE></BE_BUCKET_START_DATE><BE_NEVER_EXPIRES>1</BE_NEVER_EXPIRES><BE_EXPIRY>1970-01-01 04:00:00</BE_EXPIRY><BE_BUCKET_NEVER_USED>1</BE_BUCKET_NEVER_USED><BE_BUCKET_LAST_USE>1970-01-01 04:00:00</BE_BUCKET_LAST_USE><BE_BUCKET_REFERENCE></BE_BUCKET_REFERENCE><WALLET_TYPE>21</WALLET_TYPE></schemasubscriberbalancesdump_info><schemasubscriberbalancesdump_info><MSISDN>971527009488</MSISDN><WALLET_ID>140456530</WALLET_ID><BALANCE_TYPE>55</BALANCE_TYPE><BE_BUCKET_ID>1039329188</BE_BUCKET_ID><BALANCE_TYPE_NAME>Data</BALANCE_TYPE_NAME><BE_BUCKET_VALUE>0</BE_BUCKET_VALUE><BE_BUCKET_START_DATE></BE_BUCKET_START_DATE><BE_NEVER_EXPIRES>1</BE_NEVER_EXPIRES><BE_EXPIRY>1970-01-01 04:00:00</BE_EXPIRY><BE_BUCKET_NEVER_USED>1</BE_BUCKET_NEVER_USED><BE_BUCKET_LAST_USE>1970-01-01 04:00:00</BE_BUCKET_LAST_USE><BE_BUCKET_REFERENCE></BE_BUCKET_REFERENCE><WALLET_TYPE>21</WALLET_TYPE></schemasubscriberbalancesdump_info><schemasubscriberbalancesdump_info><MSISDN>971527009488</MSISDN><WALLET_ID>140456530</WALLET_ID><BALANCE_TYPE>62</BALANCE_TYPE><BE_BUCKET_ID>1039329236</BE_BUCKET_ID><BALANCE_TYPE_NAME>Zero Credit Calls</BALANCE_TYPE_NAME><BE_BUCKET_VALUE>0</BE_BUCKET_VALUE><BE_BUCKET_START_DATE></BE_BUCKET_START_DATE><BE_NEVER_EXPIRES>1</BE_NEVER_EXPIRES><BE_EXPIRY>1970-01-01 04:00:00</BE_EXPIRY><BE_BUCKET_NEVER_USED>1</BE_BUCKET_NEVER_USED><BE_BUCKET_LAST_USE>1970-01-01 04:00:00</BE_BUCKET_LAST_USE><BE_BUCKET_REFERENCE></BE_BUCKET_REFERENCE><WALLET_TYPE>21</WALLET_TYPE></schemasubscriberbalancesdump_info><schemasubscriberbalancesdump_info><MSISDN>971527009488</MSISDN><WALLET_ID>140456530</WALLET_ID><BALANCE_TYPE>396</BALANCE_TYPE><BE_BUCKET_ID>-1911374252</BE_BUCKET_ID><BALANCE_TYPE_NAME>Smart Nat Bundle</BALANCE_TYPE_NAME><BE_BUCKET_VALUE>0</BE_BUCKET_VALUE><BE_BUCKET_START_DATE></BE_BUCKET_START_DATE><BE_NEVER_EXPIRES>0</BE_NEVER_EXPIRES><BE_EXPIRY>2019-01-24 01:21:09</BE_EXPIRY><BE_BUCKET_NEVER_USED>0</BE_BUCKET_NEVER_USED><BE_BUCKET_LAST_USE>2019-01-08 19:32:20</BE_BUCKET_LAST_USE><BE_BUCKET_REFERENCE></BE_BUCKET_REFERENCE><WALLET_TYPE>21</WALLET_TYPE></schemasubscriberbalancesdump_info><schemasubscriberbalancesdump_info><MSISDN>971527009488</MSISDN><WALLET_ID>140456530</WALLET_ID><BALANCE_TYPE>395</BALANCE_TYPE><BE_BUCKET_ID>-1911374108</BE_BUCKET_ID><BALANCE_TYPE_NAME>Smart SMS Nat Bundle</BALANCE_TYPE_NAME><BE_BUCKET_VALUE>0</BE_BUCKET_VALUE><BE_BUCKET_START_DATE></BE_BUCKET_START_DATE><BE_NEVER_EXPIRES>0</BE_NEVER_EXPIRES><BE_EXPIRY>2019-01-24 01:21:09</BE_EXPIRY><BE_BUCKET_NEVER_USED>0</BE_BUCKET_NEVER_USED><BE_BUCKET_LAST_USE>2018-12-25 01:21:09</BE_BUCKET_LAST_USE><BE_BUCKET_REFERENCE></BE_BUCKET_REFERENCE><WALLET_TYPE>21</WALLET_TYPE></schemasubscriberbalancesdump_info><schemasubscriberbalancesdump_info><MSISDN>971527009488</MSISDN><WALLET_ID>140456530</WALLET_ID><BALANCE_TYPE>2032</BALANCE_TYPE><BE_BUCKET_ID>-1906058684</BE_BUCKET_ID><BALANCE_TYPE_NAME>BCP CUG Minutes</BALANCE_TYPE_NAME><BE_BUCKET_VALUE>59947400</BE_BUCKET_VALUE><BE_BUCKET_START_DATE></BE_BUCKET_START_DATE><BE_NEVER_EXPIRES>0</BE_NEVER_EXPIRES><BE_EXPIRY>2019-01-26 03:06:38</BE_EXPIRY><BE_BUCKET_NEVER_USED>0</BE_BUCKET_NEVER_USED><BE_BUCKET_LAST_USE>2019-01-14 18:10:04</BE_BUCKET_LAST_USE><BE_BUCKET_REFERENCE></BE_BUCKET_REFERENCE><WALLET_TYPE>21</WALLET_TYPE></schemasubscriberbalancesdump_info></balancesdump_info><cugclidump_info><schemasubscribercugclidump_info><MSISDN>971527009488</MSISDN><CUG_NAME>6140394</CUG_NAME><CHANGE_DATE>2017-08-13 12:47:08</CHANGE_DATE><TARIFF_PLAN>826</TARIFF_PLAN><TARIFF_PLAN_NAME>Business Voice HG (172)</TARIFF_PLAN_NAME></schemasubscribercugclidump_info></cugclidump_info><usmsdump_info><schemasubscriberusmsdump_info><MSISDN>971527009488</MSISDN><INITIAL_ACTIVATION_DATE>2017-08-13 13:03:05</INITIAL_ACTIVATION_DATE><INITIAL_ACCOUNT_BALANCE>0</INITIAL_ACCOUNT_BALANCE><LAST_ACCOUNT_EXPIRY_PERIOD></LAST_ACCOUNT_EXPIRY_PERIOD><LAST_BALANCE_BEFORE_RECHARGE>0</LAST_BALANCE_BEFORE_RECHARGE><LAST_BALANCE_EXPIRY_PERIOD></LAST_BALANCE_EXPIRY_PERIOD><LAST_EXPIRED_AMOUNT>0</LAST_EXPIRED_AMOUNT><LAST_EXPIRY_DATE>2019-01-05 09:31:03</LAST_EXPIRY_DATE><LAST_PRODUCT_TYPE_SWAP_DATE></LAST_PRODUCT_TYPE_SWAP_DATE><LAST_RECHARGE_AMOUNT>0</LAST_RECHARGE_AMOUNT><FIRST_RECHARGE_DATE>2017-08-13 13:03:05</FIRST_RECHARGE_DATE><LAST_RECHARGE_DATE>2018-12-27 03:06:38</LAST_RECHARGE_DATE><LAST_STATE_CHANGE_DATE>2017-08-13 13:03:05</LAST_STATE_CHANGE_DATE><TOTAL_EXPIRED_AMOUNT>0</TOTAL_EXPIRED_AMOUNT><LAST_STATE_CHANGE_REASON>Pre-use to Active</LAST_STATE_CHANGE_REASON><WALLET_ID>140456530</WALLET_ID><WALLET_TYPE>21</WALLET_TYPE></schemasubscriberusmsdump_info></usmsdump_info><profiledump_info><schemasubscriberprofiledump_info><MSISDN>971527009488</MSISDN><Language_ID>12</Language_ID><IMEI></IMEI><IMSI>424030215977619</IMSI><HLRAddress>971550930187</HLRAddress><Wallet_Type>0</Wallet_Type><BstrVceIntNumTree></BstrVceIntNumTree><BstrVceNatNumTree></BstrVceNatNumTree><PeriodicChargeStatus></PeriodicChargeStatus><CSBAR></CSBAR><crbtActReqDate></crbtActReqDate><crtCnfrmd></crtCnfrmd><crbtActConfirmDate></crbtActConfirmDate><crbtDeact></crbtDeact><crbtDeActReqDate></crbtDeActReqDate><crbtDeActConfirmDate></crbtDeActConfirmDate><cbActConfirmDate></cbActConfirmDate><cbExpDate></cbExpDate><cbCnfdAct></cbCnfdAct><cbWarn1></cbWarn1><cbWarn2></cbWarn2><cbDeActReqDate></cbDeActReqDate><cbDeActConfirmDate></cbDeActConfirmDate><cfActConfirmDate></cfActConfirmDate><cfConfActive></cfConfActive><cfDeActConfirmDate></cfDeActConfirmDate><cfDeActReqDate></cfDeActReqDate><cfLastFailedDate></cfLastFailedDate><cfActReqDate></cfActReqDate><avmActConfirmDate></avmActConfirmDate><avmCnfrmd>T</avmCnfrmd><avmDeActReqDate></avmDeActReqDate><avmDeActConfirmDate></avmDeActConfirmDate><SprssNtfctn>F</SprssNtfctn><avm>T</avm><avmActReqDate></avmActReqDate><MssdCallNot></MssdCallNot><VMCIMEI></VMCIMEI><VMCName></VMCName><AcctActiveMonth>20190112090305</AcctActiveMonth><AcctActiveYear>20190813090305</AcctActiveYear><TopXCountr1></TopXCountr1><TopXCountr2></TopXCountr2><TopXCountr3></TopXCountr3><TopXCountr4></TopXCountr4><TopXCountr5></TopXCountr5><Prepaid></Prepaid><entBsnssCrclActv>T</entBsnssCrclActv><BusMobPayg50></BusMobPayg50><BusMobTopUp></BusMobTopUp><MercuryOptInOutDate></MercuryOptInOutDate><HardCapLabel></HardCapLabel><HardCapAddonLabel></HardCapAddonLabel><Active></Active><Absher></Absher><avmInfSub>T</avmInfSub><avmPin>0000</avmPin><avmProf>11</avmProf><BronzeMPromoActDate></BronzeMPromoActDate><BronzeMPromoDeactDate></BronzeMPromoDeactDate><BstrVceIntNumAct></BstrVceIntNumAct><BstrVceNatNumAct></BstrVceNatNumAct><BstrVINActReqDate></BstrVINActReqDate><BstrVINConfirmDate></BstrVINConfirmDate><BstrVINDeActConfDate></BstrVINDeActConfDate><BstrVINDeActReqDate></BstrVINDeActReqDate><BstrVINRecur></BstrVINRecur><BstrVNNActReqDate></BstrVNNActReqDate><BstrVNNConfirmDate></BstrVNNConfirmDate><BstrVNNDeActConfDate></BstrVNNDeActConfDate><BstrVNNDeActReqDate></BstrVNNDeActReqDate><BstrVNNRecur></BstrVNNRecur><cbActReqDate></cbActReqDate><cbAll></cbAll><cbIncom></cbIncom><cbInt></cbInt><cbIntExc></cbIntExc><cbWR></cbWR><cfBusy></cfBusy><cfData></cfData><cfFax></cfFax><cfInt></cfInt><cfNoReply></cfNoReply><cfNotReach></cfNotReach><cfVoice></cfVoice><clir></clir><cllrRngTne></cllrRngTne><CVM></CVM><CVMCounter></CVMCounter><dataGeneric></dataGeneric><Date1></Date1><DisabilityActivationDate></DisabilityActivationDate><DisabilityDectivationDate></DisabilityDectivationDate><EmiratiPlan></EmiratiPlan><EntCust>T</EntCust><entMssgingActv></entMssgingActv><faxGroup3></faxGroup3><GlobalZoneOptIn></GlobalZoneOptIn><GlobalZoneOptOut></GlobalZoneOptOut><gprsPmail></gprsPmail><IDD2Act></IDD2Act><IDD2ActDate></IDD2ActDate><IDD2DeactDate></IDD2DeactDate><IDDCutRateAct></IDDCutRateAct><IDDCutRateActDate></IDDCutRateActDate><InternationalMin></InternationalMin><Language>English</Language><odbAll></odbAll><odbIncom></odbIncom><odbInt></odbInt><odbIntExc></odbIntExc><odbOnlyVoice></odbOnlyVoice><odbOutVoice></odbOutVoice><odbWR></odbWR><PAYGDataFNL></PAYGDataFNL><PAYGMet></PAYGMet><PCNGlobalOptin></PCNGlobalOptin><PCNGlobalOptout></PCNGlobalOptout><Plan></Plan><ReceivePostCallSMS>T</ReceivePostCallSMS><SocialBndlActChannel></SocialBndlActChannel><SocialBndlDeActChannel></SocialBndlDeActChannel><BstrVceIntNumExp></BstrVceIntNumExp><BstrVceNatNumExp></BstrVceNatNumExp><BstrVINChngsAllwd></BstrVINChngsAllwd><BstrVNNChngsAllwd></BstrVNNChngsAllwd><TranslatedNumber></TranslatedNumber><TransNumber></TransNumber><SmsBndl1Recur></SmsBndl1Recur><SmsExpDate></SmsExpDate><SmsBndl2Recur></SmsBndl2Recur><PriceShout></PriceShout><BlckBrryAct></BlckBrryAct><BlckBrryCnfdAct></BlckBrryCnfdAct><BlckBrryActCnfrmDate></BlckBrryActCnfrmDate><BlckBrryExpDate></BlckBrryExpDate><SmsBndl3Recur></SmsBndl3Recur><Bespoke></Bespoke><ManRenDateLess1Y></ManRenDateLess1Y><DataBndl1Recur></DataBndl1Recur><DataBndlType></DataBndlType><DataExpDate></DataExpDate><DataGraceAct></DataGraceAct><DataGraceEnd></DataGraceEnd><DataBndl2Recur></DataBndl2Recur><DataBndl3Recur></DataBndl3Recur><DataBndl4Recur></DataBndl4Recur><DataBndl5Recur></DataBndl5Recur><DataBndl6Recur></DataBndl6Recur><DataBndl8Recur></DataBndl8Recur><DataBndl9Recur></DataBndl9Recur><MBB></MBB><MBBExpDate></MBBExpDate><MBBUnlimited></MBBUnlimited><MBBUnlimExpDate></MBBUnlimExpDate><MBB2GB></MBB2GB><MBB2GBExpDate></MBB2GBExpDate><MBB10GB></MBB10GB><MBB10GBExpDate></MBB10GBExpDate><MBBGraceAct></MBBGraceAct><MBBGraceEnd></MBBGraceEnd><MBBOfferExpDate></MBBOfferExpDate><TP_Social_Deact_Conf></TP_Social_Deact_Conf><cbAct></cbAct><PokeSMSOptoutDate></PokeSMSOptoutDate><PokeSMSOptinDate></PokeSMSOptinDate><BlckBrryActReqDate></BlckBrryActReqDate><BlckBrryDeActReqDate></BlckBrryDeActReqDate><BlckBrryDeactRbkDate></BlckBrryDeactRbkDate><BronzeDeactDate></BronzeDeactDate><BronzeActDate></BronzeActDate><umsCnfrmd></umsCnfrmd><umsInfSub></umsInfSub><ums></ums><umsF2M></umsF2M><umsSMS2F></umsSMS2F><umsVm2MMS></umsVm2MMS><TravSumOptInDate></TravSumOptInDate><PassOptInDate></PassOptInDate><PassOptOutDate></PassOptOutDate><TwinSIMNumber></TwinSIMNumber><FstTimeActivation></FstTimeActivation><Anniversarytopuppromo></Anniversarytopuppromo><AnniversarytopuppromoEnd></AnniversarytopuppromoEnd><SmartPhoneExpiry></SmartPhoneExpiry><DSP_Promo></DSP_Promo><guiBalAdjDate></guiBalAdjDate><guiBalAdjVal></guiBalAdjVal><BBBundName></BBBundName><BBPromo></BBPromo><BSCSAct></BSCSAct><BBPromoSubDate></BBPromoSubDate><BBPromoEndDate></BBPromoEndDate><BlckBrrySprssSMS></BlckBrrySprssSMS><BlckBrryDeActCnfrmDt></BlckBrryDeActCnfrmDt><Payg_Life_Optin></Payg_Life_Optin><gprsBasicSer></gprsBasicSer><gprsWap></gprsWap><smsMtPp></smsMtPp><gprsMms></gprsMms><smsMoPp></smsMoPp><callhold></callhold><callwait></callwait><multiParty></multiParty><IntRoam></IntRoam><clip></clip><VdioCall></VdioCall><DuCS></DuCS><BSCS_account_num></BSCS_account_num><CS_notification_num></CS_notification_num><cbGraceAct></cbGraceAct><cbGraceEnd></cbGraceEnd><cbGraceRenew></cbGraceRenew><gprsCarrier></gprsCarrier><PAYGDataLineOffer></PAYGDataLineOffer><PAYGDataWHSP></PAYGDataWHSP><PAYGDataWH></PAYGDataWH><msisdnChgDate></msisdnChgDate><mainMSISDN></mainMSISDN><CashReturn></CashReturn><NewTopUpValue></NewTopUpValue><bdgtCntrlTopUp></bdgtCntrlTopUp><BlckBrryBundle></BlckBrryBundle><MBB10GBWelcome></MBB10GBWelcome><MBB2GBWelcome></MBB2GBWelcome><MBBUnlimWelcome></MBBUnlimWelcome><MBBWelcome></MBBWelcome><guiBalAdjCount></guiBalAdjCount><LastChangeDateExpiry></LastChangeDateExpiry><NewPPBundle></NewPPBundle><SmsBndlType></SmsBndlType></schemasubscriberprofiledump_info></profiledump_info></subscriber_xml>";
+
+		//best data
+		//String xml = "<subscriber_xml><subscriber_info><SUBSCRIBER><MSISDN>139559270317</MSISDN><CCS_ACCT_TYPE_NAME>Pay as you Go 2</CCS_ACCT_TYPE_NAME><CCS_ACCT_TYPE_ID>214</CCS_ACCT_TYPE_ID><SERVICE_STATE>A</SERVICE_STATE><CREATION_DATE>2016-02-05 14:25:06</CREATION_DATE><WALLET_EXPIRY>2019-02-05 20:52:25</WALLET_EXPIRY></SUBSCRIBER></subscriber_info><balancesdump_info><schemasubscriberbalancesdump_info><MSISDN>139559270317</MSISDN><WALLET_ID>128370838</WALLET_ID><BALANCE_TYPE>92</BALANCE_TYPE><BE_BUCKET_ID>1163929964</BE_BUCKET_ID><BALANCE_TYPE_NAME>Yearly Expenditure</BALANCE_TYPE_NAME><BE_BUCKET_VALUE>71067207</BE_BUCKET_VALUE><BE_BUCKET_START_DATE></BE_BUCKET_START_DATE><BE_NEVER_EXPIRES>0</BE_NEVER_EXPIRES><BE_EXPIRY>2019-02-08 04:00:00</BE_EXPIRY><BE_BUCKET_NEVER_USED>0</BE_BUCKET_NEVER_USED><BE_BUCKET_LAST_USE>2019-01-08 14:58:35</BE_BUCKET_LAST_USE><BE_BUCKET_REFERENCE></BE_BUCKET_REFERENCE><WALLET_TYPE>21</WALLET_TYPE></schemasubscriberbalancesdump_info><schemasubscriberbalancesdump_info><MSISDN>139559270317</MSISDN><WALLET_ID>128370838</WALLET_ID><BALANCE_TYPE>3233</BALANCE_TYPE><BE_BUCKET_ID>1462058924</BE_BUCKET_ID><BALANCE_TYPE_NAME>DSWL</BALANCE_TYPE_NAME><BE_BUCKET_VALUE>1</BE_BUCKET_VALUE><BE_BUCKET_START_DATE></BE_BUCKET_START_DATE><BE_NEVER_EXPIRES>0</BE_NEVER_EXPIRES><BE_EXPIRY>2023-09-17 10:39:14</BE_EXPIRY><BE_BUCKET_NEVER_USED>0</BE_BUCKET_NEVER_USED><BE_BUCKET_LAST_USE>2018-09-17 10:39:14</BE_BUCKET_LAST_USE><BE_BUCKET_REFERENCE></BE_BUCKET_REFERENCE><WALLET_TYPE>21</WALLET_TYPE></schemasubscriberbalancesdump_info><schemasubscriberbalancesdump_info><MSISDN>139559270317</MSISDN><WALLET_ID>128370838</WALLET_ID><BALANCE_TYPE>398</BALANCE_TYPE><BE_BUCKET_ID>1574995052</BE_BUCKET_ID><BALANCE_TYPE_NAME>Smart Monthly Usage</BALANCE_TYPE_NAME><BE_BUCKET_VALUE>10080</BE_BUCKET_VALUE><BE_BUCKET_START_DATE></BE_BUCKET_START_DATE><BE_NEVER_EXPIRES>0</BE_NEVER_EXPIRES><BE_EXPIRY>2019-01-11 04:00:00</BE_EXPIRY><BE_BUCKET_NEVER_USED>0</BE_BUCKET_NEVER_USED><BE_BUCKET_LAST_USE>2018-12-31 07:17:10</BE_BUCKET_LAST_USE><BE_BUCKET_REFERENCE></BE_BUCKET_REFERENCE><WALLET_TYPE>21</WALLET_TYPE></schemasubscriberbalancesdump_info><schemasubscriberbalancesdump_info><MSISDN>139559270317</MSISDN><WALLET_ID>128370838</WALLET_ID><BALANCE_TYPE>1635</BALANCE_TYPE><BE_BUCKET_ID>1584028172</BE_BUCKET_ID><BALANCE_TYPE_NAME>PAYG Promotional Data</BALANCE_TYPE_NAME><BE_BUCKET_VALUE>307200</BE_BUCKET_VALUE><BE_BUCKET_START_DATE></BE_BUCKET_START_DATE><BE_NEVER_EXPIRES>0</BE_NEVER_EXPIRES><BE_EXPIRY>2019-01-18 00:14:05</BE_EXPIRY><BE_BUCKET_NEVER_USED>0</BE_BUCKET_NEVER_USED><BE_BUCKET_LAST_USE>2018-12-18 00:14:05</BE_BUCKET_LAST_USE><BE_BUCKET_REFERENCE></BE_BUCKET_REFERENCE><WALLET_TYPE>21</WALLET_TYPE></schemasubscriberbalancesdump_info><schemasubscriberbalancesdump_info><MSISDN>139559270317</MSISDN><WALLET_ID>128370838</WALLET_ID><BALANCE_TYPE>1633</BALANCE_TYPE><BE_BUCKET_ID>1584028316</BE_BUCKET_ID><BALANCE_TYPE_NAME>One Off Data</BALANCE_TYPE_NAME><BE_BUCKET_VALUE>307200</BE_BUCKET_VALUE><BE_BUCKET_START_DATE></BE_BUCKET_START_DATE><BE_NEVER_EXPIRES>0</BE_NEVER_EXPIRES><BE_EXPIRY>2019-01-18 00:14:05</BE_EXPIRY><BE_BUCKET_NEVER_USED>0</BE_BUCKET_NEVER_USED><BE_BUCKET_LAST_USE>2018-12-18 00:14:05</BE_BUCKET_LAST_USE><BE_BUCKET_REFERENCE></BE_BUCKET_REFERENCE><WALLET_TYPE>21</WALLET_TYPE></schemasubscriberbalancesdump_info><schemasubscriberbalancesdump_info><MSISDN>139559270317</MSISDN><WALLET_ID>128370838</WALLET_ID><BALANCE_TYPE>1793</BALANCE_TYPE><BE_BUCKET_ID>1501833980</BE_BUCKET_ID><BALANCE_TYPE_NAME>OOC Tracker</BALANCE_TYPE_NAME><BE_BUCKET_VALUE>0</BE_BUCKET_VALUE><BE_BUCKET_START_DATE></BE_BUCKET_START_DATE><BE_NEVER_EXPIRES>0</BE_NEVER_EXPIRES><BE_EXPIRY>2019-04-30 21:36:38</BE_EXPIRY><BE_BUCKET_NEVER_USED>0</BE_BUCKET_NEVER_USED><BE_BUCKET_LAST_USE>2018-12-03 16:14:05</BE_BUCKET_LAST_USE><BE_BUCKET_REFERENCE></BE_BUCKET_REFERENCE><WALLET_TYPE>21</WALLET_TYPE></schemasubscriberbalancesdump_info><schemasubscriberbalancesdump_info><MSISDN>139559270317</MSISDN><WALLET_ID>128370838</WALLET_ID><BALANCE_TYPE>1792</BALANCE_TYPE><BE_BUCKET_ID>1501834028</BE_BUCKET_ID><BALANCE_TYPE_NAME>OOC Credit</BALANCE_TYPE_NAME><BE_BUCKET_VALUE>0</BE_BUCKET_VALUE><BE_BUCKET_START_DATE></BE_BUCKET_START_DATE><BE_NEVER_EXPIRES>1</BE_NEVER_EXPIRES><BE_EXPIRY>1970-01-01 04:00:00</BE_EXPIRY><BE_BUCKET_NEVER_USED>0</BE_BUCKET_NEVER_USED><BE_BUCKET_LAST_USE>2019-01-02 13:05:55</BE_BUCKET_LAST_USE><BE_BUCKET_REFERENCE></BE_BUCKET_REFERENCE><WALLET_TYPE>21</WALLET_TYPE></schemasubscriberbalancesdump_info><schemasubscriberbalancesdump_info><MSISDN>139559270317</MSISDN><WALLET_ID>128370838</WALLET_ID><BALANCE_TYPE>1156</BALANCE_TYPE><BE_BUCKET_ID>1463074652</BE_BUCKET_ID><BALANCE_TYPE_NAME>BlockPPU</BALANCE_TYPE_NAME><BE_BUCKET_VALUE>0</BE_BUCKET_VALUE><BE_BUCKET_START_DATE></BE_BUCKET_START_DATE><BE_NEVER_EXPIRES>1</BE_NEVER_EXPIRES><BE_EXPIRY>1970-01-01 04:00:00</BE_EXPIRY><BE_BUCKET_NEVER_USED>0</BE_BUCKET_NEVER_USED><BE_BUCKET_LAST_USE>2018-09-18 08:08:57</BE_BUCKET_LAST_USE><BE_BUCKET_REFERENCE></BE_BUCKET_REFERENCE><WALLET_TYPE>21</WALLET_TYPE></schemasubscriberbalancesdump_info><schemasubscriberbalancesdump_info><MSISDN>139559270317</MSISDN><WALLET_ID>128370838</WALLET_ID><BALANCE_TYPE>1635</BALANCE_TYPE><BE_BUCKET_ID>1590475292</BE_BUCKET_ID><BALANCE_TYPE_NAME>PAYG Promotional Data</BALANCE_TYPE_NAME><BE_BUCKET_VALUE>307200</BE_BUCKET_VALUE><BE_BUCKET_START_DATE></BE_BUCKET_START_DATE><BE_NEVER_EXPIRES>0</BE_NEVER_EXPIRES><BE_EXPIRY>2019-01-23 01:09:08</BE_EXPIRY><BE_BUCKET_NEVER_USED>0</BE_BUCKET_NEVER_USED><BE_BUCKET_LAST_USE>2018-12-23 01:09:08</BE_BUCKET_LAST_USE><BE_BUCKET_REFERENCE></BE_BUCKET_REFERENCE><WALLET_TYPE>21</WALLET_TYPE></schemasubscriberbalancesdump_info><schemasubscriberbalancesdump_info><MSISDN>139559270317</MSISDN><WALLET_ID>128370838</WALLET_ID><BALANCE_TYPE>1633</BALANCE_TYPE><BE_BUCKET_ID>1590475436</BE_BUCKET_ID><BALANCE_TYPE_NAME>One Off Data</BALANCE_TYPE_NAME><BE_BUCKET_VALUE>307200</BE_BUCKET_VALUE><BE_BUCKET_START_DATE></BE_BUCKET_START_DATE><BE_NEVER_EXPIRES>0</BE_NEVER_EXPIRES><BE_EXPIRY>2019-01-23 01:09:08</BE_EXPIRY><BE_BUCKET_NEVER_USED>0</BE_BUCKET_NEVER_USED><BE_BUCKET_LAST_USE>2018-12-23 01:09:08</BE_BUCKET_LAST_USE><BE_BUCKET_REFERENCE></BE_BUCKET_REFERENCE><WALLET_TYPE>21</WALLET_TYPE></schemasubscriberbalancesdump_info><schemasubscriberbalancesdump_info><MSISDN>139559270317</MSISDN><WALLET_ID>128370838</WALLET_ID><BALANCE_TYPE>1635</BALANCE_TYPE><BE_BUCKET_ID>1581721052</BE_BUCKET_ID><BALANCE_TYPE_NAME>PAYG Promotional Data</BALANCE_TYPE_NAME><BE_BUCKET_VALUE>307200</BE_BUCKET_VALUE><BE_BUCKET_START_DATE></BE_BUCKET_START_DATE><BE_NEVER_EXPIRES>0</BE_NEVER_EXPIRES><BE_EXPIRY>2019-01-16 08:59:48</BE_EXPIRY><BE_BUCKET_NEVER_USED>0</BE_BUCKET_NEVER_USED><BE_BUCKET_LAST_USE>2018-12-16 08:59:48</BE_BUCKET_LAST_USE><BE_BUCKET_REFERENCE></BE_BUCKET_REFERENCE><WALLET_TYPE>21</WALLET_TYPE></schemasubscriberbalancesdump_info><schemasubscriberbalancesdump_info><MSISDN>139559270317</MSISDN><WALLET_ID>128370838</WALLET_ID><BALANCE_TYPE>1633</BALANCE_TYPE><BE_BUCKET_ID>1581721196</BE_BUCKET_ID><BALANCE_TYPE_NAME>One Off Data</BALANCE_TYPE_NAME><BE_BUCKET_VALUE>307200</BE_BUCKET_VALUE><BE_BUCKET_START_DATE></BE_BUCKET_START_DATE><BE_NEVER_EXPIRES>0</BE_NEVER_EXPIRES><BE_EXPIRY>2019-01-16 08:59:48</BE_EXPIRY><BE_BUCKET_NEVER_USED>0</BE_BUCKET_NEVER_USED><BE_BUCKET_LAST_USE>2018-12-16 08:59:48</BE_BUCKET_LAST_USE><BE_BUCKET_REFERENCE></BE_BUCKET_REFERENCE><WALLET_TYPE>21</WALLET_TYPE></schemasubscriberbalancesdump_info><schemasubscriberbalancesdump_info><MSISDN>139559270317</MSISDN><WALLET_ID>128370838</WALLET_ID><BALANCE_TYPE>1635</BALANCE_TYPE><BE_BUCKET_ID>1586480732</BE_BUCKET_ID><BALANCE_TYPE_NAME>PAYG Promotional Data</BALANCE_TYPE_NAME><BE_BUCKET_VALUE>307200</BE_BUCKET_VALUE><BE_BUCKET_START_DATE></BE_BUCKET_START_DATE><BE_NEVER_EXPIRES>0</BE_NEVER_EXPIRES><BE_EXPIRY>2019-01-19 21:59:27</BE_EXPIRY><BE_BUCKET_NEVER_USED>0</BE_BUCKET_NEVER_USED><BE_BUCKET_LAST_USE>2018-12-19 21:59:27</BE_BUCKET_LAST_USE><BE_BUCKET_REFERENCE></BE_BUCKET_REFERENCE><WALLET_TYPE>21</WALLET_TYPE></schemasubscriberbalancesdump_info><schemasubscriberbalancesdump_info><MSISDN>139559270317</MSISDN><WALLET_ID>128370838</WALLET_ID><BALANCE_TYPE>1633</BALANCE_TYPE><BE_BUCKET_ID>1586480876</BE_BUCKET_ID><BALANCE_TYPE_NAME>One Off Data</BALANCE_TYPE_NAME><BE_BUCKET_VALUE>307200</BE_BUCKET_VALUE><BE_BUCKET_START_DATE></BE_BUCKET_START_DATE><BE_NEVER_EXPIRES>0</BE_NEVER_EXPIRES><BE_EXPIRY>2019-01-19 21:59:27</BE_EXPIRY><BE_BUCKET_NEVER_USED>0</BE_BUCKET_NEVER_USED><BE_BUCKET_LAST_USE>2018-12-19 21:59:27</BE_BUCKET_LAST_USE><BE_BUCKET_REFERENCE></BE_BUCKET_REFERENCE><WALLET_TYPE>21</WALLET_TYPE></schemasubscriberbalancesdump_info><schemasubscriberbalancesdump_info><MSISDN>139559270317</MSISDN><WALLET_ID>128370838</WALLET_ID><BALANCE_TYPE>3035</BALANCE_TYPE><BE_BUCKET_ID>1446965276</BE_BUCKET_ID><BALANCE_TYPE_NAME>SplSocServDeactStatus</BALANCE_TYPE_NAME><BE_BUCKET_VALUE>1</BE_BUCKET_VALUE><BE_BUCKET_START_DATE></BE_BUCKET_START_DATE><BE_NEVER_EXPIRES>1</BE_NEVER_EXPIRES><BE_EXPIRY>1970-01-01 04:00:00</BE_EXPIRY><BE_BUCKET_NEVER_USED>0</BE_BUCKET_NEVER_USED><BE_BUCKET_LAST_USE>2018-09-04 15:09:14</BE_BUCKET_LAST_USE><BE_BUCKET_REFERENCE></BE_BUCKET_REFERENCE><WALLET_TYPE>21</WALLET_TYPE></schemasubscriberbalancesdump_info><schemasubscriberbalancesdump_info><MSISDN>139559270317</MSISDN><WALLET_ID>128370838</WALLET_ID><BALANCE_TYPE>3036</BALANCE_TYPE><BE_BUCKET_ID>1446965420</BE_BUCKET_ID><BALANCE_TYPE_NAME>SplRecSocDeactServRetry</BALANCE_TYPE_NAME><BE_BUCKET_VALUE>0</BE_BUCKET_VALUE><BE_BUCKET_START_DATE></BE_BUCKET_START_DATE><BE_NEVER_EXPIRES>1</BE_NEVER_EXPIRES><BE_EXPIRY>1970-01-01 04:00:00</BE_EXPIRY><BE_BUCKET_NEVER_USED>0</BE_BUCKET_NEVER_USED><BE_BUCKET_LAST_USE>2018-09-04 15:09:20</BE_BUCKET_LAST_USE><BE_BUCKET_REFERENCE></BE_BUCKET_REFERENCE><WALLET_TYPE>21</WALLET_TYPE></schemasubscriberbalancesdump_info><schemasubscriberbalancesdump_info><MSISDN>139559270317</MSISDN><WALLET_ID>128370838</WALLET_ID><BALANCE_TYPE>1635</BALANCE_TYPE><BE_BUCKET_ID>1579695788</BE_BUCKET_ID><BALANCE_TYPE_NAME>PAYG Promotional Data</BALANCE_TYPE_NAME><BE_BUCKET_VALUE>307200</BE_BUCKET_VALUE><BE_BUCKET_START_DATE></BE_BUCKET_START_DATE><BE_NEVER_EXPIRES>0</BE_NEVER_EXPIRES><BE_EXPIRY>2019-01-14 18:13:29</BE_EXPIRY><BE_BUCKET_NEVER_USED>0</BE_BUCKET_NEVER_USED><BE_BUCKET_LAST_USE>2018-12-14 18:13:29</BE_BUCKET_LAST_USE><BE_BUCKET_REFERENCE></BE_BUCKET_REFERENCE><WALLET_TYPE>21</WALLET_TYPE></schemasubscriberbalancesdump_info><schemasubscriberbalancesdump_info><MSISDN>139559270317</MSISDN><WALLET_ID>128370838</WALLET_ID><BALANCE_TYPE>1633</BALANCE_TYPE><BE_BUCKET_ID>1579695932</BE_BUCKET_ID><BALANCE_TYPE_NAME>One Off Data</BALANCE_TYPE_NAME><BE_BUCKET_VALUE>307200</BE_BUCKET_VALUE><BE_BUCKET_START_DATE></BE_BUCKET_START_DATE><BE_NEVER_EXPIRES>0</BE_NEVER_EXPIRES><BE_EXPIRY>2019-01-14 18:13:30</BE_EXPIRY><BE_BUCKET_NEVER_USED>0</BE_BUCKET_NEVER_USED><BE_BUCKET_LAST_USE>2018-12-14 18:13:30</BE_BUCKET_LAST_USE><BE_BUCKET_REFERENCE></BE_BUCKET_REFERENCE><WALLET_TYPE>21</WALLET_TYPE></schemasubscriberbalancesdump_info><schemasubscriberbalancesdump_info><MSISDN>139559270317</MSISDN><WALLET_ID>128370838</WALLET_ID><BALANCE_TYPE>1332</BALANCE_TYPE><BE_BUCKET_ID>1597161068</BE_BUCKET_ID><BALANCE_TYPE_NAME>MonthlyDataExp</BALANCE_TYPE_NAME><BE_BUCKET_VALUE>4026432</BE_BUCKET_VALUE><BE_BUCKET_START_DATE></BE_BUCKET_START_DATE><BE_NEVER_EXPIRES>0</BE_NEVER_EXPIRES><BE_EXPIRY>2019-01-28 04:00:00</BE_EXPIRY><BE_BUCKET_NEVER_USED>0</BE_BUCKET_NEVER_USED><BE_BUCKET_LAST_USE>2019-01-08 14:33:57</BE_BUCKET_LAST_USE><BE_BUCKET_REFERENCE></BE_BUCKET_REFERENCE><WALLET_TYPE>21</WALLET_TYPE></schemasubscriberbalancesdump_info><schemasubscriberbalancesdump_info><MSISDN>139559270317</MSISDN><WALLET_ID>128370838</WALLET_ID><BALANCE_TYPE>1206</BALANCE_TYPE><BE_BUCKET_ID>1463224172</BE_BUCKET_ID><BALANCE_TYPE_NAME>DVBdata</BALANCE_TYPE_NAME><BE_BUCKET_VALUE>0</BE_BUCKET_VALUE><BE_BUCKET_START_DATE></BE_BUCKET_START_DATE><BE_NEVER_EXPIRES>1</BE_NEVER_EXPIRES><BE_EXPIRY>1970-01-01 04:00:00</BE_EXPIRY><BE_BUCKET_NEVER_USED>0</BE_BUCKET_NEVER_USED><BE_BUCKET_LAST_USE>2018-09-18 10:39:13</BE_BUCKET_LAST_USE><BE_BUCKET_REFERENCE></BE_BUCKET_REFERENCE><WALLET_TYPE>21</WALLET_TYPE></schemasubscriberbalancesdump_info><schemasubscriberbalancesdump_info><MSISDN>139559270317</MSISDN><WALLET_ID>128370838</WALLET_ID><BALANCE_TYPE>1205</BALANCE_TYPE><BE_BUCKET_ID>1463224220</BE_BUCKET_ID><BALANCE_TYPE_NAME>DVBSMS</BALANCE_TYPE_NAME><BE_BUCKET_VALUE>0</BE_BUCKET_VALUE><BE_BUCKET_START_DATE></BE_BUCKET_START_DATE><BE_NEVER_EXPIRES>1</BE_NEVER_EXPIRES><BE_EXPIRY>1970-01-01 04:00:00</BE_EXPIRY><BE_BUCKET_NEVER_USED>0</BE_BUCKET_NEVER_USED><BE_BUCKET_LAST_USE>2018-09-18 10:39:13</BE_BUCKET_LAST_USE><BE_BUCKET_REFERENCE></BE_BUCKET_REFERENCE><WALLET_TYPE>21</WALLET_TYPE></schemasubscriberbalancesdump_info><schemasubscriberbalancesdump_info><MSISDN>139559270317</MSISDN><WALLET_ID>128370838</WALLET_ID><BALANCE_TYPE>1204</BALANCE_TYPE><BE_BUCKET_ID>1463224268</BE_BUCKET_ID><BALANCE_TYPE_NAME>DVBVoice</BALANCE_TYPE_NAME><BE_BUCKET_VALUE>0</BE_BUCKET_VALUE><BE_BUCKET_START_DATE></BE_BUCKET_START_DATE><BE_NEVER_EXPIRES>1</BE_NEVER_EXPIRES><BE_EXPIRY>1970-01-01 04:00:00</BE_EXPIRY><BE_BUCKET_NEVER_USED>0</BE_BUCKET_NEVER_USED><BE_BUCKET_LAST_USE>2018-09-18 10:39:13</BE_BUCKET_LAST_USE><BE_BUCKET_REFERENCE></BE_BUCKET_REFERENCE><WALLET_TYPE>21</WALLET_TYPE></schemasubscriberbalancesdump_info><schemasubscriberbalancesdump_info><MSISDN>139559270317</MSISDN><WALLET_ID>128370838</WALLET_ID><BALANCE_TYPE>1249</BALANCE_TYPE><BE_BUCKET_ID>1463224316</BE_BUCKET_ID><BALANCE_TYPE_NAME>DVBGrace</BALANCE_TYPE_NAME><BE_BUCKET_VALUE>0</BE_BUCKET_VALUE><BE_BUCKET_START_DATE></BE_BUCKET_START_DATE><BE_NEVER_EXPIRES>1</BE_NEVER_EXPIRES><BE_EXPIRY>1970-01-01 04:00:00</BE_EXPIRY><BE_BUCKET_NEVER_USED>0</BE_BUCKET_NEVER_USED><BE_BUCKET_LAST_USE>2018-09-18 10:39:13</BE_BUCKET_LAST_USE><BE_BUCKET_REFERENCE></BE_BUCKET_REFERENCE><WALLET_TYPE>21</WALLET_TYPE></schemasubscriberbalancesdump_info><schemasubscriberbalancesdump_info><MSISDN>139559270317</MSISDN><WALLET_ID>128370838</WALLET_ID><BALANCE_TYPE>1635</BALANCE_TYPE><BE_BUCKET_ID>1602467804</BE_BUCKET_ID><BALANCE_TYPE_NAME>PAYG Promotional Data</BALANCE_TYPE_NAME><BE_BUCKET_VALUE>307200</BE_BUCKET_VALUE><BE_BUCKET_START_DATE></BE_BUCKET_START_DATE><BE_NEVER_EXPIRES>0</BE_NEVER_EXPIRES><BE_EXPIRY>2019-02-01 16:19:21</BE_EXPIRY><BE_BUCKET_NEVER_USED>0</BE_BUCKET_NEVER_USED><BE_BUCKET_LAST_USE>2019-01-01 16:19:21</BE_BUCKET_LAST_USE><BE_BUCKET_REFERENCE></BE_BUCKET_REFERENCE><WALLET_TYPE>21</WALLET_TYPE></schemasubscriberbalancesdump_info><schemasubscriberbalancesdump_info><MSISDN>139559270317</MSISDN><WALLET_ID>128370838</WALLET_ID><BALANCE_TYPE>1633</BALANCE_TYPE><BE_BUCKET_ID>1602467948</BE_BUCKET_ID><BALANCE_TYPE_NAME>One Off Data</BALANCE_TYPE_NAME><BE_BUCKET_VALUE>307200</BE_BUCKET_VALUE><BE_BUCKET_START_DATE></BE_BUCKET_START_DATE><BE_NEVER_EXPIRES>0</BE_NEVER_EXPIRES><BE_EXPIRY>2019-02-01 16:19:21</BE_EXPIRY><BE_BUCKET_NEVER_USED>0</BE_BUCKET_NEVER_USED><BE_BUCKET_LAST_USE>2019-01-01 16:19:21</BE_BUCKET_LAST_USE><BE_BUCKET_REFERENCE></BE_BUCKET_REFERENCE><WALLET_TYPE>21</WALLET_TYPE></schemasubscriberbalancesdump_info><schemasubscriberbalancesdump_info><MSISDN>139559270317</MSISDN><WALLET_ID>128370838</WALLET_ID><BALANCE_TYPE>1635</BALANCE_TYPE><BE_BUCKET_ID>1593480188</BE_BUCKET_ID><BALANCE_TYPE_NAME>PAYG Promotional Data</BALANCE_TYPE_NAME><BE_BUCKET_VALUE>307200</BE_BUCKET_VALUE><BE_BUCKET_START_DATE></BE_BUCKET_START_DATE><BE_NEVER_EXPIRES>0</BE_NEVER_EXPIRES><BE_EXPIRY>2019-01-25 12:58:17</BE_EXPIRY><BE_BUCKET_NEVER_USED>0</BE_BUCKET_NEVER_USED><BE_BUCKET_LAST_USE>2018-12-25 12:58:17</BE_BUCKET_LAST_USE><BE_BUCKET_REFERENCE></BE_BUCKET_REFERENCE><WALLET_TYPE>21</WALLET_TYPE></schemasubscriberbalancesdump_info><schemasubscriberbalancesdump_info><MSISDN>139559270317</MSISDN><WALLET_ID>128370838</WALLET_ID><BALANCE_TYPE>1633</BALANCE_TYPE><BE_BUCKET_ID>1593480332</BE_BUCKET_ID><BALANCE_TYPE_NAME>One Off Data</BALANCE_TYPE_NAME><BE_BUCKET_VALUE>307200</BE_BUCKET_VALUE><BE_BUCKET_START_DATE></BE_BUCKET_START_DATE><BE_NEVER_EXPIRES>0</BE_NEVER_EXPIRES><BE_EXPIRY>2019-01-25 12:58:18</BE_EXPIRY><BE_BUCKET_NEVER_USED>0</BE_BUCKET_NEVER_USED><BE_BUCKET_LAST_USE>2018-12-25 12:58:18</BE_BUCKET_LAST_USE><BE_BUCKET_REFERENCE></BE_BUCKET_REFERENCE><WALLET_TYPE>21</WALLET_TYPE></schemasubscriberbalancesdump_info><schemasubscriberbalancesdump_info><MSISDN>139559270317</MSISDN><WALLET_ID>128370838</WALLET_ID><BALANCE_TYPE>1832</BALANCE_TYPE><BE_BUCKET_ID>1005505148</BE_BUCKET_ID><BALANCE_TYPE_NAME>RRMCState</BALANCE_TYPE_NAME><BE_BUCKET_VALUE>0</BE_BUCKET_VALUE><BE_BUCKET_START_DATE></BE_BUCKET_START_DATE><BE_NEVER_EXPIRES>1</BE_NEVER_EXPIRES><BE_EXPIRY>1970-01-01 04:00:00</BE_EXPIRY><BE_BUCKET_NEVER_USED>0</BE_BUCKET_NEVER_USED><BE_BUCKET_LAST_USE>2017-10-18 19:26:43</BE_BUCKET_LAST_USE><BE_BUCKET_REFERENCE></BE_BUCKET_REFERENCE><WALLET_TYPE>21</WALLET_TYPE></schemasubscriberbalancesdump_info><schemasubscriberbalancesdump_info><MSISDN>139559270317</MSISDN><WALLET_ID>128370838</WALLET_ID><BALANCE_TYPE>275</BALANCE_TYPE><BE_BUCKET_ID>1585963532</BE_BUCKET_ID><BALANCE_TYPE_NAME>More International</BALANCE_TYPE_NAME><BE_BUCKET_VALUE>324367</BE_BUCKET_VALUE><BE_BUCKET_START_DATE></BE_BUCKET_START_DATE><BE_NEVER_EXPIRES>0</BE_NEVER_EXPIRES><BE_EXPIRY>2019-01-18 14:45:21</BE_EXPIRY><BE_BUCKET_NEVER_USED>0</BE_BUCKET_NEVER_USED><BE_BUCKET_LAST_USE>2019-01-04 14:17:13</BE_BUCKET_LAST_USE><BE_BUCKET_REFERENCE></BE_BUCKET_REFERENCE><WALLET_TYPE>21</WALLET_TYPE></schemasubscriberbalancesdump_info><schemasubscriberbalancesdump_info><MSISDN>139559270317</MSISDN><WALLET_ID>128370838</WALLET_ID><BALANCE_TYPE>1635</BALANCE_TYPE><BE_BUCKET_ID>1605393596</BE_BUCKET_ID><BALANCE_TYPE_NAME>PAYG Promotional Data</BALANCE_TYPE_NAME><BE_BUCKET_VALUE>307200</BE_BUCKET_VALUE><BE_BUCKET_START_DATE></BE_BUCKET_START_DATE><BE_NEVER_EXPIRES>0</BE_NEVER_EXPIRES><BE_EXPIRY>2019-02-03 23:06:57</BE_EXPIRY><BE_BUCKET_NEVER_USED>0</BE_BUCKET_NEVER_USED><BE_BUCKET_LAST_USE>2019-01-03 23:06:57</BE_BUCKET_LAST_USE><BE_BUCKET_REFERENCE></BE_BUCKET_REFERENCE><WALLET_TYPE>21</WALLET_TYPE></schemasubscriberbalancesdump_info><schemasubscriberbalancesdump_info><MSISDN>139559270317</MSISDN><WALLET_ID>128370838</WALLET_ID><BALANCE_TYPE>1633</BALANCE_TYPE><BE_BUCKET_ID>1605393740</BE_BUCKET_ID><BALANCE_TYPE_NAME>One Off Data</BALANCE_TYPE_NAME><BE_BUCKET_VALUE>307200</BE_BUCKET_VALUE><BE_BUCKET_START_DATE></BE_BUCKET_START_DATE><BE_NEVER_EXPIRES>0</BE_NEVER_EXPIRES><BE_EXPIRY>2019-02-03 23:06:58</BE_EXPIRY><BE_BUCKET_NEVER_USED>0</BE_BUCKET_NEVER_USED><BE_BUCKET_LAST_USE>2019-01-03 23:06:58</BE_BUCKET_LAST_USE><BE_BUCKET_REFERENCE></BE_BUCKET_REFERENCE><WALLET_TYPE>21</WALLET_TYPE></schemasubscriberbalancesdump_info><schemasubscriberbalancesdump_info><MSISDN>139559270317</MSISDN><WALLET_ID>128370838</WALLET_ID><BALANCE_TYPE>1635</BALANCE_TYPE><BE_BUCKET_ID>1603616060</BE_BUCKET_ID><BALANCE_TYPE_NAME>PAYG Promotional Data</BALANCE_TYPE_NAME><BE_BUCKET_VALUE>307200</BE_BUCKET_VALUE><BE_BUCKET_START_DATE></BE_BUCKET_START_DATE><BE_NEVER_EXPIRES>0</BE_NEVER_EXPIRES><BE_EXPIRY>2019-02-02 14:15:05</BE_EXPIRY><BE_BUCKET_NEVER_USED>0</BE_BUCKET_NEVER_USED><BE_BUCKET_LAST_USE>2019-01-02 14:15:05</BE_BUCKET_LAST_USE><BE_BUCKET_REFERENCE></BE_BUCKET_REFERENCE><WALLET_TYPE>21</WALLET_TYPE></schemasubscriberbalancesdump_info><schemasubscriberbalancesdump_info><MSISDN>139559270317</MSISDN><WALLET_ID>128370838</WALLET_ID><BALANCE_TYPE>1633</BALANCE_TYPE><BE_BUCKET_ID>1603616204</BE_BUCKET_ID><BALANCE_TYPE_NAME>One Off Data</BALANCE_TYPE_NAME><BE_BUCKET_VALUE>307200</BE_BUCKET_VALUE><BE_BUCKET_START_DATE></BE_BUCKET_START_DATE><BE_NEVER_EXPIRES>0</BE_NEVER_EXPIRES><BE_EXPIRY>2019-02-02 14:15:05</BE_EXPIRY><BE_BUCKET_NEVER_USED>0</BE_BUCKET_NEVER_USED><BE_BUCKET_LAST_USE>2019-01-02 14:15:05</BE_BUCKET_LAST_USE><BE_BUCKET_REFERENCE></BE_BUCKET_REFERENCE><WALLET_TYPE>21</WALLET_TYPE></schemasubscriberbalancesdump_info><schemasubscriberbalancesdump_info><MSISDN>139559270317</MSISDN><WALLET_ID>128370838</WALLET_ID><BALANCE_TYPE>2925</BALANCE_TYPE><BE_BUCKET_ID>1047251420</BE_BUCKET_ID><BALANCE_TYPE_NAME>ComboGrace</BALANCE_TYPE_NAME><BE_BUCKET_VALUE>0</BE_BUCKET_VALUE><BE_BUCKET_START_DATE></BE_BUCKET_START_DATE><BE_NEVER_EXPIRES>1</BE_NEVER_EXPIRES><BE_EXPIRY>1970-01-01 04:00:00</BE_EXPIRY><BE_BUCKET_NEVER_USED>0</BE_BUCKET_NEVER_USED><BE_BUCKET_LAST_USE>2017-11-18 22:32:17</BE_BUCKET_LAST_USE><BE_BUCKET_REFERENCE></BE_BUCKET_REFERENCE><WALLET_TYPE>21</WALLET_TYPE></schemasubscriberbalancesdump_info><schemasubscriberbalancesdump_info><MSISDN>139559270317</MSISDN><WALLET_ID>128370838</WALLET_ID><BALANCE_TYPE>1635</BALANCE_TYPE><BE_BUCKET_ID>1599538892</BE_BUCKET_ID><BALANCE_TYPE_NAME>PAYG Promotional Data</BALANCE_TYPE_NAME><BE_BUCKET_VALUE>307200</BE_BUCKET_VALUE><BE_BUCKET_START_DATE></BE_BUCKET_START_DATE><BE_NEVER_EXPIRES>0</BE_NEVER_EXPIRES><BE_EXPIRY>2019-01-30 10:00:55</BE_EXPIRY><BE_BUCKET_NEVER_USED>0</BE_BUCKET_NEVER_USED><BE_BUCKET_LAST_USE>2018-12-30 10:00:55</BE_BUCKET_LAST_USE><BE_BUCKET_REFERENCE></BE_BUCKET_REFERENCE><WALLET_TYPE>21</WALLET_TYPE></schemasubscriberbalancesdump_info><schemasubscriberbalancesdump_info><MSISDN>139559270317</MSISDN><WALLET_ID>128370838</WALLET_ID><BALANCE_TYPE>1633</BALANCE_TYPE><BE_BUCKET_ID>1599539180</BE_BUCKET_ID><BALANCE_TYPE_NAME>One Off Data</BALANCE_TYPE_NAME><BE_BUCKET_VALUE>307200</BE_BUCKET_VALUE><BE_BUCKET_START_DATE></BE_BUCKET_START_DATE><BE_NEVER_EXPIRES>0</BE_NEVER_EXPIRES><BE_EXPIRY>2019-01-30 10:00:55</BE_EXPIRY><BE_BUCKET_NEVER_USED>0</BE_BUCKET_NEVER_USED><BE_BUCKET_LAST_USE>2018-12-30 10:00:55</BE_BUCKET_LAST_USE><BE_BUCKET_REFERENCE></BE_BUCKET_REFERENCE><WALLET_TYPE>21</WALLET_TYPE></schemasubscriberbalancesdump_info><schemasubscriberbalancesdump_info><MSISDN>139559270317</MSISDN><WALLET_ID>128370838</WALLET_ID><BALANCE_TYPE>3034</BALANCE_TYPE><BE_BUCKET_ID>1445770460</BE_BUCKET_ID><BALANCE_TYPE_NAME>SplRecSocServRetry</BALANCE_TYPE_NAME><BE_BUCKET_VALUE>0</BE_BUCKET_VALUE><BE_BUCKET_START_DATE></BE_BUCKET_START_DATE><BE_NEVER_EXPIRES>1</BE_NEVER_EXPIRES><BE_EXPIRY>1970-01-01 04:00:00</BE_EXPIRY><BE_BUCKET_NEVER_USED>0</BE_BUCKET_NEVER_USED><BE_BUCKET_LAST_USE>2018-09-03 15:05:40</BE_BUCKET_LAST_USE><BE_BUCKET_REFERENCE></BE_BUCKET_REFERENCE><WALLET_TYPE>21</WALLET_TYPE></schemasubscriberbalancesdump_info><schemasubscriberbalancesdump_info><MSISDN>139559270317</MSISDN><WALLET_ID>128370838</WALLET_ID><BALANCE_TYPE>1190</BALANCE_TYPE><BE_BUCKET_ID>1608784412</BE_BUCKET_ID><BALANCE_TYPE_NAME>_pc_PeerCounterReset</BALANCE_TYPE_NAME><BE_BUCKET_VALUE>2</BE_BUCKET_VALUE><BE_BUCKET_START_DATE>2019-01-06 19:36:30</BE_BUCKET_START_DATE><BE_NEVER_EXPIRES>0</BE_NEVER_EXPIRES><BE_EXPIRY>2019-01-08 19:36:06</BE_EXPIRY><BE_BUCKET_NEVER_USED>1</BE_BUCKET_NEVER_USED><BE_BUCKET_LAST_USE>1970-01-01 04:00:00</BE_BUCKET_LAST_USE><BE_BUCKET_REFERENCE>129330072:21</BE_BUCKET_REFERENCE><WALLET_TYPE>21</WALLET_TYPE></schemasubscriberbalancesdump_info><schemasubscriberbalancesdump_info><MSISDN>139559270317</MSISDN><WALLET_ID>128370838</WALLET_ID><BALANCE_TYPE>1266</BALANCE_TYPE><BE_BUCKET_ID>539475644</BE_BUCKET_ID><BALANCE_TYPE_NAME>P2PAllowed</BALANCE_TYPE_NAME><BE_BUCKET_VALUE>1</BE_BUCKET_VALUE><BE_BUCKET_START_DATE></BE_BUCKET_START_DATE><BE_NEVER_EXPIRES>1</BE_NEVER_EXPIRES><BE_EXPIRY>1970-01-01 04:00:00</BE_EXPIRY><BE_BUCKET_NEVER_USED>0</BE_BUCKET_NEVER_USED><BE_BUCKET_LAST_USE>2016-02-11 00:31:12</BE_BUCKET_LAST_USE><BE_BUCKET_REFERENCE></BE_BUCKET_REFERENCE><WALLET_TYPE>21</WALLET_TYPE></schemasubscriberbalancesdump_info><schemasubscriberbalancesdump_info><MSISDN>139559270317</MSISDN><WALLET_ID>128370838</WALLET_ID><BALANCE_TYPE>1324</BALANCE_TYPE><BE_BUCKET_ID>539475692</BE_BUCKET_ID><BALANCE_TYPE_NAME>PostCall</BALANCE_TYPE_NAME><BE_BUCKET_VALUE>1</BE_BUCKET_VALUE><BE_BUCKET_START_DATE></BE_BUCKET_START_DATE><BE_NEVER_EXPIRES>1</BE_NEVER_EXPIRES><BE_EXPIRY>1970-01-01 04:00:00</BE_EXPIRY><BE_BUCKET_NEVER_USED>0</BE_BUCKET_NEVER_USED><BE_BUCKET_LAST_USE>2016-02-06 20:53:13</BE_BUCKET_LAST_USE><BE_BUCKET_REFERENCE></BE_BUCKET_REFERENCE><WALLET_TYPE>21</WALLET_TYPE></schemasubscriberbalancesdump_info><schemasubscriberbalancesdump_info><MSISDN>139559270317</MSISDN><WALLET_ID>128370838</WALLET_ID><BALANCE_TYPE>2112</BALANCE_TYPE><BE_BUCKET_ID>539476364</BE_BUCKET_ID><BALANCE_TYPE_NAME>ZingerPPU</BALANCE_TYPE_NAME><BE_BUCKET_VALUE>0</BE_BUCKET_VALUE><BE_BUCKET_START_DATE></BE_BUCKET_START_DATE><BE_NEVER_EXPIRES>1</BE_NEVER_EXPIRES><BE_EXPIRY>1970-01-01 04:00:00</BE_EXPIRY><BE_BUCKET_NEVER_USED>0</BE_BUCKET_NEVER_USED><BE_BUCKET_LAST_USE>2016-06-10 08:16:34</BE_BUCKET_LAST_USE><BE_BUCKET_REFERENCE></BE_BUCKET_REFERENCE><WALLET_TYPE>21</WALLET_TYPE></schemasubscriberbalancesdump_info><schemasubscriberbalancesdump_info><MSISDN>139559270317</MSISDN><WALLET_ID>128370838</WALLET_ID><BALANCE_TYPE>2352</BALANCE_TYPE><BE_BUCKET_ID>539476412</BE_BUCKET_ID><BALANCE_TYPE_NAME>OOB_Protection</BALANCE_TYPE_NAME><BE_BUCKET_VALUE>272</BE_BUCKET_VALUE><BE_BUCKET_START_DATE></BE_BUCKET_START_DATE><BE_NEVER_EXPIRES>0</BE_NEVER_EXPIRES><BE_EXPIRY>2019-02-07 22:17:54</BE_EXPIRY><BE_BUCKET_NEVER_USED>0</BE_BUCKET_NEVER_USED><BE_BUCKET_LAST_USE>2019-01-07 22:17:54</BE_BUCKET_LAST_USE><BE_BUCKET_REFERENCE></BE_BUCKET_REFERENCE><WALLET_TYPE>21</WALLET_TYPE></schemasubscriberbalancesdump_info><schemasubscriberbalancesdump_info><MSISDN>139559270317</MSISDN><WALLET_ID>128370838</WALLET_ID><BALANCE_TYPE>2353</BALANCE_TYPE><BE_BUCKET_ID>539476460</BE_BUCKET_ID><BALANCE_TYPE_NAME>OOB_Migration_flag</BALANCE_TYPE_NAME><BE_BUCKET_VALUE>1</BE_BUCKET_VALUE><BE_BUCKET_START_DATE></BE_BUCKET_START_DATE><BE_NEVER_EXPIRES>1</BE_NEVER_EXPIRES><BE_EXPIRY>1970-01-01 04:00:00</BE_EXPIRY><BE_BUCKET_NEVER_USED>0</BE_BUCKET_NEVER_USED><BE_BUCKET_LAST_USE>2016-10-05 02:16:31</BE_BUCKET_LAST_USE><BE_BUCKET_REFERENCE></BE_BUCKET_REFERENCE><WALLET_TYPE>21</WALLET_TYPE></schemasubscriberbalancesdump_info><schemasubscriberbalancesdump_info><MSISDN>139559270317</MSISDN><WALLET_ID>128370838</WALLET_ID><BALANCE_TYPE>21</BALANCE_TYPE><BE_BUCKET_ID>539475068</BE_BUCKET_ID><BALANCE_TYPE_NAME>General Cash</BALANCE_TYPE_NAME><BE_BUCKET_VALUE>162908</BE_BUCKET_VALUE><BE_BUCKET_START_DATE></BE_BUCKET_START_DATE><BE_NEVER_EXPIRES>1</BE_NEVER_EXPIRES><BE_EXPIRY>1970-01-01 04:00:00</BE_EXPIRY><BE_BUCKET_NEVER_USED>0</BE_BUCKET_NEVER_USED><BE_BUCKET_LAST_USE>2019-01-08 15:22:36</BE_BUCKET_LAST_USE><BE_BUCKET_REFERENCE></BE_BUCKET_REFERENCE><WALLET_TYPE>21</WALLET_TYPE></schemasubscriberbalancesdump_info><schemasubscriberbalancesdump_info><MSISDN>139559270317</MSISDN><WALLET_ID>128370838</WALLET_ID><BALANCE_TYPE>25</BALANCE_TYPE><BE_BUCKET_ID>539475116</BE_BUCKET_ID><BALANCE_TYPE_NAME>Free SMS</BALANCE_TYPE_NAME><BE_BUCKET_VALUE>0</BE_BUCKET_VALUE><BE_BUCKET_START_DATE></BE_BUCKET_START_DATE><BE_NEVER_EXPIRES>1</BE_NEVER_EXPIRES><BE_EXPIRY>1970-01-01 04:00:00</BE_EXPIRY><BE_BUCKET_NEVER_USED>1</BE_BUCKET_NEVER_USED><BE_BUCKET_LAST_USE>1970-01-01 04:00:00</BE_BUCKET_LAST_USE><BE_BUCKET_REFERENCE></BE_BUCKET_REFERENCE><WALLET_TYPE>21</WALLET_TYPE></schemasubscriberbalancesdump_info><schemasubscriberbalancesdump_info><MSISDN>139559270317</MSISDN><WALLET_ID>128370838</WALLET_ID><BALANCE_TYPE>55</BALANCE_TYPE><BE_BUCKET_ID>539475164</BE_BUCKET_ID><BALANCE_TYPE_NAME>Data</BALANCE_TYPE_NAME><BE_BUCKET_VALUE>0</BE_BUCKET_VALUE><BE_BUCKET_START_DATE></BE_BUCKET_START_DATE><BE_NEVER_EXPIRES>1</BE_NEVER_EXPIRES><BE_EXPIRY>1970-01-01 04:00:00</BE_EXPIRY><BE_BUCKET_NEVER_USED>0</BE_BUCKET_NEVER_USED><BE_BUCKET_LAST_USE>2019-01-07 21:06:37</BE_BUCKET_LAST_USE><BE_BUCKET_REFERENCE></BE_BUCKET_REFERENCE><WALLET_TYPE>21</WALLET_TYPE></schemasubscriberbalancesdump_info><schemasubscriberbalancesdump_info><MSISDN>139559270317</MSISDN><WALLET_ID>128370838</WALLET_ID><BALANCE_TYPE>1060</BALANCE_TYPE><BE_BUCKET_ID>539475500</BE_BUCKET_ID><BALANCE_TYPE_NAME>_WLC_Service</BALANCE_TYPE_NAME><BE_BUCKET_VALUE>-1</BE_BUCKET_VALUE><BE_BUCKET_START_DATE>2018-02-05 21:03:03</BE_BUCKET_START_DATE><BE_NEVER_EXPIRES>0</BE_NEVER_EXPIRES><BE_EXPIRY>2019-02-05 20:52:25</BE_EXPIRY><BE_BUCKET_NEVER_USED>1</BE_BUCKET_NEVER_USED><BE_BUCKET_LAST_USE>1970-01-01 04:00:00</BE_BUCKET_LAST_USE><BE_BUCKET_REFERENCE>129330072:21:214:2</BE_BUCKET_REFERENCE><WALLET_TYPE>21</WALLET_TYPE></schemasubscriberbalancesdump_info><schemasubscriberbalancesdump_info><MSISDN>139559270317</MSISDN><WALLET_ID>128370838</WALLET_ID><BALANCE_TYPE>1099</BALANCE_TYPE><BE_BUCKET_ID>539475548</BE_BUCKET_ID><BALANCE_TYPE_NAME>InitialCreditTracker</BALANCE_TYPE_NAME><BE_BUCKET_VALUE>0</BE_BUCKET_VALUE><BE_BUCKET_START_DATE></BE_BUCKET_START_DATE><BE_NEVER_EXPIRES>1</BE_NEVER_EXPIRES><BE_EXPIRY>1970-01-01 04:00:00</BE_EXPIRY><BE_BUCKET_NEVER_USED>1</BE_BUCKET_NEVER_USED><BE_BUCKET_LAST_USE>1970-01-01 04:00:00</BE_BUCKET_LAST_USE><BE_BUCKET_REFERENCE></BE_BUCKET_REFERENCE><WALLET_TYPE>21</WALLET_TYPE></schemasubscriberbalancesdump_info><schemasubscriberbalancesdump_info><MSISDN>139559270317</MSISDN><WALLET_ID>128370838</WALLET_ID><BALANCE_TYPE>3172</BALANCE_TYPE><BE_BUCKET_ID>1509221468</BE_BUCKET_ID><BALANCE_TYPE_NAME>MonthlyRecNew</BALANCE_TYPE_NAME><BE_BUCKET_VALUE>1</BE_BUCKET_VALUE><BE_BUCKET_START_DATE></BE_BUCKET_START_DATE><BE_NEVER_EXPIRES>1</BE_NEVER_EXPIRES><BE_EXPIRY>1970-01-01 04:00:00</BE_EXPIRY><BE_BUCKET_NEVER_USED>0</BE_BUCKET_NEVER_USED><BE_BUCKET_LAST_USE>2018-10-24 15:23:34</BE_BUCKET_LAST_USE><BE_BUCKET_REFERENCE></BE_BUCKET_REFERENCE><WALLET_TYPE>21</WALLET_TYPE></schemasubscriberbalancesdump_info><schemasubscriberbalancesdump_info><MSISDN>139559270317</MSISDN><WALLET_ID>128370838</WALLET_ID><BALANCE_TYPE>62</BALANCE_TYPE><BE_BUCKET_ID>1610172044</BE_BUCKET_ID><BALANCE_TYPE_NAME>Zero Credit Calls</BALANCE_TYPE_NAME><BE_BUCKET_VALUE>1</BE_BUCKET_VALUE><BE_BUCKET_START_DATE></BE_BUCKET_START_DATE><BE_NEVER_EXPIRES>1</BE_NEVER_EXPIRES><BE_EXPIRY>1970-01-01 04:00:00</BE_EXPIRY><BE_BUCKET_NEVER_USED>0</BE_BUCKET_NEVER_USED><BE_BUCKET_LAST_USE>2019-01-07 22:17:21</BE_BUCKET_LAST_USE><BE_BUCKET_REFERENCE></BE_BUCKET_REFERENCE><WALLET_TYPE>21</WALLET_TYPE></schemasubscriberbalancesdump_info><schemasubscriberbalancesdump_info><MSISDN>139559270317</MSISDN><WALLET_ID>128370838</WALLET_ID><BALANCE_TYPE>1956</BALANCE_TYPE><BE_BUCKET_ID>1610172092</BE_BUCKET_ID><BALANCE_TYPE_NAME>Rech_Face_Val</BALANCE_TYPE_NAME><BE_BUCKET_VALUE>55</BE_BUCKET_VALUE><BE_BUCKET_START_DATE></BE_BUCKET_START_DATE><BE_NEVER_EXPIRES>0</BE_NEVER_EXPIRES><BE_EXPIRY>2019-02-06 22:17:21</BE_EXPIRY><BE_BUCKET_NEVER_USED>0</BE_BUCKET_NEVER_USED><BE_BUCKET_LAST_USE>2019-01-07 22:17:21</BE_BUCKET_LAST_USE><BE_BUCKET_REFERENCE></BE_BUCKET_REFERENCE><WALLET_TYPE>21</WALLET_TYPE></schemasubscriberbalancesdump_info><schemasubscriberbalancesdump_info><MSISDN>139559270317</MSISDN><WALLET_ID>128370838</WALLET_ID><BALANCE_TYPE>969</BALANCE_TYPE><BE_BUCKET_ID>1610172140</BE_BUCKET_ID><BALANCE_TYPE_NAME>FaceValue</BALANCE_TYPE_NAME><BE_BUCKET_VALUE>550000</BE_BUCKET_VALUE><BE_BUCKET_START_DATE></BE_BUCKET_START_DATE><BE_NEVER_EXPIRES>0</BE_NEVER_EXPIRES><BE_EXPIRY>2019-02-06 22:17:21</BE_EXPIRY><BE_BUCKET_NEVER_USED>0</BE_BUCKET_NEVER_USED><BE_BUCKET_LAST_USE>2019-01-07 22:17:21</BE_BUCKET_LAST_USE><BE_BUCKET_REFERENCE></BE_BUCKET_REFERENCE><WALLET_TYPE>21</WALLET_TYPE></schemasubscriberbalancesdump_info><schemasubscriberbalancesdump_info><MSISDN>139559270317</MSISDN><WALLET_ID>128370838</WALLET_ID><BALANCE_TYPE>1635</BALANCE_TYPE><BE_BUCKET_ID>1610172524</BE_BUCKET_ID><BALANCE_TYPE_NAME>PAYG Promotional Data</BALANCE_TYPE_NAME><BE_BUCKET_VALUE>307200</BE_BUCKET_VALUE><BE_BUCKET_START_DATE></BE_BUCKET_START_DATE><BE_NEVER_EXPIRES>0</BE_NEVER_EXPIRES><BE_EXPIRY>2019-02-07 22:17:54</BE_EXPIRY><BE_BUCKET_NEVER_USED>0</BE_BUCKET_NEVER_USED><BE_BUCKET_LAST_USE>2019-01-07 22:17:54</BE_BUCKET_LAST_USE><BE_BUCKET_REFERENCE></BE_BUCKET_REFERENCE><WALLET_TYPE>21</WALLET_TYPE></schemasubscriberbalancesdump_info><schemasubscriberbalancesdump_info><MSISDN>139559270317</MSISDN><WALLET_ID>128370838</WALLET_ID><BALANCE_TYPE>55</BALANCE_TYPE><BE_BUCKET_ID>1610172572</BE_BUCKET_ID><BALANCE_TYPE_NAME>Data</BALANCE_TYPE_NAME><BE_BUCKET_VALUE>97280</BE_BUCKET_VALUE><BE_BUCKET_START_DATE></BE_BUCKET_START_DATE><BE_NEVER_EXPIRES>0</BE_NEVER_EXPIRES><BE_EXPIRY>2019-02-07 22:17:54</BE_EXPIRY><BE_BUCKET_NEVER_USED>0</BE_BUCKET_NEVER_USED><BE_BUCKET_LAST_USE>2019-01-08 14:33:57</BE_BUCKET_LAST_USE><BE_BUCKET_REFERENCE></BE_BUCKET_REFERENCE><WALLET_TYPE>21</WALLET_TYPE></schemasubscriberbalancesdump_info><schemasubscriberbalancesdump_info><MSISDN>139559270317</MSISDN><WALLET_ID>128370838</WALLET_ID><BALANCE_TYPE>55</BALANCE_TYPE><BE_BUCKET_ID>1610172620</BE_BUCKET_ID><BALANCE_TYPE_NAME>Data</BALANCE_TYPE_NAME><BE_BUCKET_VALUE>614400</BE_BUCKET_VALUE><BE_BUCKET_START_DATE></BE_BUCKET_START_DATE><BE_NEVER_EXPIRES>0</BE_NEVER_EXPIRES><BE_EXPIRY>2019-02-07 22:17:54</BE_EXPIRY><BE_BUCKET_NEVER_USED>0</BE_BUCKET_NEVER_USED><BE_BUCKET_LAST_USE>2019-01-07 22:17:54</BE_BUCKET_LAST_USE><BE_BUCKET_REFERENCE></BE_BUCKET_REFERENCE><WALLET_TYPE>21</WALLET_TYPE></schemasubscriberbalancesdump_info><schemasubscriberbalancesdump_info><MSISDN>139559270317</MSISDN><WALLET_ID>128370838</WALLET_ID><BALANCE_TYPE>1633</BALANCE_TYPE><BE_BUCKET_ID>1610172668</BE_BUCKET_ID><BALANCE_TYPE_NAME>One Off Data</BALANCE_TYPE_NAME><BE_BUCKET_VALUE>307200</BE_BUCKET_VALUE><BE_BUCKET_START_DATE></BE_BUCKET_START_DATE><BE_NEVER_EXPIRES>0</BE_NEVER_EXPIRES><BE_EXPIRY>2019-02-07 22:17:54</BE_EXPIRY><BE_BUCKET_NEVER_USED>0</BE_BUCKET_NEVER_USED><BE_BUCKET_LAST_USE>2019-01-07 22:17:54</BE_BUCKET_LAST_USE><BE_BUCKET_REFERENCE></BE_BUCKET_REFERENCE><WALLET_TYPE>21</WALLET_TYPE></schemasubscriberbalancesdump_info><schemasubscriberbalancesdump_info><MSISDN>139559270317</MSISDN><WALLET_ID>128370838</WALLET_ID><BALANCE_TYPE>1892</BALANCE_TYPE><BE_BUCKET_ID>1610172860</BE_BUCKET_ID><BALANCE_TYPE_NAME>MonthlySMSCheck</BALANCE_TYPE_NAME><BE_BUCKET_VALUE>2</BE_BUCKET_VALUE><BE_BUCKET_START_DATE></BE_BUCKET_START_DATE><BE_NEVER_EXPIRES>0</BE_NEVER_EXPIRES><BE_EXPIRY>2019-02-06 22:18:05</BE_EXPIRY><BE_BUCKET_NEVER_USED>0</BE_BUCKET_NEVER_USED><BE_BUCKET_LAST_USE>2019-01-07 22:18:05</BE_BUCKET_LAST_USE><BE_BUCKET_REFERENCE></BE_BUCKET_REFERENCE><WALLET_TYPE>21</WALLET_TYPE></schemasubscriberbalancesdump_info><schemasubscriberbalancesdump_info><MSISDN>139559270317</MSISDN><WALLET_ID>128370838</WALLET_ID><BALANCE_TYPE>661</BALANCE_TYPE><BE_BUCKET_ID>1609989788</BE_BUCKET_ID><BALANCE_TYPE_NAME>PeerCounter</BALANCE_TYPE_NAME><BE_BUCKET_VALUE>0</BE_BUCKET_VALUE><BE_BUCKET_START_DATE></BE_BUCKET_START_DATE><BE_NEVER_EXPIRES>1</BE_NEVER_EXPIRES><BE_EXPIRY>1970-01-01 04:00:00</BE_EXPIRY><BE_BUCKET_NEVER_USED>0</BE_BUCKET_NEVER_USED><BE_BUCKET_LAST_USE>2019-01-07 19:36:07</BE_BUCKET_LAST_USE><BE_BUCKET_REFERENCE></BE_BUCKET_REFERENCE><WALLET_TYPE>21</WALLET_TYPE></schemasubscriberbalancesdump_info><schemasubscriberbalancesdump_info><MSISDN>139559270317</MSISDN><WALLET_ID>128370838</WALLET_ID><BALANCE_TYPE>2927</BALANCE_TYPE><BE_BUCKET_ID>1526821484</BE_BUCKET_ID><BALANCE_TYPE_NAME>ComboRecServ</BALANCE_TYPE_NAME><BE_BUCKET_VALUE>0</BE_BUCKET_VALUE><BE_BUCKET_START_DATE></BE_BUCKET_START_DATE><BE_NEVER_EXPIRES>1</BE_NEVER_EXPIRES><BE_EXPIRY>1970-01-01 04:00:00</BE_EXPIRY><BE_BUCKET_NEVER_USED>0</BE_BUCKET_NEVER_USED><BE_BUCKET_LAST_USE>2018-11-07 00:25:50</BE_BUCKET_LAST_USE><BE_BUCKET_REFERENCE></BE_BUCKET_REFERENCE><WALLET_TYPE>21</WALLET_TYPE></schemasubscriberbalancesdump_info></balancesdump_info><cugclidump_info>null</cugclidump_info><usmsdump_info><schemasubscriberusmsdump_info><MSISDN>139559270317</MSISDN><INITIAL_ACTIVATION_DATE>2016-02-06 20:52:25</INITIAL_ACTIVATION_DATE><INITIAL_ACCOUNT_BALANCE>0</INITIAL_ACCOUNT_BALANCE><LAST_ACCOUNT_EXPIRY_PERIOD>2018-02-05 20:52:25</LAST_ACCOUNT_EXPIRY_PERIOD><LAST_BALANCE_BEFORE_RECHARGE>216952</LAST_BALANCE_BEFORE_RECHARGE><LAST_BALANCE_EXPIRY_PERIOD></LAST_BALANCE_EXPIRY_PERIOD><LAST_EXPIRED_AMOUNT>0</LAST_EXPIRED_AMOUNT><LAST_EXPIRY_DATE>2019-01-08 04:07:36</LAST_EXPIRY_DATE><LAST_PRODUCT_TYPE_SWAP_DATE></LAST_PRODUCT_TYPE_SWAP_DATE><LAST_RECHARGE_AMOUNT>550000</LAST_RECHARGE_AMOUNT><FIRST_RECHARGE_DATE>2016-02-07 16:06:13</FIRST_RECHARGE_DATE><LAST_RECHARGE_DATE>2019-01-07 22:17:21</LAST_RECHARGE_DATE><LAST_STATE_CHANGE_DATE>2017-10-18 15:46:43</LAST_STATE_CHANGE_DATE><TOTAL_EXPIRED_AMOUNT>0</TOTAL_EXPIRED_AMOUNT><LAST_STATE_CHANGE_REASON>Suspend to Active</LAST_STATE_CHANGE_REASON><WALLET_ID>128370838</WALLET_ID><WALLET_TYPE>21</WALLET_TYPE></schemasubscriberusmsdump_info></usmsdump_info><profiledump_info><schemasubscriberprofiledump_info><MSISDN>139559270317</MSISDN><Language_ID>11</Language_ID><IMEI></IMEI><IMSI>424030107230185</IMSI><HLRAddress>971550930187</HLRAddress><Wallet_Type>0</Wallet_Type><BstrVceIntNumTree></BstrVceIntNumTree><BstrVceNatNumTree></BstrVceNatNumTree><PeriodicChargeStatus></PeriodicChargeStatus><CSBAR></CSBAR><crbtActReqDate></crbtActReqDate><crtCnfrmd></crtCnfrmd><crbtActConfirmDate></crbtActConfirmDate><crbtDeact></crbtDeact><crbtDeActReqDate></crbtDeActReqDate><crbtDeActConfirmDate></crbtDeActConfirmDate><cbActConfirmDate></cbActConfirmDate><cbExpDate></cbExpDate><cbCnfdAct></cbCnfdAct><cbWarn1></cbWarn1><cbWarn2></cbWarn2><cbDeActReqDate></cbDeActReqDate><cbDeActConfirmDate></cbDeActConfirmDate><cfActConfirmDate></cfActConfirmDate><cfConfActive></cfConfActive><cfDeActConfirmDate></cfDeActConfirmDate><cfDeActReqDate></cfDeActReqDate><cfLastFailedDate></cfLastFailedDate><cfActReqDate></cfActReqDate><avmActConfirmDate></avmActConfirmDate><avmCnfrmd></avmCnfrmd><avmDeActReqDate></avmDeActReqDate><avmDeActConfirmDate></avmDeActConfirmDate><SprssNtfctn>F</SprssNtfctn><avm></avm><avmActReqDate></avmActReqDate><MssdCallNot></MssdCallNot><VMCIMEI></VMCIMEI><VMCName></VMCName><AcctActiveMonth>20160307165225</AcctActiveMonth><AcctActiveYear>20190205165225</AcctActiveYear><TopXCountr1></TopXCountr1><TopXCountr2></TopXCountr2><TopXCountr3></TopXCountr3><TopXCountr4></TopXCountr4><TopXCountr5></TopXCountr5><Prepaid></Prepaid><entBsnssCrclActv></entBsnssCrclActv><BusMobPayg50></BusMobPayg50><BusMobTopUp></BusMobTopUp><MercuryOptInOutDate></MercuryOptInOutDate><HardCapLabel></HardCapLabel><HardCapAddonLabel></HardCapAddonLabel><Active></Active><Absher></Absher><avmInfSub></avmInfSub><avmPin></avmPin><avmProf></avmProf><BronzeMPromoActDate></BronzeMPromoActDate><BronzeMPromoDeactDate></BronzeMPromoDeactDate><BstrVceIntNumAct></BstrVceIntNumAct><BstrVceNatNumAct></BstrVceNatNumAct><BstrVINActReqDate></BstrVINActReqDate><BstrVINConfirmDate></BstrVINConfirmDate><BstrVINDeActConfDate></BstrVINDeActConfDate><BstrVINDeActReqDate></BstrVINDeActReqDate><BstrVINRecur></BstrVINRecur><BstrVNNActReqDate></BstrVNNActReqDate><BstrVNNConfirmDate></BstrVNNConfirmDate><BstrVNNDeActConfDate></BstrVNNDeActConfDate><BstrVNNDeActReqDate></BstrVNNDeActReqDate><BstrVNNRecur></BstrVNNRecur><cbActReqDate></cbActReqDate><cbAll></cbAll><cbIncom></cbIncom><cbInt></cbInt><cbIntExc></cbIntExc><cbWR></cbWR><cfBusy></cfBusy><cfData></cfData><cfFax></cfFax><cfInt></cfInt><cfNoReply></cfNoReply><cfNotReach></cfNotReach><cfVoice></cfVoice><clir></clir><cllrRngTne></cllrRngTne><CVM></CVM><CVMCounter></CVMCounter><dataGeneric></dataGeneric><Date1></Date1><DisabilityActivationDate></DisabilityActivationDate><DisabilityDectivationDate></DisabilityDectivationDate><EmiratiPlan></EmiratiPlan><EntCust></EntCust><entMssgingActv></entMssgingActv><faxGroup3></faxGroup3><GlobalZoneOptIn></GlobalZoneOptIn><GlobalZoneOptOut></GlobalZoneOptOut><gprsPmail></gprsPmail><IDD2Act></IDD2Act><IDD2ActDate></IDD2ActDate><IDD2DeactDate></IDD2DeactDate><IDDCutRateAct></IDDCutRateAct><IDDCutRateActDate></IDDCutRateActDate><InternationalMin></InternationalMin><Language></Language><odbAll></odbAll><odbIncom></odbIncom><odbInt></odbInt><odbIntExc></odbIntExc><odbOnlyVoice></odbOnlyVoice><odbOutVoice></odbOutVoice><odbWR></odbWR><PAYGDataFNL></PAYGDataFNL><PAYGMet></PAYGMet><PCNGlobalOptin></PCNGlobalOptin><PCNGlobalOptout>20181024085659</PCNGlobalOptout><Plan></Plan><ReceivePostCallSMS>F</ReceivePostCallSMS><SocialBndlActChannel></SocialBndlActChannel><SocialBndlDeActChannel></SocialBndlDeActChannel><BstrVceIntNumExp></BstrVceIntNumExp><BstrVceNatNumExp></BstrVceNatNumExp><BstrVINChngsAllwd></BstrVINChngsAllwd><BstrVNNChngsAllwd></BstrVNNChngsAllwd><TranslatedNumber></TranslatedNumber><TransNumber>2298696704</TransNumber><SmsBndl1Recur></SmsBndl1Recur><SmsExpDate></SmsExpDate><SmsBndl2Recur></SmsBndl2Recur><PriceShout></PriceShout><BlckBrryAct></BlckBrryAct><BlckBrryCnfdAct></BlckBrryCnfdAct><BlckBrryActCnfrmDate></BlckBrryActCnfrmDate><BlckBrryExpDate></BlckBrryExpDate><SmsBndl3Recur></SmsBndl3Recur><Bespoke></Bespoke><ManRenDateLess1Y></ManRenDateLess1Y><DataBndl1Recur></DataBndl1Recur><DataBndlType></DataBndlType><DataExpDate></DataExpDate><DataGraceAct></DataGraceAct><DataGraceEnd></DataGraceEnd><DataBndl2Recur></DataBndl2Recur><DataBndl3Recur></DataBndl3Recur><DataBndl4Recur></DataBndl4Recur><DataBndl5Recur></DataBndl5Recur><DataBndl6Recur></DataBndl6Recur><DataBndl8Recur></DataBndl8Recur><DataBndl9Recur></DataBndl9Recur><MBB></MBB><MBBExpDate></MBBExpDate><MBBUnlimited></MBBUnlimited><MBBUnlimExpDate></MBBUnlimExpDate><MBB2GB></MBB2GB><MBB2GBExpDate></MBB2GBExpDate><MBB10GB></MBB10GB><MBB10GBExpDate></MBB10GBExpDate><MBBGraceAct></MBBGraceAct><MBBGraceEnd></MBBGraceEnd><MBBOfferExpDate></MBBOfferExpDate><TP_Social_Deact_Conf></TP_Social_Deact_Conf><cbAct></cbAct><PokeSMSOptoutDate></PokeSMSOptoutDate><PokeSMSOptinDate></PokeSMSOptinDate><BlckBrryActReqDate></BlckBrryActReqDate><BlckBrryDeActReqDate></BlckBrryDeActReqDate><BlckBrryDeactRbkDate></BlckBrryDeactRbkDate><BronzeDeactDate></BronzeDeactDate><BronzeActDate></BronzeActDate><umsCnfrmd></umsCnfrmd><umsInfSub></umsInfSub><ums></ums><umsF2M></umsF2M><umsSMS2F></umsSMS2F><umsVm2MMS></umsVm2MMS><TravSumOptInDate></TravSumOptInDate><PassOptInDate></PassOptInDate><PassOptOutDate></PassOptOutDate><TwinSIMNumber></TwinSIMNumber><FstTimeActivation></FstTimeActivation><Anniversarytopuppromo></Anniversarytopuppromo><AnniversarytopuppromoEnd></AnniversarytopuppromoEnd><SmartPhoneExpiry></SmartPhoneExpiry><DSP_Promo></DSP_Promo><guiBalAdjDate></guiBalAdjDate><guiBalAdjVal></guiBalAdjVal><BBBundName></BBBundName><BBPromo></BBPromo><BSCSAct></BSCSAct><BBPromoSubDate></BBPromoSubDate><BBPromoEndDate></BBPromoEndDate><BlckBrrySprssSMS></BlckBrrySprssSMS><BlckBrryDeActCnfrmDt></BlckBrryDeActCnfrmDt><Payg_Life_Optin></Payg_Life_Optin><gprsBasicSer></gprsBasicSer><gprsWap></gprsWap><smsMtPp></smsMtPp><gprsMms></gprsMms><smsMoPp></smsMoPp><callhold></callhold><callwait></callwait><multiParty></multiParty><IntRoam></IntRoam><clip></clip><VdioCall></VdioCall><DuCS></DuCS><BSCS_account_num></BSCS_account_num><CS_notification_num></CS_notification_num><cbGraceAct></cbGraceAct><cbGraceEnd></cbGraceEnd><cbGraceRenew></cbGraceRenew><gprsCarrier></gprsCarrier><PAYGDataLineOffer></PAYGDataLineOffer><PAYGDataWHSP></PAYGDataWHSP><PAYGDataWH></PAYGDataWH><msisdnChgDate></msisdnChgDate><mainMSISDN></mainMSISDN><CashReturn></CashReturn><NewTopUpValue></NewTopUpValue><bdgtCntrlTopUp></bdgtCntrlTopUp><BlckBrryBundle></BlckBrryBundle><MBB10GBWelcome></MBB10GBWelcome><MBB2GBWelcome></MBB2GBWelcome><MBBUnlimWelcome></MBBUnlimWelcome><MBBWelcome></MBBWelcome><guiBalAdjCount></guiBalAdjCount><LastChangeDateExpiry></LastChangeDateExpiry><NewPPBundle></NewPPBundle><SmsBndlType></SmsBndlType></schemasubscriberprofiledump_info></profiledump_info></subscriber_xml>";
+
+		//PT Values
+		//String xml = "<subscriber_xml><subscriber_info><SUBSCRIBER><MSISDN>139559270317</MSISDN><CCS_ACCT_TYPE_NAME>Pay as you Go 2</CCS_ACCT_TYPE_NAME><CCS_ACCT_TYPE_ID>214</CCS_ACCT_TYPE_ID><SERVICE_STATE>A</SERVICE_STATE><CREATION_DATE>2016-02-05 14:25:06</CREATION_DATE><WALLET_EXPIRY>2019-02-05 20:52:25</WALLET_EXPIRY></SUBSCRIBER></subscriber_info><balancesdump_info><schemasubscriberbalancesdump_info><MSISDN>139559270317</MSISDN><WALLET_ID>128370838</WALLET_ID><BALANCE_TYPE>92</BALANCE_TYPE><BE_BUCKET_ID>1163929964</BE_BUCKET_ID><BALANCE_TYPE_NAME>Yearly Expenditure</BALANCE_TYPE_NAME><BE_BUCKET_VALUE>71067207</BE_BUCKET_VALUE><BE_BUCKET_START_DATE></BE_BUCKET_START_DATE><BE_NEVER_EXPIRES>0</BE_NEVER_EXPIRES><BE_EXPIRY>2019-02-08 04:00:00</BE_EXPIRY><BE_BUCKET_NEVER_USED>0</BE_BUCKET_NEVER_USED><BE_BUCKET_LAST_USE>2019-01-08 14:58:35</BE_BUCKET_LAST_USE><BE_BUCKET_REFERENCE></BE_BUCKET_REFERENCE><WALLET_TYPE>21</WALLET_TYPE></schemasubscriberbalancesdump_info><schemasubscriberbalancesdump_info><MSISDN>139559270317</MSISDN><WALLET_ID>128370838</WALLET_ID><BALANCE_TYPE>3233</BALANCE_TYPE><BE_BUCKET_ID>1462058924</BE_BUCKET_ID><BALANCE_TYPE_NAME>DSWL</BALANCE_TYPE_NAME><BE_BUCKET_VALUE>1</BE_BUCKET_VALUE><BE_BUCKET_START_DATE></BE_BUCKET_START_DATE><BE_NEVER_EXPIRES>0</BE_NEVER_EXPIRES><BE_EXPIRY>2023-09-17 10:39:14</BE_EXPIRY><BE_BUCKET_NEVER_USED>0</BE_BUCKET_NEVER_USED><BE_BUCKET_LAST_USE>2018-09-17 10:39:14</BE_BUCKET_LAST_USE><BE_BUCKET_REFERENCE></BE_BUCKET_REFERENCE><WALLET_TYPE>21</WALLET_TYPE></schemasubscriberbalancesdump_info><schemasubscriberbalancesdump_info><MSISDN>139559270317</MSISDN><WALLET_ID>128370838</WALLET_ID><BALANCE_TYPE>398</BALANCE_TYPE><BE_BUCKET_ID>1574995052</BE_BUCKET_ID><BALANCE_TYPE_NAME>Smart Monthly Usage</BALANCE_TYPE_NAME><BE_BUCKET_VALUE>10080</BE_BUCKET_VALUE><BE_BUCKET_START_DATE></BE_BUCKET_START_DATE><BE_NEVER_EXPIRES>0</BE_NEVER_EXPIRES><BE_EXPIRY>2019-01-11 04:00:00</BE_EXPIRY><BE_BUCKET_NEVER_USED>0</BE_BUCKET_NEVER_USED><BE_BUCKET_LAST_USE>2018-12-31 07:17:10</BE_BUCKET_LAST_USE><BE_BUCKET_REFERENCE></BE_BUCKET_REFERENCE><WALLET_TYPE>21</WALLET_TYPE></schemasubscriberbalancesdump_info><schemasubscriberbalancesdump_info><MSISDN>139559270317</MSISDN><WALLET_ID>128370838</WALLET_ID><BALANCE_TYPE>1635</BALANCE_TYPE><BE_BUCKET_ID>1584028172</BE_BUCKET_ID><BALANCE_TYPE_NAME>PAYG Promotional Data</BALANCE_TYPE_NAME><BE_BUCKET_VALUE>307200</BE_BUCKET_VALUE><BE_BUCKET_START_DATE></BE_BUCKET_START_DATE><BE_NEVER_EXPIRES>0</BE_NEVER_EXPIRES><BE_EXPIRY>2019-01-18 00:14:05</BE_EXPIRY><BE_BUCKET_NEVER_USED>0</BE_BUCKET_NEVER_USED><BE_BUCKET_LAST_USE>2018-12-18 00:14:05</BE_BUCKET_LAST_USE><BE_BUCKET_REFERENCE></BE_BUCKET_REFERENCE><WALLET_TYPE>21</WALLET_TYPE></schemasubscriberbalancesdump_info><schemasubscriberbalancesdump_info><MSISDN>139559270317</MSISDN><WALLET_ID>128370838</WALLET_ID><BALANCE_TYPE>1633</BALANCE_TYPE><BE_BUCKET_ID>1584028316</BE_BUCKET_ID><BALANCE_TYPE_NAME>One Off Data</BALANCE_TYPE_NAME><BE_BUCKET_VALUE>307200</BE_BUCKET_VALUE><BE_BUCKET_START_DATE></BE_BUCKET_START_DATE><BE_NEVER_EXPIRES>0</BE_NEVER_EXPIRES><BE_EXPIRY>2019-01-18 00:14:05</BE_EXPIRY><BE_BUCKET_NEVER_USED>0</BE_BUCKET_NEVER_USED><BE_BUCKET_LAST_USE>2018-12-18 00:14:05</BE_BUCKET_LAST_USE><BE_BUCKET_REFERENCE></BE_BUCKET_REFERENCE><WALLET_TYPE>21</WALLET_TYPE></schemasubscriberbalancesdump_info><schemasubscriberbalancesdump_info><MSISDN>139559270317</MSISDN><WALLET_ID>128370838</WALLET_ID><BALANCE_TYPE>1793</BALANCE_TYPE><BE_BUCKET_ID>1501833980</BE_BUCKET_ID><BALANCE_TYPE_NAME>OOC Tracker</BALANCE_TYPE_NAME><BE_BUCKET_VALUE>0</BE_BUCKET_VALUE><BE_BUCKET_START_DATE></BE_BUCKET_START_DATE><BE_NEVER_EXPIRES>0</BE_NEVER_EXPIRES><BE_EXPIRY>2019-04-30 21:36:38</BE_EXPIRY><BE_BUCKET_NEVER_USED>0</BE_BUCKET_NEVER_USED><BE_BUCKET_LAST_USE>2018-12-03 16:14:05</BE_BUCKET_LAST_USE><BE_BUCKET_REFERENCE></BE_BUCKET_REFERENCE><WALLET_TYPE>21</WALLET_TYPE></schemasubscriberbalancesdump_info><schemasubscriberbalancesdump_info><MSISDN>139559270317</MSISDN><WALLET_ID>128370838</WALLET_ID><BALANCE_TYPE>1792</BALANCE_TYPE><BE_BUCKET_ID>1501834028</BE_BUCKET_ID><BALANCE_TYPE_NAME>OOC Credit</BALANCE_TYPE_NAME><BE_BUCKET_VALUE>0</BE_BUCKET_VALUE><BE_BUCKET_START_DATE></BE_BUCKET_START_DATE><BE_NEVER_EXPIRES>1</BE_NEVER_EXPIRES><BE_EXPIRY>1970-01-01 04:00:00</BE_EXPIRY><BE_BUCKET_NEVER_USED>0</BE_BUCKET_NEVER_USED><BE_BUCKET_LAST_USE>2019-01-02 13:05:55</BE_BUCKET_LAST_USE><BE_BUCKET_REFERENCE></BE_BUCKET_REFERENCE><WALLET_TYPE>21</WALLET_TYPE></schemasubscriberbalancesdump_info><schemasubscriberbalancesdump_info><MSISDN>139559270317</MSISDN><WALLET_ID>128370838</WALLET_ID><BALANCE_TYPE>1156</BALANCE_TYPE><BE_BUCKET_ID>1463074652</BE_BUCKET_ID><BALANCE_TYPE_NAME>BlockPPU</BALANCE_TYPE_NAME><BE_BUCKET_VALUE>0</BE_BUCKET_VALUE><BE_BUCKET_START_DATE></BE_BUCKET_START_DATE><BE_NEVER_EXPIRES>1</BE_NEVER_EXPIRES><BE_EXPIRY>1970-01-01 04:00:00</BE_EXPIRY><BE_BUCKET_NEVER_USED>0</BE_BUCKET_NEVER_USED><BE_BUCKET_LAST_USE>2018-09-18 08:08:57</BE_BUCKET_LAST_USE><BE_BUCKET_REFERENCE></BE_BUCKET_REFERENCE><WALLET_TYPE>21</WALLET_TYPE></schemasubscriberbalancesdump_info><schemasubscriberbalancesdump_info><MSISDN>139559270317</MSISDN><WALLET_ID>128370838</WALLET_ID><BALANCE_TYPE>1635</BALANCE_TYPE><BE_BUCKET_ID>1590475292</BE_BUCKET_ID><BALANCE_TYPE_NAME>PAYG Promotional Data</BALANCE_TYPE_NAME><BE_BUCKET_VALUE>307200</BE_BUCKET_VALUE><BE_BUCKET_START_DATE></BE_BUCKET_START_DATE><BE_NEVER_EXPIRES>0</BE_NEVER_EXPIRES><BE_EXPIRY>2019-01-23 01:09:08</BE_EXPIRY><BE_BUCKET_NEVER_USED>0</BE_BUCKET_NEVER_USED><BE_BUCKET_LAST_USE>2018-12-23 01:09:08</BE_BUCKET_LAST_USE><BE_BUCKET_REFERENCE></BE_BUCKET_REFERENCE><WALLET_TYPE>21</WALLET_TYPE></schemasubscriberbalancesdump_info><schemasubscriberbalancesdump_info><MSISDN>139559270317</MSISDN><WALLET_ID>128370838</WALLET_ID><BALANCE_TYPE>1633</BALANCE_TYPE><BE_BUCKET_ID>1590475436</BE_BUCKET_ID><BALANCE_TYPE_NAME>One Off Data</BALANCE_TYPE_NAME><BE_BUCKET_VALUE>307200</BE_BUCKET_VALUE><BE_BUCKET_START_DATE></BE_BUCKET_START_DATE><BE_NEVER_EXPIRES>0</BE_NEVER_EXPIRES><BE_EXPIRY>2019-01-23 01:09:08</BE_EXPIRY><BE_BUCKET_NEVER_USED>0</BE_BUCKET_NEVER_USED><BE_BUCKET_LAST_USE>2018-12-23 01:09:08</BE_BUCKET_LAST_USE><BE_BUCKET_REFERENCE></BE_BUCKET_REFERENCE><WALLET_TYPE>21</WALLET_TYPE></schemasubscriberbalancesdump_info><schemasubscriberbalancesdump_info><MSISDN>139559270317</MSISDN><WALLET_ID>128370838</WALLET_ID><BALANCE_TYPE>1635</BALANCE_TYPE><BE_BUCKET_ID>1581721052</BE_BUCKET_ID><BALANCE_TYPE_NAME>PAYG Promotional Data</BALANCE_TYPE_NAME><BE_BUCKET_VALUE>307200</BE_BUCKET_VALUE><BE_BUCKET_START_DATE></BE_BUCKET_START_DATE><BE_NEVER_EXPIRES>0</BE_NEVER_EXPIRES><BE_EXPIRY>2019-01-16 08:59:48</BE_EXPIRY><BE_BUCKET_NEVER_USED>0</BE_BUCKET_NEVER_USED><BE_BUCKET_LAST_USE>2018-12-16 08:59:48</BE_BUCKET_LAST_USE><BE_BUCKET_REFERENCE></BE_BUCKET_REFERENCE><WALLET_TYPE>21</WALLET_TYPE></schemasubscriberbalancesdump_info><schemasubscriberbalancesdump_info><MSISDN>139559270317</MSISDN><WALLET_ID>128370838</WALLET_ID><BALANCE_TYPE>1633</BALANCE_TYPE><BE_BUCKET_ID>1581721196</BE_BUCKET_ID><BALANCE_TYPE_NAME>One Off Data</BALANCE_TYPE_NAME><BE_BUCKET_VALUE>307200</BE_BUCKET_VALUE><BE_BUCKET_START_DATE></BE_BUCKET_START_DATE><BE_NEVER_EXPIRES>0</BE_NEVER_EXPIRES><BE_EXPIRY>2019-01-16 08:59:48</BE_EXPIRY><BE_BUCKET_NEVER_USED>0</BE_BUCKET_NEVER_USED><BE_BUCKET_LAST_USE>2018-12-16 08:59:48</BE_BUCKET_LAST_USE><BE_BUCKET_REFERENCE></BE_BUCKET_REFERENCE><WALLET_TYPE>21</WALLET_TYPE></schemasubscriberbalancesdump_info><schemasubscriberbalancesdump_info><MSISDN>139559270317</MSISDN><WALLET_ID>128370838</WALLET_ID><BALANCE_TYPE>1635</BALANCE_TYPE><BE_BUCKET_ID>1586480732</BE_BUCKET_ID><BALANCE_TYPE_NAME>PAYG Promotional Data</BALANCE_TYPE_NAME><BE_BUCKET_VALUE>307200</BE_BUCKET_VALUE><BE_BUCKET_START_DATE></BE_BUCKET_START_DATE><BE_NEVER_EXPIRES>0</BE_NEVER_EXPIRES><BE_EXPIRY>2019-01-19 21:59:27</BE_EXPIRY><BE_BUCKET_NEVER_USED>0</BE_BUCKET_NEVER_USED><BE_BUCKET_LAST_USE>2018-12-19 21:59:27</BE_BUCKET_LAST_USE><BE_BUCKET_REFERENCE></BE_BUCKET_REFERENCE><WALLET_TYPE>21</WALLET_TYPE></schemasubscriberbalancesdump_info><schemasubscriberbalancesdump_info><MSISDN>139559270317</MSISDN><WALLET_ID>128370838</WALLET_ID><BALANCE_TYPE>1633</BALANCE_TYPE><BE_BUCKET_ID>1586480876</BE_BUCKET_ID><BALANCE_TYPE_NAME>One Off Data</BALANCE_TYPE_NAME><BE_BUCKET_VALUE>307200</BE_BUCKET_VALUE><BE_BUCKET_START_DATE></BE_BUCKET_START_DATE><BE_NEVER_EXPIRES>0</BE_NEVER_EXPIRES><BE_EXPIRY>2019-01-19 21:59:27</BE_EXPIRY><BE_BUCKET_NEVER_USED>0</BE_BUCKET_NEVER_USED><BE_BUCKET_LAST_USE>2018-12-19 21:59:27</BE_BUCKET_LAST_USE><BE_BUCKET_REFERENCE></BE_BUCKET_REFERENCE><WALLET_TYPE>21</WALLET_TYPE></schemasubscriberbalancesdump_info><schemasubscriberbalancesdump_info><MSISDN>139559270317</MSISDN><WALLET_ID>128370838</WALLET_ID><BALANCE_TYPE>3035</BALANCE_TYPE><BE_BUCKET_ID>1446965276</BE_BUCKET_ID><BALANCE_TYPE_NAME>SplSocServDeactStatus</BALANCE_TYPE_NAME><BE_BUCKET_VALUE>1</BE_BUCKET_VALUE><BE_BUCKET_START_DATE></BE_BUCKET_START_DATE><BE_NEVER_EXPIRES>1</BE_NEVER_EXPIRES><BE_EXPIRY>1970-01-01 04:00:00</BE_EXPIRY><BE_BUCKET_NEVER_USED>0</BE_BUCKET_NEVER_USED><BE_BUCKET_LAST_USE>2018-09-04 15:09:14</BE_BUCKET_LAST_USE><BE_BUCKET_REFERENCE></BE_BUCKET_REFERENCE><WALLET_TYPE>21</WALLET_TYPE></schemasubscriberbalancesdump_info><schemasubscriberbalancesdump_info><MSISDN>139559270317</MSISDN><WALLET_ID>128370838</WALLET_ID><BALANCE_TYPE>3036</BALANCE_TYPE><BE_BUCKET_ID>1446965420</BE_BUCKET_ID><BALANCE_TYPE_NAME>SplRecSocDeactServRetry</BALANCE_TYPE_NAME><BE_BUCKET_VALUE>0</BE_BUCKET_VALUE><BE_BUCKET_START_DATE></BE_BUCKET_START_DATE><BE_NEVER_EXPIRES>1</BE_NEVER_EXPIRES><BE_EXPIRY>1970-01-01 04:00:00</BE_EXPIRY><BE_BUCKET_NEVER_USED>0</BE_BUCKET_NEVER_USED><BE_BUCKET_LAST_USE>2018-09-04 15:09:20</BE_BUCKET_LAST_USE><BE_BUCKET_REFERENCE></BE_BUCKET_REFERENCE><WALLET_TYPE>21</WALLET_TYPE></schemasubscriberbalancesdump_info><schemasubscriberbalancesdump_info><MSISDN>139559270317</MSISDN><WALLET_ID>128370838</WALLET_ID><BALANCE_TYPE>1635</BALANCE_TYPE><BE_BUCKET_ID>1579695788</BE_BUCKET_ID><BALANCE_TYPE_NAME>PAYG Promotional Data</BALANCE_TYPE_NAME><BE_BUCKET_VALUE>307200</BE_BUCKET_VALUE><BE_BUCKET_START_DATE></BE_BUCKET_START_DATE><BE_NEVER_EXPIRES>0</BE_NEVER_EXPIRES><BE_EXPIRY>2019-01-14 18:13:29</BE_EXPIRY><BE_BUCKET_NEVER_USED>0</BE_BUCKET_NEVER_USED><BE_BUCKET_LAST_USE>2018-12-14 18:13:29</BE_BUCKET_LAST_USE><BE_BUCKET_REFERENCE></BE_BUCKET_REFERENCE><WALLET_TYPE>21</WALLET_TYPE></schemasubscriberbalancesdump_info><schemasubscriberbalancesdump_info><MSISDN>139559270317</MSISDN><WALLET_ID>128370838</WALLET_ID><BALANCE_TYPE>1633</BALANCE_TYPE><BE_BUCKET_ID>1579695932</BE_BUCKET_ID><BALANCE_TYPE_NAME>One Off Data</BALANCE_TYPE_NAME><BE_BUCKET_VALUE>307200</BE_BUCKET_VALUE><BE_BUCKET_START_DATE></BE_BUCKET_START_DATE><BE_NEVER_EXPIRES>0</BE_NEVER_EXPIRES><BE_EXPIRY>2019-01-14 18:13:30</BE_EXPIRY><BE_BUCKET_NEVER_USED>0</BE_BUCKET_NEVER_USED><BE_BUCKET_LAST_USE>2018-12-14 18:13:30</BE_BUCKET_LAST_USE><BE_BUCKET_REFERENCE></BE_BUCKET_REFERENCE><WALLET_TYPE>21</WALLET_TYPE></schemasubscriberbalancesdump_info><schemasubscriberbalancesdump_info><MSISDN>139559270317</MSISDN><WALLET_ID>128370838</WALLET_ID><BALANCE_TYPE>1332</BALANCE_TYPE><BE_BUCKET_ID>1597161068</BE_BUCKET_ID><BALANCE_TYPE_NAME>MonthlyDataExp</BALANCE_TYPE_NAME><BE_BUCKET_VALUE>4026432</BE_BUCKET_VALUE><BE_BUCKET_START_DATE></BE_BUCKET_START_DATE><BE_NEVER_EXPIRES>0</BE_NEVER_EXPIRES><BE_EXPIRY>2019-01-28 04:00:00</BE_EXPIRY><BE_BUCKET_NEVER_USED>0</BE_BUCKET_NEVER_USED><BE_BUCKET_LAST_USE>2019-01-08 14:33:57</BE_BUCKET_LAST_USE><BE_BUCKET_REFERENCE></BE_BUCKET_REFERENCE><WALLET_TYPE>21</WALLET_TYPE></schemasubscriberbalancesdump_info><schemasubscriberbalancesdump_info><MSISDN>139559270317</MSISDN><WALLET_ID>128370838</WALLET_ID><BALANCE_TYPE>1206</BALANCE_TYPE><BE_BUCKET_ID>1463224172</BE_BUCKET_ID><BALANCE_TYPE_NAME>DVBdata</BALANCE_TYPE_NAME><BE_BUCKET_VALUE>0</BE_BUCKET_VALUE><BE_BUCKET_START_DATE></BE_BUCKET_START_DATE><BE_NEVER_EXPIRES>1</BE_NEVER_EXPIRES><BE_EXPIRY>1970-01-01 04:00:00</BE_EXPIRY><BE_BUCKET_NEVER_USED>0</BE_BUCKET_NEVER_USED><BE_BUCKET_LAST_USE>2018-09-18 10:39:13</BE_BUCKET_LAST_USE><BE_BUCKET_REFERENCE></BE_BUCKET_REFERENCE><WALLET_TYPE>21</WALLET_TYPE></schemasubscriberbalancesdump_info><schemasubscriberbalancesdump_info><MSISDN>139559270317</MSISDN><WALLET_ID>128370838</WALLET_ID><BALANCE_TYPE>1205</BALANCE_TYPE><BE_BUCKET_ID>1463224220</BE_BUCKET_ID><BALANCE_TYPE_NAME>DVBSMS</BALANCE_TYPE_NAME><BE_BUCKET_VALUE>0</BE_BUCKET_VALUE><BE_BUCKET_START_DATE></BE_BUCKET_START_DATE><BE_NEVER_EXPIRES>1</BE_NEVER_EXPIRES><BE_EXPIRY>1970-01-01 04:00:00</BE_EXPIRY><BE_BUCKET_NEVER_USED>0</BE_BUCKET_NEVER_USED><BE_BUCKET_LAST_USE>2018-09-18 10:39:13</BE_BUCKET_LAST_USE><BE_BUCKET_REFERENCE></BE_BUCKET_REFERENCE><WALLET_TYPE>21</WALLET_TYPE></schemasubscriberbalancesdump_info><schemasubscriberbalancesdump_info><MSISDN>139559270317</MSISDN><WALLET_ID>128370838</WALLET_ID><BALANCE_TYPE>1204</BALANCE_TYPE><BE_BUCKET_ID>1463224268</BE_BUCKET_ID><BALANCE_TYPE_NAME>DVBVoice</BALANCE_TYPE_NAME><BE_BUCKET_VALUE>0</BE_BUCKET_VALUE><BE_BUCKET_START_DATE></BE_BUCKET_START_DATE><BE_NEVER_EXPIRES>1</BE_NEVER_EXPIRES><BE_EXPIRY>1970-01-01 04:00:00</BE_EXPIRY><BE_BUCKET_NEVER_USED>0</BE_BUCKET_NEVER_USED><BE_BUCKET_LAST_USE>2018-09-18 10:39:13</BE_BUCKET_LAST_USE><BE_BUCKET_REFERENCE></BE_BUCKET_REFERENCE><WALLET_TYPE>21</WALLET_TYPE></schemasubscriberbalancesdump_info><schemasubscriberbalancesdump_info><MSISDN>139559270317</MSISDN><WALLET_ID>128370838</WALLET_ID><BALANCE_TYPE>1249</BALANCE_TYPE><BE_BUCKET_ID>1463224316</BE_BUCKET_ID><BALANCE_TYPE_NAME>DVBGrace</BALANCE_TYPE_NAME><BE_BUCKET_VALUE>0</BE_BUCKET_VALUE><BE_BUCKET_START_DATE></BE_BUCKET_START_DATE><BE_NEVER_EXPIRES>1</BE_NEVER_EXPIRES><BE_EXPIRY>1970-01-01 04:00:00</BE_EXPIRY><BE_BUCKET_NEVER_USED>0</BE_BUCKET_NEVER_USED><BE_BUCKET_LAST_USE>2018-09-18 10:39:13</BE_BUCKET_LAST_USE><BE_BUCKET_REFERENCE></BE_BUCKET_REFERENCE><WALLET_TYPE>21</WALLET_TYPE></schemasubscriberbalancesdump_info><schemasubscriberbalancesdump_info><MSISDN>139559270317</MSISDN><WALLET_ID>128370838</WALLET_ID><BALANCE_TYPE>1635</BALANCE_TYPE><BE_BUCKET_ID>1602467804</BE_BUCKET_ID><BALANCE_TYPE_NAME>PAYG Promotional Data</BALANCE_TYPE_NAME><BE_BUCKET_VALUE>307200</BE_BUCKET_VALUE><BE_BUCKET_START_DATE></BE_BUCKET_START_DATE><BE_NEVER_EXPIRES>0</BE_NEVER_EXPIRES><BE_EXPIRY>2019-02-01 16:19:21</BE_EXPIRY><BE_BUCKET_NEVER_USED>0</BE_BUCKET_NEVER_USED><BE_BUCKET_LAST_USE>2019-01-01 16:19:21</BE_BUCKET_LAST_USE><BE_BUCKET_REFERENCE></BE_BUCKET_REFERENCE><WALLET_TYPE>21</WALLET_TYPE></schemasubscriberbalancesdump_info><schemasubscriberbalancesdump_info><MSISDN>139559270317</MSISDN><WALLET_ID>128370838</WALLET_ID><BALANCE_TYPE>1633</BALANCE_TYPE><BE_BUCKET_ID>1602467948</BE_BUCKET_ID><BALANCE_TYPE_NAME>One Off Data</BALANCE_TYPE_NAME><BE_BUCKET_VALUE>307200</BE_BUCKET_VALUE><BE_BUCKET_START_DATE></BE_BUCKET_START_DATE><BE_NEVER_EXPIRES>0</BE_NEVER_EXPIRES><BE_EXPIRY>2019-02-01 16:19:21</BE_EXPIRY><BE_BUCKET_NEVER_USED>0</BE_BUCKET_NEVER_USED><BE_BUCKET_LAST_USE>2019-01-01 16:19:21</BE_BUCKET_LAST_USE><BE_BUCKET_REFERENCE></BE_BUCKET_REFERENCE><WALLET_TYPE>21</WALLET_TYPE></schemasubscriberbalancesdump_info><schemasubscriberbalancesdump_info><MSISDN>139559270317</MSISDN><WALLET_ID>128370838</WALLET_ID><BALANCE_TYPE>1635</BALANCE_TYPE><BE_BUCKET_ID>1593480188</BE_BUCKET_ID><BALANCE_TYPE_NAME>PAYG Promotional Data</BALANCE_TYPE_NAME><BE_BUCKET_VALUE>307200</BE_BUCKET_VALUE><BE_BUCKET_START_DATE></BE_BUCKET_START_DATE><BE_NEVER_EXPIRES>0</BE_NEVER_EXPIRES><BE_EXPIRY>2019-01-25 12:58:17</BE_EXPIRY><BE_BUCKET_NEVER_USED>0</BE_BUCKET_NEVER_USED><BE_BUCKET_LAST_USE>2018-12-25 12:58:17</BE_BUCKET_LAST_USE><BE_BUCKET_REFERENCE></BE_BUCKET_REFERENCE><WALLET_TYPE>21</WALLET_TYPE></schemasubscriberbalancesdump_info><schemasubscriberbalancesdump_info><MSISDN>139559270317</MSISDN><WALLET_ID>128370838</WALLET_ID><BALANCE_TYPE>1633</BALANCE_TYPE><BE_BUCKET_ID>1593480332</BE_BUCKET_ID><BALANCE_TYPE_NAME>One Off Data</BALANCE_TYPE_NAME><BE_BUCKET_VALUE>307200</BE_BUCKET_VALUE><BE_BUCKET_START_DATE></BE_BUCKET_START_DATE><BE_NEVER_EXPIRES>0</BE_NEVER_EXPIRES><BE_EXPIRY>2019-01-25 12:58:18</BE_EXPIRY><BE_BUCKET_NEVER_USED>0</BE_BUCKET_NEVER_USED><BE_BUCKET_LAST_USE>2018-12-25 12:58:18</BE_BUCKET_LAST_USE><BE_BUCKET_REFERENCE></BE_BUCKET_REFERENCE><WALLET_TYPE>21</WALLET_TYPE></schemasubscriberbalancesdump_info><schemasubscriberbalancesdump_info><MSISDN>139559270317</MSISDN><WALLET_ID>128370838</WALLET_ID><BALANCE_TYPE>1832</BALANCE_TYPE><BE_BUCKET_ID>1005505148</BE_BUCKET_ID><BALANCE_TYPE_NAME>RRMCState</BALANCE_TYPE_NAME><BE_BUCKET_VALUE>0</BE_BUCKET_VALUE><BE_BUCKET_START_DATE></BE_BUCKET_START_DATE><BE_NEVER_EXPIRES>1</BE_NEVER_EXPIRES><BE_EXPIRY>1970-01-01 04:00:00</BE_EXPIRY><BE_BUCKET_NEVER_USED>0</BE_BUCKET_NEVER_USED><BE_BUCKET_LAST_USE>2017-10-18 19:26:43</BE_BUCKET_LAST_USE><BE_BUCKET_REFERENCE></BE_BUCKET_REFERENCE><WALLET_TYPE>21</WALLET_TYPE></schemasubscriberbalancesdump_info><schemasubscriberbalancesdump_info><MSISDN>139559270317</MSISDN><WALLET_ID>128370838</WALLET_ID><BALANCE_TYPE>275</BALANCE_TYPE><BE_BUCKET_ID>1585963532</BE_BUCKET_ID><BALANCE_TYPE_NAME>More International</BALANCE_TYPE_NAME><BE_BUCKET_VALUE>324367</BE_BUCKET_VALUE><BE_BUCKET_START_DATE></BE_BUCKET_START_DATE><BE_NEVER_EXPIRES>0</BE_NEVER_EXPIRES><BE_EXPIRY>2019-01-18 14:45:21</BE_EXPIRY><BE_BUCKET_NEVER_USED>0</BE_BUCKET_NEVER_USED><BE_BUCKET_LAST_USE>2019-01-04 14:17:13</BE_BUCKET_LAST_USE><BE_BUCKET_REFERENCE></BE_BUCKET_REFERENCE><WALLET_TYPE>21</WALLET_TYPE></schemasubscriberbalancesdump_info><schemasubscriberbalancesdump_info><MSISDN>139559270317</MSISDN><WALLET_ID>128370838</WALLET_ID><BALANCE_TYPE>1635</BALANCE_TYPE><BE_BUCKET_ID>1605393596</BE_BUCKET_ID><BALANCE_TYPE_NAME>PAYG Promotional Data</BALANCE_TYPE_NAME><BE_BUCKET_VALUE>307200</BE_BUCKET_VALUE><BE_BUCKET_START_DATE></BE_BUCKET_START_DATE><BE_NEVER_EXPIRES>0</BE_NEVER_EXPIRES><BE_EXPIRY>2019-02-03 23:06:57</BE_EXPIRY><BE_BUCKET_NEVER_USED>0</BE_BUCKET_NEVER_USED><BE_BUCKET_LAST_USE>2019-01-03 23:06:57</BE_BUCKET_LAST_USE><BE_BUCKET_REFERENCE></BE_BUCKET_REFERENCE><WALLET_TYPE>21</WALLET_TYPE></schemasubscriberbalancesdump_info><schemasubscriberbalancesdump_info><MSISDN>139559270317</MSISDN><WALLET_ID>128370838</WALLET_ID><BALANCE_TYPE>1633</BALANCE_TYPE><BE_BUCKET_ID>1605393740</BE_BUCKET_ID><BALANCE_TYPE_NAME>One Off Data</BALANCE_TYPE_NAME><BE_BUCKET_VALUE>307200</BE_BUCKET_VALUE><BE_BUCKET_START_DATE></BE_BUCKET_START_DATE><BE_NEVER_EXPIRES>0</BE_NEVER_EXPIRES><BE_EXPIRY>2019-02-03 23:06:58</BE_EXPIRY><BE_BUCKET_NEVER_USED>0</BE_BUCKET_NEVER_USED><BE_BUCKET_LAST_USE>2019-01-03 23:06:58</BE_BUCKET_LAST_USE><BE_BUCKET_REFERENCE></BE_BUCKET_REFERENCE><WALLET_TYPE>21</WALLET_TYPE></schemasubscriberbalancesdump_info><schemasubscriberbalancesdump_info><MSISDN>139559270317</MSISDN><WALLET_ID>128370838</WALLET_ID><BALANCE_TYPE>1635</BALANCE_TYPE><BE_BUCKET_ID>1603616060</BE_BUCKET_ID><BALANCE_TYPE_NAME>PAYG Promotional Data</BALANCE_TYPE_NAME><BE_BUCKET_VALUE>307200</BE_BUCKET_VALUE><BE_BUCKET_START_DATE></BE_BUCKET_START_DATE><BE_NEVER_EXPIRES>0</BE_NEVER_EXPIRES><BE_EXPIRY>2019-02-02 14:15:05</BE_EXPIRY><BE_BUCKET_NEVER_USED>0</BE_BUCKET_NEVER_USED><BE_BUCKET_LAST_USE>2019-01-02 14:15:05</BE_BUCKET_LAST_USE><BE_BUCKET_REFERENCE></BE_BUCKET_REFERENCE><WALLET_TYPE>21</WALLET_TYPE></schemasubscriberbalancesdump_info><schemasubscriberbalancesdump_info><MSISDN>139559270317</MSISDN><WALLET_ID>128370838</WALLET_ID><BALANCE_TYPE>1633</BALANCE_TYPE><BE_BUCKET_ID>1603616204</BE_BUCKET_ID><BALANCE_TYPE_NAME>One Off Data</BALANCE_TYPE_NAME><BE_BUCKET_VALUE>307200</BE_BUCKET_VALUE><BE_BUCKET_START_DATE></BE_BUCKET_START_DATE><BE_NEVER_EXPIRES>0</BE_NEVER_EXPIRES><BE_EXPIRY>2019-02-02 14:15:05</BE_EXPIRY><BE_BUCKET_NEVER_USED>0</BE_BUCKET_NEVER_USED><BE_BUCKET_LAST_USE>2019-01-02 14:15:05</BE_BUCKET_LAST_USE><BE_BUCKET_REFERENCE></BE_BUCKET_REFERENCE><WALLET_TYPE>21</WALLET_TYPE></schemasubscriberbalancesdump_info><schemasubscriberbalancesdump_info><MSISDN>139559270317</MSISDN><WALLET_ID>128370838</WALLET_ID><BALANCE_TYPE>2925</BALANCE_TYPE><BE_BUCKET_ID>1047251420</BE_BUCKET_ID><BALANCE_TYPE_NAME>ComboGrace</BALANCE_TYPE_NAME><BE_BUCKET_VALUE>0</BE_BUCKET_VALUE><BE_BUCKET_START_DATE></BE_BUCKET_START_DATE><BE_NEVER_EXPIRES>1</BE_NEVER_EXPIRES><BE_EXPIRY>1970-01-01 04:00:00</BE_EXPIRY><BE_BUCKET_NEVER_USED>0</BE_BUCKET_NEVER_USED><BE_BUCKET_LAST_USE>2017-11-18 22:32:17</BE_BUCKET_LAST_USE><BE_BUCKET_REFERENCE></BE_BUCKET_REFERENCE><WALLET_TYPE>21</WALLET_TYPE></schemasubscriberbalancesdump_info><schemasubscriberbalancesdump_info><MSISDN>139559270317</MSISDN><WALLET_ID>128370838</WALLET_ID><BALANCE_TYPE>1635</BALANCE_TYPE><BE_BUCKET_ID>1599538892</BE_BUCKET_ID><BALANCE_TYPE_NAME>PAYG Promotional Data</BALANCE_TYPE_NAME><BE_BUCKET_VALUE>307200</BE_BUCKET_VALUE><BE_BUCKET_START_DATE></BE_BUCKET_START_DATE><BE_NEVER_EXPIRES>0</BE_NEVER_EXPIRES><BE_EXPIRY>2019-01-30 10:00:55</BE_EXPIRY><BE_BUCKET_NEVER_USED>0</BE_BUCKET_NEVER_USED><BE_BUCKET_LAST_USE>2018-12-30 10:00:55</BE_BUCKET_LAST_USE><BE_BUCKET_REFERENCE></BE_BUCKET_REFERENCE><WALLET_TYPE>21</WALLET_TYPE></schemasubscriberbalancesdump_info><schemasubscriberbalancesdump_info><MSISDN>139559270317</MSISDN><WALLET_ID>128370838</WALLET_ID><BALANCE_TYPE>1633</BALANCE_TYPE><BE_BUCKET_ID>1599539180</BE_BUCKET_ID><BALANCE_TYPE_NAME>One Off Data</BALANCE_TYPE_NAME><BE_BUCKET_VALUE>307200</BE_BUCKET_VALUE><BE_BUCKET_START_DATE></BE_BUCKET_START_DATE><BE_NEVER_EXPIRES>0</BE_NEVER_EXPIRES><BE_EXPIRY>2019-01-30 10:00:55</BE_EXPIRY><BE_BUCKET_NEVER_USED>0</BE_BUCKET_NEVER_USED><BE_BUCKET_LAST_USE>2018-12-30 10:00:55</BE_BUCKET_LAST_USE><BE_BUCKET_REFERENCE></BE_BUCKET_REFERENCE><WALLET_TYPE>21</WALLET_TYPE></schemasubscriberbalancesdump_info><schemasubscriberbalancesdump_info><MSISDN>139559270317</MSISDN><WALLET_ID>128370838</WALLET_ID><BALANCE_TYPE>3034</BALANCE_TYPE><BE_BUCKET_ID>1445770460</BE_BUCKET_ID><BALANCE_TYPE_NAME>SplRecSocServRetry</BALANCE_TYPE_NAME><BE_BUCKET_VALUE>0</BE_BUCKET_VALUE><BE_BUCKET_START_DATE></BE_BUCKET_START_DATE><BE_NEVER_EXPIRES>1</BE_NEVER_EXPIRES><BE_EXPIRY>1970-01-01 04:00:00</BE_EXPIRY><BE_BUCKET_NEVER_USED>0</BE_BUCKET_NEVER_USED><BE_BUCKET_LAST_USE>2018-09-03 15:05:40</BE_BUCKET_LAST_USE><BE_BUCKET_REFERENCE></BE_BUCKET_REFERENCE><WALLET_TYPE>21</WALLET_TYPE></schemasubscriberbalancesdump_info><schemasubscriberbalancesdump_info><MSISDN>139559270317</MSISDN><WALLET_ID>128370838</WALLET_ID><BALANCE_TYPE>1190</BALANCE_TYPE><BE_BUCKET_ID>1608784412</BE_BUCKET_ID><BALANCE_TYPE_NAME>_pc_PeerCounterReset</BALANCE_TYPE_NAME><BE_BUCKET_VALUE>2</BE_BUCKET_VALUE><BE_BUCKET_START_DATE>2019-01-06 19:36:30</BE_BUCKET_START_DATE><BE_NEVER_EXPIRES>0</BE_NEVER_EXPIRES><BE_EXPIRY>2019-01-08 19:36:06</BE_EXPIRY><BE_BUCKET_NEVER_USED>1</BE_BUCKET_NEVER_USED><BE_BUCKET_LAST_USE>1970-01-01 04:00:00</BE_BUCKET_LAST_USE><BE_BUCKET_REFERENCE>129330072:21</BE_BUCKET_REFERENCE><WALLET_TYPE>21</WALLET_TYPE></schemasubscriberbalancesdump_info><schemasubscriberbalancesdump_info><MSISDN>139559270317</MSISDN><WALLET_ID>128370838</WALLET_ID><BALANCE_TYPE>1266</BALANCE_TYPE><BE_BUCKET_ID>539475644</BE_BUCKET_ID><BALANCE_TYPE_NAME>P2PAllowed</BALANCE_TYPE_NAME><BE_BUCKET_VALUE>1</BE_BUCKET_VALUE><BE_BUCKET_START_DATE></BE_BUCKET_START_DATE><BE_NEVER_EXPIRES>1</BE_NEVER_EXPIRES><BE_EXPIRY>1970-01-01 04:00:00</BE_EXPIRY><BE_BUCKET_NEVER_USED>0</BE_BUCKET_NEVER_USED><BE_BUCKET_LAST_USE>2016-02-11 00:31:12</BE_BUCKET_LAST_USE><BE_BUCKET_REFERENCE></BE_BUCKET_REFERENCE><WALLET_TYPE>21</WALLET_TYPE></schemasubscriberbalancesdump_info><schemasubscriberbalancesdump_info><MSISDN>139559270317</MSISDN><WALLET_ID>128370838</WALLET_ID><BALANCE_TYPE>1324</BALANCE_TYPE><BE_BUCKET_ID>539475692</BE_BUCKET_ID><BALANCE_TYPE_NAME>PostCall</BALANCE_TYPE_NAME><BE_BUCKET_VALUE>1</BE_BUCKET_VALUE><BE_BUCKET_START_DATE></BE_BUCKET_START_DATE><BE_NEVER_EXPIRES>1</BE_NEVER_EXPIRES><BE_EXPIRY>1970-01-01 04:00:00</BE_EXPIRY><BE_BUCKET_NEVER_USED>0</BE_BUCKET_NEVER_USED><BE_BUCKET_LAST_USE>2016-02-06 20:53:13</BE_BUCKET_LAST_USE><BE_BUCKET_REFERENCE></BE_BUCKET_REFERENCE><WALLET_TYPE>21</WALLET_TYPE></schemasubscriberbalancesdump_info><schemasubscriberbalancesdump_info><MSISDN>139559270317</MSISDN><WALLET_ID>128370838</WALLET_ID><BALANCE_TYPE>2112</BALANCE_TYPE><BE_BUCKET_ID>539476364</BE_BUCKET_ID><BALANCE_TYPE_NAME>ZingerPPU</BALANCE_TYPE_NAME><BE_BUCKET_VALUE>0</BE_BUCKET_VALUE><BE_BUCKET_START_DATE></BE_BUCKET_START_DATE><BE_NEVER_EXPIRES>1</BE_NEVER_EXPIRES><BE_EXPIRY>1970-01-01 04:00:00</BE_EXPIRY><BE_BUCKET_NEVER_USED>0</BE_BUCKET_NEVER_USED><BE_BUCKET_LAST_USE>2016-06-10 08:16:34</BE_BUCKET_LAST_USE><BE_BUCKET_REFERENCE></BE_BUCKET_REFERENCE><WALLET_TYPE>21</WALLET_TYPE></schemasubscriberbalancesdump_info><schemasubscriberbalancesdump_info><MSISDN>139559270317</MSISDN><WALLET_ID>128370838</WALLET_ID><BALANCE_TYPE>2352</BALANCE_TYPE><BE_BUCKET_ID>539476412</BE_BUCKET_ID><BALANCE_TYPE_NAME>OOB_Protection</BALANCE_TYPE_NAME><BE_BUCKET_VALUE>272</BE_BUCKET_VALUE><BE_BUCKET_START_DATE></BE_BUCKET_START_DATE><BE_NEVER_EXPIRES>0</BE_NEVER_EXPIRES><BE_EXPIRY>2019-02-07 22:17:54</BE_EXPIRY><BE_BUCKET_NEVER_USED>0</BE_BUCKET_NEVER_USED><BE_BUCKET_LAST_USE>2019-01-07 22:17:54</BE_BUCKET_LAST_USE><BE_BUCKET_REFERENCE></BE_BUCKET_REFERENCE><WALLET_TYPE>21</WALLET_TYPE></schemasubscriberbalancesdump_info><schemasubscriberbalancesdump_info><MSISDN>139559270317</MSISDN><WALLET_ID>128370838</WALLET_ID><BALANCE_TYPE>2353</BALANCE_TYPE><BE_BUCKET_ID>539476460</BE_BUCKET_ID><BALANCE_TYPE_NAME>OOB_Migration_flag</BALANCE_TYPE_NAME><BE_BUCKET_VALUE>1</BE_BUCKET_VALUE><BE_BUCKET_START_DATE></BE_BUCKET_START_DATE><BE_NEVER_EXPIRES>1</BE_NEVER_EXPIRES><BE_EXPIRY>1970-01-01 04:00:00</BE_EXPIRY><BE_BUCKET_NEVER_USED>0</BE_BUCKET_NEVER_USED><BE_BUCKET_LAST_USE>2016-10-05 02:16:31</BE_BUCKET_LAST_USE><BE_BUCKET_REFERENCE></BE_BUCKET_REFERENCE><WALLET_TYPE>21</WALLET_TYPE></schemasubscriberbalancesdump_info><schemasubscriberbalancesdump_info><MSISDN>139559270317</MSISDN><WALLET_ID>128370838</WALLET_ID><BALANCE_TYPE>21</BALANCE_TYPE><BE_BUCKET_ID>539475068</BE_BUCKET_ID><BALANCE_TYPE_NAME>General Cash</BALANCE_TYPE_NAME><BE_BUCKET_VALUE>162908</BE_BUCKET_VALUE><BE_BUCKET_START_DATE></BE_BUCKET_START_DATE><BE_NEVER_EXPIRES>1</BE_NEVER_EXPIRES><BE_EXPIRY>1970-01-01 04:00:00</BE_EXPIRY><BE_BUCKET_NEVER_USED>0</BE_BUCKET_NEVER_USED><BE_BUCKET_LAST_USE>2019-01-08 15:22:36</BE_BUCKET_LAST_USE><BE_BUCKET_REFERENCE></BE_BUCKET_REFERENCE><WALLET_TYPE>21</WALLET_TYPE></schemasubscriberbalancesdump_info><schemasubscriberbalancesdump_info><MSISDN>139559270317</MSISDN><WALLET_ID>128370838</WALLET_ID><BALANCE_TYPE>25</BALANCE_TYPE><BE_BUCKET_ID>539475116</BE_BUCKET_ID><BALANCE_TYPE_NAME>Free SMS</BALANCE_TYPE_NAME><BE_BUCKET_VALUE>0</BE_BUCKET_VALUE><BE_BUCKET_START_DATE></BE_BUCKET_START_DATE><BE_NEVER_EXPIRES>1</BE_NEVER_EXPIRES><BE_EXPIRY>1970-01-01 04:00:00</BE_EXPIRY><BE_BUCKET_NEVER_USED>1</BE_BUCKET_NEVER_USED><BE_BUCKET_LAST_USE>1970-01-01 04:00:00</BE_BUCKET_LAST_USE><BE_BUCKET_REFERENCE></BE_BUCKET_REFERENCE><WALLET_TYPE>21</WALLET_TYPE></schemasubscriberbalancesdump_info><schemasubscriberbalancesdump_info><MSISDN>139559270317</MSISDN><WALLET_ID>128370838</WALLET_ID><BALANCE_TYPE>55</BALANCE_TYPE><BE_BUCKET_ID>539475164</BE_BUCKET_ID><BALANCE_TYPE_NAME>Data</BALANCE_TYPE_NAME><BE_BUCKET_VALUE>0</BE_BUCKET_VALUE><BE_BUCKET_START_DATE></BE_BUCKET_START_DATE><BE_NEVER_EXPIRES>1</BE_NEVER_EXPIRES><BE_EXPIRY>1970-01-01 04:00:00</BE_EXPIRY><BE_BUCKET_NEVER_USED>0</BE_BUCKET_NEVER_USED><BE_BUCKET_LAST_USE>2019-01-07 21:06:37</BE_BUCKET_LAST_USE><BE_BUCKET_REFERENCE></BE_BUCKET_REFERENCE><WALLET_TYPE>21</WALLET_TYPE></schemasubscriberbalancesdump_info><schemasubscriberbalancesdump_info><MSISDN>139559270317</MSISDN><WALLET_ID>128370838</WALLET_ID><BALANCE_TYPE>1060</BALANCE_TYPE><BE_BUCKET_ID>539475500</BE_BUCKET_ID><BALANCE_TYPE_NAME>_WLC_Service</BALANCE_TYPE_NAME><BE_BUCKET_VALUE>-1</BE_BUCKET_VALUE><BE_BUCKET_START_DATE>2018-02-05 21:03:03</BE_BUCKET_START_DATE><BE_NEVER_EXPIRES>0</BE_NEVER_EXPIRES><BE_EXPIRY>2019-02-05 20:52:25</BE_EXPIRY><BE_BUCKET_NEVER_USED>1</BE_BUCKET_NEVER_USED><BE_BUCKET_LAST_USE>1970-01-01 04:00:00</BE_BUCKET_LAST_USE><BE_BUCKET_REFERENCE>129330072:21:214:2</BE_BUCKET_REFERENCE><WALLET_TYPE>21</WALLET_TYPE></schemasubscriberbalancesdump_info><schemasubscriberbalancesdump_info><MSISDN>139559270317</MSISDN><WALLET_ID>128370838</WALLET_ID><BALANCE_TYPE>1099</BALANCE_TYPE><BE_BUCKET_ID>539475548</BE_BUCKET_ID><BALANCE_TYPE_NAME>InitialCreditTracker</BALANCE_TYPE_NAME><BE_BUCKET_VALUE>0</BE_BUCKET_VALUE><BE_BUCKET_START_DATE></BE_BUCKET_START_DATE><BE_NEVER_EXPIRES>1</BE_NEVER_EXPIRES><BE_EXPIRY>1970-01-01 04:00:00</BE_EXPIRY><BE_BUCKET_NEVER_USED>1</BE_BUCKET_NEVER_USED><BE_BUCKET_LAST_USE>1970-01-01 04:00:00</BE_BUCKET_LAST_USE><BE_BUCKET_REFERENCE></BE_BUCKET_REFERENCE><WALLET_TYPE>21</WALLET_TYPE></schemasubscriberbalancesdump_info><schemasubscriberbalancesdump_info><MSISDN>139559270317</MSISDN><WALLET_ID>128370838</WALLET_ID><BALANCE_TYPE>3172</BALANCE_TYPE><BE_BUCKET_ID>1509221468</BE_BUCKET_ID><BALANCE_TYPE_NAME>MonthlyRecNew</BALANCE_TYPE_NAME><BE_BUCKET_VALUE>1</BE_BUCKET_VALUE><BE_BUCKET_START_DATE></BE_BUCKET_START_DATE><BE_NEVER_EXPIRES>1</BE_NEVER_EXPIRES><BE_EXPIRY>1970-01-01 04:00:00</BE_EXPIRY><BE_BUCKET_NEVER_USED>0</BE_BUCKET_NEVER_USED><BE_BUCKET_LAST_USE>2018-10-24 15:23:34</BE_BUCKET_LAST_USE><BE_BUCKET_REFERENCE></BE_BUCKET_REFERENCE><WALLET_TYPE>21</WALLET_TYPE></schemasubscriberbalancesdump_info><schemasubscriberbalancesdump_info><MSISDN>139559270317</MSISDN><WALLET_ID>128370838</WALLET_ID><BALANCE_TYPE>62</BALANCE_TYPE><BE_BUCKET_ID>1610172044</BE_BUCKET_ID><BALANCE_TYPE_NAME>Zero Credit Calls</BALANCE_TYPE_NAME><BE_BUCKET_VALUE>1</BE_BUCKET_VALUE><BE_BUCKET_START_DATE></BE_BUCKET_START_DATE><BE_NEVER_EXPIRES>1</BE_NEVER_EXPIRES><BE_EXPIRY>1970-01-01 04:00:00</BE_EXPIRY><BE_BUCKET_NEVER_USED>0</BE_BUCKET_NEVER_USED><BE_BUCKET_LAST_USE>2019-01-07 22:17:21</BE_BUCKET_LAST_USE><BE_BUCKET_REFERENCE></BE_BUCKET_REFERENCE><WALLET_TYPE>21</WALLET_TYPE></schemasubscriberbalancesdump_info><schemasubscriberbalancesdump_info><MSISDN>139559270317</MSISDN><WALLET_ID>128370838</WALLET_ID><BALANCE_TYPE>1956</BALANCE_TYPE><BE_BUCKET_ID>1610172092</BE_BUCKET_ID><BALANCE_TYPE_NAME>Rech_Face_Val</BALANCE_TYPE_NAME><BE_BUCKET_VALUE>55</BE_BUCKET_VALUE><BE_BUCKET_START_DATE></BE_BUCKET_START_DATE><BE_NEVER_EXPIRES>0</BE_NEVER_EXPIRES><BE_EXPIRY>2019-02-06 22:17:21</BE_EXPIRY><BE_BUCKET_NEVER_USED>0</BE_BUCKET_NEVER_USED><BE_BUCKET_LAST_USE>2019-01-07 22:17:21</BE_BUCKET_LAST_USE><BE_BUCKET_REFERENCE></BE_BUCKET_REFERENCE><WALLET_TYPE>21</WALLET_TYPE></schemasubscriberbalancesdump_info><schemasubscriberbalancesdump_info><MSISDN>139559270317</MSISDN><WALLET_ID>128370838</WALLET_ID><BALANCE_TYPE>969</BALANCE_TYPE><BE_BUCKET_ID>1610172140</BE_BUCKET_ID><BALANCE_TYPE_NAME>FaceValue</BALANCE_TYPE_NAME><BE_BUCKET_VALUE>550000</BE_BUCKET_VALUE><BE_BUCKET_START_DATE></BE_BUCKET_START_DATE><BE_NEVER_EXPIRES>0</BE_NEVER_EXPIRES><BE_EXPIRY>2019-02-06 22:17:21</BE_EXPIRY><BE_BUCKET_NEVER_USED>0</BE_BUCKET_NEVER_USED><BE_BUCKET_LAST_USE>2019-01-07 22:17:21</BE_BUCKET_LAST_USE><BE_BUCKET_REFERENCE></BE_BUCKET_REFERENCE><WALLET_TYPE>21</WALLET_TYPE></schemasubscriberbalancesdump_info><schemasubscriberbalancesdump_info><MSISDN>139559270317</MSISDN><WALLET_ID>128370838</WALLET_ID><BALANCE_TYPE>1635</BALANCE_TYPE><BE_BUCKET_ID>1610172524</BE_BUCKET_ID><BALANCE_TYPE_NAME>PAYG Promotional Data</BALANCE_TYPE_NAME><BE_BUCKET_VALUE>307200</BE_BUCKET_VALUE><BE_BUCKET_START_DATE></BE_BUCKET_START_DATE><BE_NEVER_EXPIRES>0</BE_NEVER_EXPIRES><BE_EXPIRY>2019-02-07 22:17:54</BE_EXPIRY><BE_BUCKET_NEVER_USED>0</BE_BUCKET_NEVER_USED><BE_BUCKET_LAST_USE>2019-01-07 22:17:54</BE_BUCKET_LAST_USE><BE_BUCKET_REFERENCE></BE_BUCKET_REFERENCE><WALLET_TYPE>21</WALLET_TYPE></schemasubscriberbalancesdump_info><schemasubscriberbalancesdump_info><MSISDN>139559270317</MSISDN><WALLET_ID>128370838</WALLET_ID><BALANCE_TYPE>55</BALANCE_TYPE><BE_BUCKET_ID>1610172572</BE_BUCKET_ID><BALANCE_TYPE_NAME>Data</BALANCE_TYPE_NAME><BE_BUCKET_VALUE>97280</BE_BUCKET_VALUE><BE_BUCKET_START_DATE></BE_BUCKET_START_DATE><BE_NEVER_EXPIRES>0</BE_NEVER_EXPIRES><BE_EXPIRY>2019-02-07 22:17:54</BE_EXPIRY><BE_BUCKET_NEVER_USED>0</BE_BUCKET_NEVER_USED><BE_BUCKET_LAST_USE>2019-01-08 14:33:57</BE_BUCKET_LAST_USE><BE_BUCKET_REFERENCE></BE_BUCKET_REFERENCE><WALLET_TYPE>21</WALLET_TYPE></schemasubscriberbalancesdump_info><schemasubscriberbalancesdump_info><MSISDN>139559270317</MSISDN><WALLET_ID>128370838</WALLET_ID><BALANCE_TYPE>55</BALANCE_TYPE><BE_BUCKET_ID>1610172620</BE_BUCKET_ID><BALANCE_TYPE_NAME>Data</BALANCE_TYPE_NAME><BE_BUCKET_VALUE>614400</BE_BUCKET_VALUE><BE_BUCKET_START_DATE></BE_BUCKET_START_DATE><BE_NEVER_EXPIRES>0</BE_NEVER_EXPIRES><BE_EXPIRY>2019-02-07 22:17:54</BE_EXPIRY><BE_BUCKET_NEVER_USED>0</BE_BUCKET_NEVER_USED><BE_BUCKET_LAST_USE>2019-01-07 22:17:54</BE_BUCKET_LAST_USE><BE_BUCKET_REFERENCE></BE_BUCKET_REFERENCE><WALLET_TYPE>21</WALLET_TYPE></schemasubscriberbalancesdump_info><schemasubscriberbalancesdump_info><MSISDN>139559270317</MSISDN><WALLET_ID>128370838</WALLET_ID><BALANCE_TYPE>1633</BALANCE_TYPE><BE_BUCKET_ID>1610172668</BE_BUCKET_ID><BALANCE_TYPE_NAME>One Off Data</BALANCE_TYPE_NAME><BE_BUCKET_VALUE>307200</BE_BUCKET_VALUE><BE_BUCKET_START_DATE></BE_BUCKET_START_DATE><BE_NEVER_EXPIRES>0</BE_NEVER_EXPIRES><BE_EXPIRY>2019-02-07 22:17:54</BE_EXPIRY><BE_BUCKET_NEVER_USED>0</BE_BUCKET_NEVER_USED><BE_BUCKET_LAST_USE>2019-01-07 22:17:54</BE_BUCKET_LAST_USE><BE_BUCKET_REFERENCE></BE_BUCKET_REFERENCE><WALLET_TYPE>21</WALLET_TYPE></schemasubscriberbalancesdump_info><schemasubscriberbalancesdump_info><MSISDN>139559270317</MSISDN><WALLET_ID>128370838</WALLET_ID><BALANCE_TYPE>1892</BALANCE_TYPE><BE_BUCKET_ID>1610172860</BE_BUCKET_ID><BALANCE_TYPE_NAME>MonthlySMSCheck</BALANCE_TYPE_NAME><BE_BUCKET_VALUE>2</BE_BUCKET_VALUE><BE_BUCKET_START_DATE></BE_BUCKET_START_DATE><BE_NEVER_EXPIRES>0</BE_NEVER_EXPIRES><BE_EXPIRY>2019-02-06 22:18:05</BE_EXPIRY><BE_BUCKET_NEVER_USED>0</BE_BUCKET_NEVER_USED><BE_BUCKET_LAST_USE>2019-01-07 22:18:05</BE_BUCKET_LAST_USE><BE_BUCKET_REFERENCE></BE_BUCKET_REFERENCE><WALLET_TYPE>21</WALLET_TYPE></schemasubscriberbalancesdump_info><schemasubscriberbalancesdump_info><MSISDN>139559270317</MSISDN><WALLET_ID>128370838</WALLET_ID><BALANCE_TYPE>661</BALANCE_TYPE><BE_BUCKET_ID>1609989788</BE_BUCKET_ID><BALANCE_TYPE_NAME>PeerCounter</BALANCE_TYPE_NAME><BE_BUCKET_VALUE>0</BE_BUCKET_VALUE><BE_BUCKET_START_DATE></BE_BUCKET_START_DATE><BE_NEVER_EXPIRES>1</BE_NEVER_EXPIRES><BE_EXPIRY>1970-01-01 04:00:00</BE_EXPIRY><BE_BUCKET_NEVER_USED>0</BE_BUCKET_NEVER_USED><BE_BUCKET_LAST_USE>2019-01-07 19:36:07</BE_BUCKET_LAST_USE><BE_BUCKET_REFERENCE></BE_BUCKET_REFERENCE><WALLET_TYPE>21</WALLET_TYPE></schemasubscriberbalancesdump_info><schemasubscriberbalancesdump_info><MSISDN>139559270317</MSISDN><WALLET_ID>128370838</WALLET_ID><BALANCE_TYPE>2927</BALANCE_TYPE><BE_BUCKET_ID>1526821484</BE_BUCKET_ID><BALANCE_TYPE_NAME>ComboRecServ</BALANCE_TYPE_NAME><BE_BUCKET_VALUE>0</BE_BUCKET_VALUE><BE_BUCKET_START_DATE></BE_BUCKET_START_DATE><BE_NEVER_EXPIRES>1</BE_NEVER_EXPIRES><BE_EXPIRY>1970-01-01 04:00:00</BE_EXPIRY><BE_BUCKET_NEVER_USED>0</BE_BUCKET_NEVER_USED><BE_BUCKET_LAST_USE>2018-11-07 00:25:50</BE_BUCKET_LAST_USE><BE_BUCKET_REFERENCE></BE_BUCKET_REFERENCE><WALLET_TYPE>21</WALLET_TYPE></schemasubscriberbalancesdump_info></balancesdump_info><cugclidump_info>null</cugclidump_info><usmsdump_info><schemasubscriberusmsdump_info><MSISDN>139559270317</MSISDN><INITIAL_ACTIVATION_DATE>2016-02-06 20:52:25</INITIAL_ACTIVATION_DATE><INITIAL_ACCOUNT_BALANCE>0</INITIAL_ACCOUNT_BALANCE><LAST_ACCOUNT_EXPIRY_PERIOD>2018-02-05 20:52:25</LAST_ACCOUNT_EXPIRY_PERIOD><LAST_BALANCE_BEFORE_RECHARGE>216952</LAST_BALANCE_BEFORE_RECHARGE><LAST_BALANCE_EXPIRY_PERIOD></LAST_BALANCE_EXPIRY_PERIOD><LAST_EXPIRED_AMOUNT>0</LAST_EXPIRED_AMOUNT><LAST_EXPIRY_DATE>2019-01-08 04:07:36</LAST_EXPIRY_DATE><LAST_PRODUCT_TYPE_SWAP_DATE></LAST_PRODUCT_TYPE_SWAP_DATE><LAST_RECHARGE_AMOUNT>550000</LAST_RECHARGE_AMOUNT><FIRST_RECHARGE_DATE>2016-02-07 16:06:13</FIRST_RECHARGE_DATE><LAST_RECHARGE_DATE>2019-01-07 22:17:21</LAST_RECHARGE_DATE><LAST_STATE_CHANGE_DATE>2017-10-18 15:46:43</LAST_STATE_CHANGE_DATE><TOTAL_EXPIRED_AMOUNT>0</TOTAL_EXPIRED_AMOUNT><LAST_STATE_CHANGE_REASON>Suspend to Active</LAST_STATE_CHANGE_REASON><WALLET_ID>128370838</WALLET_ID><WALLET_TYPE>21</WALLET_TYPE></schemasubscriberusmsdump_info></usmsdump_info><profiledump_info><schemasubscriberprofiledump_info><MSISDN>139559270317</MSISDN><Language_ID>11</Language_ID><IMEI></IMEI><IMSI>424030107230185</IMSI><HLRAddress>971550930187</HLRAddress><Wallet_Type>0</Wallet_Type><BstrVceIntNumTree></BstrVceIntNumTree><BstrVceNatNumTree></BstrVceNatNumTree><PeriodicChargeStatus></PeriodicChargeStatus><CSBAR></CSBAR><crbtActReqDate></crbtActReqDate><crtCnfrmd></crtCnfrmd><crbtActConfirmDate></crbtActConfirmDate><crbtDeact></crbtDeact><crbtDeActReqDate></crbtDeActReqDate><crbtDeActConfirmDate></crbtDeActConfirmDate><cbActConfirmDate></cbActConfirmDate><cbExpDate></cbExpDate><cbCnfdAct></cbCnfdAct><cbWarn1></cbWarn1><cbWarn2></cbWarn2><cbDeActReqDate></cbDeActReqDate><cbDeActConfirmDate></cbDeActConfirmDate><cfActConfirmDate></cfActConfirmDate><cfConfActive></cfConfActive><cfDeActConfirmDate></cfDeActConfirmDate><cfDeActReqDate></cfDeActReqDate><cfLastFailedDate></cfLastFailedDate><cfActReqDate></cfActReqDate><avmActConfirmDate></avmActConfirmDate><avmCnfrmd></avmCnfrmd><avmDeActReqDate></avmDeActReqDate><avmDeActConfirmDate></avmDeActConfirmDate><SprssNtfctn>F</SprssNtfctn><avm></avm><avmActReqDate></avmActReqDate><MssdCallNot></MssdCallNot><VMCIMEI></VMCIMEI><VMCName></VMCName><AcctActiveMonth>20160307165225</AcctActiveMonth><AcctActiveYear>20190205165225</AcctActiveYear><TopXCountr1></TopXCountr1><TopXCountr2></TopXCountr2><TopXCountr3></TopXCountr3><TopXCountr4></TopXCountr4><TopXCountr5></TopXCountr5><Prepaid></Prepaid><entBsnssCrclActv></entBsnssCrclActv><BusMobPayg50></BusMobPayg50><BusMobTopUp></BusMobTopUp><MercuryOptInOutDate></MercuryOptInOutDate><HardCapLabel></HardCapLabel><HardCapAddonLabel></HardCapAddonLabel><Active></Active><Absher></Absher><avmInfSub></avmInfSub><avmPin></avmPin><avmProf></avmProf><BronzeMPromoActDate></BronzeMPromoActDate><BronzeMPromoDeactDate></BronzeMPromoDeactDate><BstrVceIntNumAct></BstrVceIntNumAct><BstrVceNatNumAct></BstrVceNatNumAct><BstrVINActReqDate></BstrVINActReqDate><BstrVINConfirmDate></BstrVINConfirmDate><BstrVINDeActConfDate></BstrVINDeActConfDate><BstrVINDeActReqDate></BstrVINDeActReqDate><BstrVINRecur></BstrVINRecur><BstrVNNActReqDate></BstrVNNActReqDate><BstrVNNConfirmDate></BstrVNNConfirmDate><BstrVNNDeActConfDate></BstrVNNDeActConfDate><BstrVNNDeActReqDate></BstrVNNDeActReqDate><BstrVNNRecur></BstrVNNRecur><cbActReqDate></cbActReqDate><cbAll></cbAll><cbIncom></cbIncom><cbInt></cbInt><cbIntExc></cbIntExc><cbWR></cbWR><cfBusy></cfBusy><cfData></cfData><cfFax></cfFax><cfInt></cfInt><cfNoReply></cfNoReply><cfNotReach></cfNotReach><cfVoice></cfVoice><clir></clir><cllrRngTne></cllrRngTne><CVM></CVM><CVMCounter></CVMCounter><dataGeneric></dataGeneric><Date1></Date1><DisabilityActivationDate></DisabilityActivationDate><DisabilityDectivationDate></DisabilityDectivationDate><EmiratiPlan></EmiratiPlan><EntCust></EntCust><entMssgingActv></entMssgingActv><faxGroup3></faxGroup3><GlobalZoneOptIn></GlobalZoneOptIn><GlobalZoneOptOut></GlobalZoneOptOut><gprsPmail></gprsPmail><IDD2Act></IDD2Act><IDD2ActDate></IDD2ActDate><IDD2DeactDate></IDD2DeactDate><IDDCutRateAct></IDDCutRateAct><IDDCutRateActDate></IDDCutRateActDate><InternationalMin></InternationalMin><Language></Language><odbAll></odbAll><odbIncom></odbIncom><odbInt></odbInt><odbIntExc></odbIntExc><odbOnlyVoice></odbOnlyVoice><odbOutVoice></odbOutVoice><odbWR></odbWR><PAYGDataFNL></PAYGDataFNL><PAYGMet></PAYGMet><PCNGlobalOptin></PCNGlobalOptin><PCNGlobalOptout>20181024085659</PCNGlobalOptout><Plan></Plan><ReceivePostCallSMS>F</ReceivePostCallSMS><SocialBndlActChannel></SocialBndlActChannel><SocialBndlDeActChannel></SocialBndlDeActChannel><BstrVceIntNumExp></BstrVceIntNumExp><BstrVceNatNumExp></BstrVceNatNumExp><BstrVINChngsAllwd></BstrVINChngsAllwd><BstrVNNChngsAllwd></BstrVNNChngsAllwd><TranslatedNumber></TranslatedNumber><TransNumber>2298696704</TransNumber><SmsBndl1Recur></SmsBndl1Recur><SmsExpDate></SmsExpDate><SmsBndl2Recur></SmsBndl2Recur><PriceShout></PriceShout><BlckBrryAct></BlckBrryAct><BlckBrryCnfdAct></BlckBrryCnfdAct><BlckBrryActCnfrmDate></BlckBrryActCnfrmDate><BlckBrryExpDate></BlckBrryExpDate><SmsBndl3Recur></SmsBndl3Recur><Bespoke></Bespoke><ManRenDateLess1Y></ManRenDateLess1Y><DataBndl1Recur></DataBndl1Recur><DataBndlType></DataBndlType><DataExpDate></DataExpDate><DataGraceAct></DataGraceAct><DataGraceEnd></DataGraceEnd><DataBndl2Recur></DataBndl2Recur><DataBndl3Recur></DataBndl3Recur><DataBndl4Recur></DataBndl4Recur><DataBndl5Recur></DataBndl5Recur><DataBndl6Recur></DataBndl6Recur><DataBndl8Recur></DataBndl8Recur><DataBndl9Recur></DataBndl9Recur><MBB></MBB><MBBExpDate></MBBExpDate><MBBUnlimited></MBBUnlimited><MBBUnlimExpDate></MBBUnlimExpDate><MBB2GB></MBB2GB><MBB2GBExpDate></MBB2GBExpDate><MBB10GB></MBB10GB><MBB10GBExpDate></MBB10GBExpDate><MBBGraceAct></MBBGraceAct><MBBGraceEnd></MBBGraceEnd><MBBOfferExpDate></MBBOfferExpDate><TP_Social_Deact_Conf></TP_Social_Deact_Conf><cbAct></cbAct><PokeSMSOptoutDate></PokeSMSOptoutDate><PokeSMSOptinDate></PokeSMSOptinDate><BlckBrryActReqDate></BlckBrryActReqDate><BlckBrryDeActReqDate></BlckBrryDeActReqDate><BlckBrryDeactRbkDate></BlckBrryDeactRbkDate><BronzeDeactDate></BronzeDeactDate><BronzeActDate></BronzeActDate><umsCnfrmd></umsCnfrmd><umsInfSub></umsInfSub><ums></ums><umsF2M></umsF2M><umsSMS2F></umsSMS2F><umsVm2MMS></umsVm2MMS><TravSumOptInDate></TravSumOptInDate><PassOptInDate></PassOptInDate><PassOptOutDate></PassOptOutDate><TwinSIMNumber></TwinSIMNumber><FstTimeActivation></FstTimeActivation><Anniversarytopuppromo></Anniversarytopuppromo><AnniversarytopuppromoEnd></AnniversarytopuppromoEnd><SmartPhoneExpiry></SmartPhoneExpiry><DSP_Promo></DSP_Promo><guiBalAdjDate></guiBalAdjDate><guiBalAdjVal></guiBalAdjVal><BBBundName></BBBundName><BBPromo></BBPromo><BSCSAct></BSCSAct><BBPromoSubDate></BBPromoSubDate><BBPromoEndDate></BBPromoEndDate><BlckBrrySprssSMS></BlckBrrySprssSMS><BlckBrryDeActCnfrmDt></BlckBrryDeActCnfrmDt><Payg_Life_Optin></Payg_Life_Optin><gprsBasicSer></gprsBasicSer><gprsWap></gprsWap><smsMtPp></smsMtPp><gprsMms></gprsMms><smsMoPp></smsMoPp><callhold></callhold><callwait></callwait><multiParty></multiParty><IntRoam></IntRoam><clip></clip><VdioCall></VdioCall><DuCS></DuCS><BSCS_account_num></BSCS_account_num><CS_notification_num></CS_notification_num><cbGraceAct></cbGraceAct><cbGraceEnd></cbGraceEnd><cbGraceRenew></cbGraceRenew><gprsCarrier></gprsCarrier><PAYGDataLineOffer></PAYGDataLineOffer><PAYGDataWHSP></PAYGDataWHSP><PAYGDataWH></PAYGDataWH><msisdnChgDate></msisdnChgDate><mainMSISDN></mainMSISDN><CashReturn></CashReturn><NewTopUpValue></NewTopUpValue><bdgtCntrlTopUp></bdgtCntrlTopUp><BlckBrryBundle></BlckBrryBundle><MBB10GBWelcome></MBB10GBWelcome><MBB2GBWelcome></MBB2GBWelcome><MBBUnlimWelcome></MBBUnlimWelcome><MBBWelcome></MBBWelcome><guiBalAdjCount></guiBalAdjCount><LastChangeDateExpiry></LastChangeDateExpiry><NewPPBundle></NewPPBundle><SmsBndlType></SmsBndlType></schemasubscriberprofiledump_info></profiledump_info></subscriber_xml>";
+		
+		String xml = "<subscriber_xml><subscriber_info><SUBSCRIBER><MSISDN>125677951660</MSISDN><CCS_ACCT_TYPE_NAME>Pay as you Go 2</CCS_ACCT_TYPE_NAME><CCS_ACCT_TYPE_ID>214</CCS_ACCT_TYPE_ID><SERVICE_STATE>A</SERVICE_STATE><CREATION_DATE>2018-11-09 13:12:08</CREATION_DATE><WALLET_EXPIRY>1970-01-01 04:00:00</WALLET_EXPIRY></SUBSCRIBER></subscriber_info><balancesdump_info><schemasubscriberbalancesdump_info><MSISDN>125677951660</MSISDN><WALLET_ID>148546411</WALLET_ID><BALANCE_TYPE>3395</BALANCE_TYPE><BE_BUCKET_ID>-1853383754</BE_BUCKET_ID><BALANCE_TYPE_NAME>RateCutterIndiaFlg</BALANCE_TYPE_NAME><BE_BUCKET_VALUE>1</BE_BUCKET_VALUE><BE_BUCKET_START_DATE></BE_BUCKET_START_DATE><BE_NEVER_EXPIRES>0</BE_NEVER_EXPIRES><BE_EXPIRY>2020-01-11 15:53:01</BE_EXPIRY><BE_BUCKET_NEVER_USED>0</BE_BUCKET_NEVER_USED><BE_BUCKET_LAST_USE>2019-01-11 15:53:01</BE_BUCKET_LAST_USE><BE_BUCKET_REFERENCE></BE_BUCKET_REFERENCE><WALLET_TYPE>21</WALLET_TYPE></schemasubscriberbalancesdump_info><schemasubscriberbalancesdump_info><MSISDN>125677951660</MSISDN><WALLET_ID>148546411</WALLET_ID><BALANCE_TYPE>3052</BALANCE_TYPE><BE_BUCKET_ID>-1853383706</BE_BUCKET_ID><BALANCE_TYPE_NAME>_pc_PC_PAYG_ALO_ActNotif</BALANCE_TYPE_NAME><BE_BUCKET_VALUE>6</BE_BUCKET_VALUE><BE_BUCKET_START_DATE>2019-01-11 15:53:01</BE_BUCKET_START_DATE><BE_NEVER_EXPIRES>0</BE_NEVER_EXPIRES><BE_EXPIRY>2019-01-15 15:53:34</BE_EXPIRY><BE_BUCKET_NEVER_USED>1</BE_BUCKET_NEVER_USED><BE_BUCKET_LAST_USE>1970-01-01 04:00:00</BE_BUCKET_LAST_USE><BE_BUCKET_REFERENCE>149592899:21</BE_BUCKET_REFERENCE><WALLET_TYPE>21</WALLET_TYPE></schemasubscriberbalancesdump_info><schemasubscriberbalancesdump_info><MSISDN>125677951660</MSISDN><WALLET_ID>148546411</WALLET_ID><BALANCE_TYPE>3361</BALANCE_TYPE><BE_BUCKET_ID>-1853383658</BE_BUCKET_ID><BALANCE_TYPE_NAME>_pc_NewWalletRGECheck_PC</BALANCE_TYPE_NAME><BE_BUCKET_VALUE>6</BE_BUCKET_VALUE><BE_BUCKET_START_DATE>2019-01-11 15:53:01</BE_BUCKET_START_DATE><BE_NEVER_EXPIRES>0</BE_NEVER_EXPIRES><BE_EXPIRY>2019-02-10 15:53:32</BE_EXPIRY><BE_BUCKET_NEVER_USED>1</BE_BUCKET_NEVER_USED><BE_BUCKET_LAST_USE>1970-01-01 04:00:00</BE_BUCKET_LAST_USE><BE_BUCKET_REFERENCE>149592899:21</BE_BUCKET_REFERENCE><WALLET_TYPE>21</WALLET_TYPE></schemasubscriberbalancesdump_info><schemasubscriberbalancesdump_info><MSISDN>125677951660</MSISDN><WALLET_ID>148546411</WALLET_ID><BALANCE_TYPE>3319</BALANCE_TYPE><BE_BUCKET_ID>-1853370170</BE_BUCKET_ID><BALANCE_TYPE_NAME>NewRGETracker</BALANCE_TYPE_NAME><BE_BUCKET_VALUE>1</BE_BUCKET_VALUE><BE_BUCKET_START_DATE></BE_BUCKET_START_DATE><BE_NEVER_EXPIRES>0</BE_NEVER_EXPIRES><BE_EXPIRY>2019-02-10 15:59:43</BE_EXPIRY><BE_BUCKET_NEVER_USED>0</BE_BUCKET_NEVER_USED><BE_BUCKET_LAST_USE>2019-01-11 15:59:43</BE_BUCKET_LAST_USE><BE_BUCKET_REFERENCE></BE_BUCKET_REFERENCE><WALLET_TYPE>21</WALLET_TYPE></schemasubscriberbalancesdump_info><schemasubscriberbalancesdump_info><MSISDN>125677951660</MSISDN><WALLET_ID>148546411</WALLET_ID><BALANCE_TYPE>3317</BALANCE_TYPE><BE_BUCKET_ID>-1853370122</BE_BUCKET_ID><BALANCE_TYPE_NAME>NewLifeCycle</BALANCE_TYPE_NAME><BE_BUCKET_VALUE>0</BE_BUCKET_VALUE><BE_BUCKET_START_DATE></BE_BUCKET_START_DATE><BE_NEVER_EXPIRES>1</BE_NEVER_EXPIRES><BE_EXPIRY>1970-01-01 04:00:00</BE_EXPIRY><BE_BUCKET_NEVER_USED>0</BE_BUCKET_NEVER_USED><BE_BUCKET_LAST_USE>2019-01-11 15:59:43</BE_BUCKET_LAST_USE><BE_BUCKET_REFERENCE></BE_BUCKET_REFERENCE><WALLET_TYPE>21</WALLET_TYPE></schemasubscriberbalancesdump_info><schemasubscriberbalancesdump_info><MSISDN>125677951660</MSISDN><WALLET_ID>148546411</WALLET_ID><BALANCE_TYPE>1672</BALANCE_TYPE><BE_BUCKET_ID>-1853382938</BE_BUCKET_ID><BALANCE_TYPE_NAME>Global Zone</BALANCE_TYPE_NAME><BE_BUCKET_VALUE>1</BE_BUCKET_VALUE><BE_BUCKET_START_DATE></BE_BUCKET_START_DATE><BE_NEVER_EXPIRES>1</BE_NEVER_EXPIRES><BE_EXPIRY>1970-01-01 04:00:00</BE_EXPIRY><BE_BUCKET_NEVER_USED>0</BE_BUCKET_NEVER_USED><BE_BUCKET_LAST_USE>2019-01-11 15:53:12</BE_BUCKET_LAST_USE><BE_BUCKET_REFERENCE></BE_BUCKET_REFERENCE><WALLET_TYPE>21</WALLET_TYPE></schemasubscriberbalancesdump_info><schemasubscriberbalancesdump_info><MSISDN>125677951660</MSISDN><WALLET_ID>148546411</WALLET_ID><BALANCE_TYPE>1324</BALANCE_TYPE><BE_BUCKET_ID>-1853382650</BE_BUCKET_ID><BALANCE_TYPE_NAME>PostCall</BALANCE_TYPE_NAME><BE_BUCKET_VALUE>1</BE_BUCKET_VALUE><BE_BUCKET_START_DATE></BE_BUCKET_START_DATE><BE_NEVER_EXPIRES>1</BE_NEVER_EXPIRES><BE_EXPIRY>1970-01-01 04:00:00</BE_EXPIRY><BE_BUCKET_NEVER_USED>0</BE_BUCKET_NEVER_USED><BE_BUCKET_LAST_USE>2019-01-11 15:53:16</BE_BUCKET_LAST_USE><BE_BUCKET_REFERENCE></BE_BUCKET_REFERENCE><WALLET_TYPE>21</WALLET_TYPE></schemasubscriberbalancesdump_info><schemasubscriberbalancesdump_info><MSISDN>125677951660</MSISDN><WALLET_ID>148546411</WALLET_ID><BALANCE_TYPE>3390</BALANCE_TYPE><BE_BUCKET_ID>-1853381546</BE_BUCKET_ID><BALANCE_TYPE_NAME>RateCutterIndia</BALANCE_TYPE_NAME><BE_BUCKET_VALUE>1</BE_BUCKET_VALUE><BE_BUCKET_START_DATE></BE_BUCKET_START_DATE><BE_NEVER_EXPIRES>0</BE_NEVER_EXPIRES><BE_EXPIRY>2019-02-10 15:53:43</BE_EXPIRY><BE_BUCKET_NEVER_USED>0</BE_BUCKET_NEVER_USED><BE_BUCKET_LAST_USE>2019-01-11 15:53:43</BE_BUCKET_LAST_USE><BE_BUCKET_REFERENCE></BE_BUCKET_REFERENCE><WALLET_TYPE>21</WALLET_TYPE></schemasubscriberbalancesdump_info><schemasubscriberbalancesdump_info><MSISDN>125677951660</MSISDN><WALLET_ID>148546411</WALLET_ID><BALANCE_TYPE>62</BALANCE_TYPE><BE_BUCKET_ID>-1853381066</BE_BUCKET_ID><BALANCE_TYPE_NAME>Zero Credit Calls</BALANCE_TYPE_NAME><BE_BUCKET_VALUE>1</BE_BUCKET_VALUE><BE_BUCKET_START_DATE></BE_BUCKET_START_DATE><BE_NEVER_EXPIRES>1</BE_NEVER_EXPIRES><BE_EXPIRY>1970-01-01 04:00:00</BE_EXPIRY><BE_BUCKET_NEVER_USED>0</BE_BUCKET_NEVER_USED><BE_BUCKET_LAST_USE>2019-01-11 15:53:51</BE_BUCKET_LAST_USE><BE_BUCKET_REFERENCE></BE_BUCKET_REFERENCE><WALLET_TYPE>21</WALLET_TYPE></schemasubscriberbalancesdump_info><schemasubscriberbalancesdump_info><MSISDN>125677951660</MSISDN><WALLET_ID>148546411</WALLET_ID><BALANCE_TYPE>3318</BALANCE_TYPE><BE_BUCKET_ID>-1853370074</BE_BUCKET_ID><BALANCE_TYPE_NAME>NewRGEMonths</BALANCE_TYPE_NAME><BE_BUCKET_VALUE>0</BE_BUCKET_VALUE><BE_BUCKET_START_DATE></BE_BUCKET_START_DATE><BE_NEVER_EXPIRES>1</BE_NEVER_EXPIRES><BE_EXPIRY>1970-01-01 04:00:00</BE_EXPIRY><BE_BUCKET_NEVER_USED>0</BE_BUCKET_NEVER_USED><BE_BUCKET_LAST_USE>2019-01-11 15:59:43</BE_BUCKET_LAST_USE><BE_BUCKET_REFERENCE></BE_BUCKET_REFERENCE><WALLET_TYPE>21</WALLET_TYPE></schemasubscriberbalancesdump_info><schemasubscriberbalancesdump_info><MSISDN>125677951660</MSISDN><WALLET_ID>148546411</WALLET_ID><BALANCE_TYPE>3320</BALANCE_TYPE><BE_BUCKET_ID>-1853370026</BE_BUCKET_ID><BALANCE_TYPE_NAME>NewCustodyDays</BALANCE_TYPE_NAME><BE_BUCKET_VALUE>0</BE_BUCKET_VALUE><BE_BUCKET_START_DATE></BE_BUCKET_START_DATE><BE_NEVER_EXPIRES>1</BE_NEVER_EXPIRES><BE_EXPIRY>1970-01-01 04:00:00</BE_EXPIRY><BE_BUCKET_NEVER_USED>0</BE_BUCKET_NEVER_USED><BE_BUCKET_LAST_USE>2019-01-11 15:59:43</BE_BUCKET_LAST_USE><BE_BUCKET_REFERENCE></BE_BUCKET_REFERENCE><WALLET_TYPE>21</WALLET_TYPE></schemasubscriberbalancesdump_info><schemasubscriberbalancesdump_info><MSISDN>125677951660</MSISDN><WALLET_ID>148546411</WALLET_ID><BALANCE_TYPE>398</BALANCE_TYPE><BE_BUCKET_ID>-1852891658</BE_BUCKET_ID><BALANCE_TYPE_NAME>Smart Monthly Usage</BALANCE_TYPE_NAME><BE_BUCKET_VALUE>6300</BE_BUCKET_VALUE><BE_BUCKET_START_DATE></BE_BUCKET_START_DATE><BE_NEVER_EXPIRES>0</BE_NEVER_EXPIRES><BE_EXPIRY>2019-02-11 04:00:00</BE_EXPIRY><BE_BUCKET_NEVER_USED>0</BE_BUCKET_NEVER_USED><BE_BUCKET_LAST_USE>2019-01-11 19:08:21</BE_BUCKET_LAST_USE><BE_BUCKET_REFERENCE></BE_BUCKET_REFERENCE><WALLET_TYPE>21</WALLET_TYPE></schemasubscriberbalancesdump_info><schemasubscriberbalancesdump_info><MSISDN>125677951660</MSISDN><WALLET_ID>148546411</WALLET_ID><BALANCE_TYPE>21</BALANCE_TYPE><BE_BUCKET_ID>-2024381018</BE_BUCKET_ID><BALANCE_TYPE_NAME>General Cash</BALANCE_TYPE_NAME><BE_BUCKET_VALUE>104706</BE_BUCKET_VALUE><BE_BUCKET_START_DATE></BE_BUCKET_START_DATE><BE_NEVER_EXPIRES>1</BE_NEVER_EXPIRES><BE_EXPIRY>1970-01-01 04:00:00</BE_EXPIRY><BE_BUCKET_NEVER_USED>0</BE_BUCKET_NEVER_USED><BE_BUCKET_LAST_USE>2019-01-14 19:19:01</BE_BUCKET_LAST_USE><BE_BUCKET_REFERENCE></BE_BUCKET_REFERENCE><WALLET_TYPE>21</WALLET_TYPE></schemasubscriberbalancesdump_info><schemasubscriberbalancesdump_info><MSISDN>125677951660</MSISDN><WALLET_ID>148546411</WALLET_ID><BALANCE_TYPE>23</BALANCE_TYPE><BE_BUCKET_ID>-2024380970</BE_BUCKET_ID><BALANCE_TYPE_NAME>Bad Pin</BALANCE_TYPE_NAME><BE_BUCKET_VALUE>0</BE_BUCKET_VALUE><BE_BUCKET_START_DATE></BE_BUCKET_START_DATE><BE_NEVER_EXPIRES>1</BE_NEVER_EXPIRES><BE_EXPIRY>1970-01-01 04:00:00</BE_EXPIRY><BE_BUCKET_NEVER_USED>1</BE_BUCKET_NEVER_USED><BE_BUCKET_LAST_USE>1970-01-01 04:00:00</BE_BUCKET_LAST_USE><BE_BUCKET_REFERENCE></BE_BUCKET_REFERENCE><WALLET_TYPE>21</WALLET_TYPE></schemasubscriberbalancesdump_info><schemasubscriberbalancesdump_info><MSISDN>125677951660</MSISDN><WALLET_ID>148546411</WALLET_ID><BALANCE_TYPE>25</BALANCE_TYPE><BE_BUCKET_ID>-2024380922</BE_BUCKET_ID><BALANCE_TYPE_NAME>Free SMS</BALANCE_TYPE_NAME><BE_BUCKET_VALUE>0</BE_BUCKET_VALUE><BE_BUCKET_START_DATE></BE_BUCKET_START_DATE><BE_NEVER_EXPIRES>1</BE_NEVER_EXPIRES><BE_EXPIRY>1970-01-01 04:00:00</BE_EXPIRY><BE_BUCKET_NEVER_USED>1</BE_BUCKET_NEVER_USED><BE_BUCKET_LAST_USE>1970-01-01 04:00:00</BE_BUCKET_LAST_USE><BE_BUCKET_REFERENCE></BE_BUCKET_REFERENCE><WALLET_TYPE>21</WALLET_TYPE></schemasubscriberbalancesdump_info><schemasubscriberbalancesdump_info><MSISDN>125677951660</MSISDN><WALLET_ID>148546411</WALLET_ID><BALANCE_TYPE>55</BALANCE_TYPE><BE_BUCKET_ID>-2024380874</BE_BUCKET_ID><BALANCE_TYPE_NAME>Data</BALANCE_TYPE_NAME><BE_BUCKET_VALUE>0</BE_BUCKET_VALUE><BE_BUCKET_START_DATE></BE_BUCKET_START_DATE><BE_NEVER_EXPIRES>1</BE_NEVER_EXPIRES><BE_EXPIRY>1970-01-01 04:00:00</BE_EXPIRY><BE_BUCKET_NEVER_USED>1</BE_BUCKET_NEVER_USED><BE_BUCKET_LAST_USE>1970-01-01 04:00:00</BE_BUCKET_LAST_USE><BE_BUCKET_REFERENCE></BE_BUCKET_REFERENCE><WALLET_TYPE>21</WALLET_TYPE></schemasubscriberbalancesdump_info><schemasubscriberbalancesdump_info><MSISDN>125677951660</MSISDN><WALLET_ID>148546411</WALLET_ID><BALANCE_TYPE>92</BALANCE_TYPE><BE_BUCKET_ID>-2024380778</BE_BUCKET_ID><BALANCE_TYPE_NAME>Yearly Expenditure</BALANCE_TYPE_NAME><BE_BUCKET_VALUE>91619</BE_BUCKET_VALUE><BE_BUCKET_START_DATE></BE_BUCKET_START_DATE><BE_NEVER_EXPIRES>0</BE_NEVER_EXPIRES><BE_EXPIRY>2020-01-11 04:00:00</BE_EXPIRY><BE_BUCKET_NEVER_USED>0</BE_BUCKET_NEVER_USED><BE_BUCKET_LAST_USE>2019-01-14 19:19:01</BE_BUCKET_LAST_USE><BE_BUCKET_REFERENCE></BE_BUCKET_REFERENCE><WALLET_TYPE>21</WALLET_TYPE></schemasubscriberbalancesdump_info><schemasubscriberbalancesdump_info><MSISDN>125677951660</MSISDN><WALLET_ID>148546411</WALLET_ID><BALANCE_TYPE>1099</BALANCE_TYPE><BE_BUCKET_ID>-2024380730</BE_BUCKET_ID><BALANCE_TYPE_NAME>InitialCreditTracker</BALANCE_TYPE_NAME><BE_BUCKET_VALUE>0</BE_BUCKET_VALUE><BE_BUCKET_START_DATE></BE_BUCKET_START_DATE><BE_NEVER_EXPIRES>1</BE_NEVER_EXPIRES><BE_EXPIRY>1970-01-01 04:00:00</BE_EXPIRY><BE_BUCKET_NEVER_USED>1</BE_BUCKET_NEVER_USED><BE_BUCKET_LAST_USE>1970-01-01 04:00:00</BE_BUCKET_LAST_USE><BE_BUCKET_REFERENCE></BE_BUCKET_REFERENCE><WALLET_TYPE>21</WALLET_TYPE></schemasubscriberbalancesdump_info><schemasubscriberbalancesdump_info><MSISDN>125677951660</MSISDN><WALLET_ID>148546411</WALLET_ID><BALANCE_TYPE>1332</BALANCE_TYPE><BE_BUCKET_ID>-2024380682</BE_BUCKET_ID><BALANCE_TYPE_NAME>MonthlyDataExp</BALANCE_TYPE_NAME><BE_BUCKET_VALUE>0</BE_BUCKET_VALUE><BE_BUCKET_START_DATE></BE_BUCKET_START_DATE><BE_NEVER_EXPIRES>0</BE_NEVER_EXPIRES><BE_EXPIRY>2019-02-11 04:00:00</BE_EXPIRY><BE_BUCKET_NEVER_USED>0</BE_BUCKET_NEVER_USED><BE_BUCKET_LAST_USE>2019-01-11 15:53:01</BE_BUCKET_LAST_USE><BE_BUCKET_REFERENCE></BE_BUCKET_REFERENCE><WALLET_TYPE>21</WALLET_TYPE></schemasubscriberbalancesdump_info><schemasubscriberbalancesdump_info><MSISDN>125677951660</MSISDN><WALLET_ID>148546411</WALLET_ID><BALANCE_TYPE>1333</BALANCE_TYPE><BE_BUCKET_ID>-2024380634</BE_BUCKET_ID><BALANCE_TYPE_NAME>MonthlyDataRoamExp</BALANCE_TYPE_NAME><BE_BUCKET_VALUE>0</BE_BUCKET_VALUE><BE_BUCKET_START_DATE></BE_BUCKET_START_DATE><BE_NEVER_EXPIRES>0</BE_NEVER_EXPIRES><BE_EXPIRY>2019-02-11 04:00:00</BE_EXPIRY><BE_BUCKET_NEVER_USED>0</BE_BUCKET_NEVER_USED><BE_BUCKET_LAST_USE>2019-01-11 15:53:01</BE_BUCKET_LAST_USE><BE_BUCKET_REFERENCE></BE_BUCKET_REFERENCE><WALLET_TYPE>21</WALLET_TYPE></schemasubscriberbalancesdump_info><schemasubscriberbalancesdump_info><MSISDN>125677951660</MSISDN><WALLET_ID>148546411</WALLET_ID><BALANCE_TYPE>1334</BALANCE_TYPE><BE_BUCKET_ID>-2024380586</BE_BUCKET_ID><BALANCE_TYPE_NAME>MonthlyPPUExp</BALANCE_TYPE_NAME><BE_BUCKET_VALUE>0</BE_BUCKET_VALUE><BE_BUCKET_START_DATE></BE_BUCKET_START_DATE><BE_NEVER_EXPIRES>0</BE_NEVER_EXPIRES><BE_EXPIRY>2019-02-11 04:00:00</BE_EXPIRY><BE_BUCKET_NEVER_USED>0</BE_BUCKET_NEVER_USED><BE_BUCKET_LAST_USE>2019-01-11 15:53:01</BE_BUCKET_LAST_USE><BE_BUCKET_REFERENCE></BE_BUCKET_REFERENCE><WALLET_TYPE>21</WALLET_TYPE></schemasubscriberbalancesdump_info><schemasubscriberbalancesdump_info><MSISDN>125677951660</MSISDN><WALLET_ID>148546411</WALLET_ID><BALANCE_TYPE>1335</BALANCE_TYPE><BE_BUCKET_ID>-2024380538</BE_BUCKET_ID><BALANCE_TYPE_NAME>MonthlyPPURoamExp</BALANCE_TYPE_NAME><BE_BUCKET_VALUE>0</BE_BUCKET_VALUE><BE_BUCKET_START_DATE></BE_BUCKET_START_DATE><BE_NEVER_EXPIRES>0</BE_NEVER_EXPIRES><BE_EXPIRY>2019-02-11 04:00:00</BE_EXPIRY><BE_BUCKET_NEVER_USED>0</BE_BUCKET_NEVER_USED><BE_BUCKET_LAST_USE>2019-01-11 15:53:01</BE_BUCKET_LAST_USE><BE_BUCKET_REFERENCE></BE_BUCKET_REFERENCE><WALLET_TYPE>21</WALLET_TYPE></schemasubscriberbalancesdump_info></balancesdump_info><cugclidump_info>null</cugclidump_info><usmsdump_info><schemasubscriberusmsdump_info><MSISDN>125677951660</MSISDN><INITIAL_ACTIVATION_DATE></INITIAL_ACTIVATION_DATE><INITIAL_ACCOUNT_BALANCE>0</INITIAL_ACCOUNT_BALANCE><LAST_ACCOUNT_EXPIRY_PERIOD></LAST_ACCOUNT_EXPIRY_PERIOD><LAST_BALANCE_BEFORE_RECHARGE>0</LAST_BALANCE_BEFORE_RECHARGE><LAST_BALANCE_EXPIRY_PERIOD></LAST_BALANCE_EXPIRY_PERIOD><LAST_EXPIRED_AMOUNT>0</LAST_EXPIRED_AMOUNT><LAST_EXPIRY_DATE></LAST_EXPIRY_DATE><LAST_PRODUCT_TYPE_SWAP_DATE></LAST_PRODUCT_TYPE_SWAP_DATE><LAST_RECHARGE_AMOUNT>0</LAST_RECHARGE_AMOUNT><FIRST_RECHARGE_DATE></FIRST_RECHARGE_DATE><LAST_RECHARGE_DATE></LAST_RECHARGE_DATE><LAST_STATE_CHANGE_DATE>2018-11-09 13:12:08</LAST_STATE_CHANGE_DATE><TOTAL_EXPIRED_AMOUNT>0</TOTAL_EXPIRED_AMOUNT><LAST_STATE_CHANGE_REASON></LAST_STATE_CHANGE_REASON><WALLET_ID>148546411</WALLET_ID><WALLET_TYPE>21</WALLET_TYPE></schemasubscriberusmsdump_info></usmsdump_info><profiledump_info><schemasubscriberprofiledump_info><MSISDN>125677951660</MSISDN><Language_ID></Language_ID><IMEI></IMEI><IMSI>424030245154790</IMSI><HLRAddress>971550930187</HLRAddress><Wallet_Type>0</Wallet_Type><BstrVceIntNumTree></BstrVceIntNumTree><BstrVceNatNumTree></BstrVceNatNumTree><PeriodicChargeStatus></PeriodicChargeStatus><CSBAR></CSBAR><crbtActReqDate></crbtActReqDate><crtCnfrmd></crtCnfrmd><crbtActConfirmDate></crbtActConfirmDate><crbtDeact></crbtDeact><crbtDeActReqDate></crbtDeActReqDate><crbtDeActConfirmDate></crbtDeActConfirmDate><cbActConfirmDate></cbActConfirmDate><cbExpDate></cbExpDate><cbCnfdAct></cbCnfdAct><cbWarn1></cbWarn1><cbWarn2></cbWarn2><cbDeActReqDate></cbDeActReqDate><cbDeActConfirmDate></cbDeActConfirmDate><cfActConfirmDate></cfActConfirmDate><cfConfActive></cfConfActive><cfDeActConfirmDate></cfDeActConfirmDate><cfDeActReqDate></cfDeActReqDate><cfLastFailedDate></cfLastFailedDate><cfActReqDate></cfActReqDate><avmActConfirmDate></avmActConfirmDate><avmCnfrmd></avmCnfrmd><avmDeActReqDate></avmDeActReqDate><avmDeActConfirmDate></avmDeActConfirmDate><SprssNtfctn>F</SprssNtfctn><avm></avm><avmActReqDate></avmActReqDate><MssdCallNot></MssdCallNot><VMCIMEI></VMCIMEI><VMCName></VMCName><AcctActiveMonth></AcctActiveMonth><AcctActiveYear></AcctActiveYear><TopXCountr1></TopXCountr1><TopXCountr2></TopXCountr2><TopXCountr3></TopXCountr3><TopXCountr4></TopXCountr4><TopXCountr5></TopXCountr5><Prepaid></Prepaid><entBsnssCrclActv></entBsnssCrclActv><BusMobPayg50></BusMobPayg50><BusMobTopUp></BusMobTopUp><MercuryOptInOutDate></MercuryOptInOutDate><HardCapLabel></HardCapLabel><HardCapAddonLabel></HardCapAddonLabel><Active></Active><Absher></Absher><avmInfSub></avmInfSub><avmPin></avmPin><avmProf></avmProf><BronzeMPromoActDate></BronzeMPromoActDate><BronzeMPromoDeactDate></BronzeMPromoDeactDate><BstrVceIntNumAct></BstrVceIntNumAct><BstrVceNatNumAct></BstrVceNatNumAct><BstrVINActReqDate></BstrVINActReqDate><BstrVINConfirmDate></BstrVINConfirmDate><BstrVINDeActConfDate></BstrVINDeActConfDate><BstrVINDeActReqDate></BstrVINDeActReqDate><BstrVINRecur></BstrVINRecur><BstrVNNActReqDate></BstrVNNActReqDate><BstrVNNConfirmDate></BstrVNNConfirmDate><BstrVNNDeActConfDate></BstrVNNDeActConfDate><BstrVNNDeActReqDate></BstrVNNDeActReqDate><BstrVNNRecur></BstrVNNRecur><cbActReqDate></cbActReqDate><cbAll></cbAll><cbIncom></cbIncom><cbInt></cbInt><cbIntExc></cbIntExc><cbWR></cbWR><cfBusy></cfBusy><cfData></cfData><cfFax></cfFax><cfInt></cfInt><cfNoReply></cfNoReply><cfNotReach></cfNotReach><cfVoice></cfVoice><clir></clir><cllrRngTne></cllrRngTne><CVM></CVM><CVMCounter></CVMCounter><dataGeneric></dataGeneric><Date1></Date1><DisabilityActivationDate></DisabilityActivationDate><DisabilityDectivationDate></DisabilityDectivationDate><EmiratiPlan></EmiratiPlan><EntCust></EntCust><entMssgingActv></entMssgingActv><faxGroup3></faxGroup3><GlobalZoneOptIn></GlobalZoneOptIn><GlobalZoneOptOut></GlobalZoneOptOut><gprsPmail></gprsPmail><IDD2Act></IDD2Act><IDD2ActDate></IDD2ActDate><IDD2DeactDate></IDD2DeactDate><IDDCutRateAct></IDDCutRateAct><IDDCutRateActDate></IDDCutRateActDate><InternationalMin></InternationalMin><Language></Language><odbAll>T</odbAll><odbIncom></odbIncom><odbInt></odbInt><odbIntExc></odbIntExc><odbOnlyVoice></odbOnlyVoice><odbOutVoice></odbOutVoice><odbWR></odbWR><PAYGDataFNL></PAYGDataFNL><PAYGMet></PAYGMet><PCNGlobalOptin></PCNGlobalOptin><PCNGlobalOptout></PCNGlobalOptout><Plan></Plan><ReceivePostCallSMS></ReceivePostCallSMS><SocialBndlActChannel></SocialBndlActChannel><SocialBndlDeActChannel></SocialBndlDeActChannel><BstrVceIntNumExp></BstrVceIntNumExp><BstrVceNatNumExp></BstrVceNatNumExp><BstrVINChngsAllwd></BstrVINChngsAllwd><BstrVNNChngsAllwd></BstrVNNChngsAllwd><TranslatedNumber></TranslatedNumber><TransNumber></TransNumber><SmsBndl1Recur></SmsBndl1Recur><SmsExpDate></SmsExpDate><SmsBndl2Recur></SmsBndl2Recur><PriceShout></PriceShout><BlckBrryAct></BlckBrryAct><BlckBrryCnfdAct></BlckBrryCnfdAct><BlckBrryActCnfrmDate></BlckBrryActCnfrmDate><BlckBrryExpDate></BlckBrryExpDate><SmsBndl3Recur></SmsBndl3Recur><Bespoke></Bespoke><ManRenDateLess1Y></ManRenDateLess1Y><DataBndl1Recur></DataBndl1Recur><DataBndlType></DataBndlType><DataExpDate></DataExpDate><DataGraceAct></DataGraceAct><DataGraceEnd></DataGraceEnd><DataBndl2Recur></DataBndl2Recur><DataBndl3Recur></DataBndl3Recur><DataBndl4Recur></DataBndl4Recur><DataBndl5Recur></DataBndl5Recur><DataBndl6Recur></DataBndl6Recur><DataBndl8Recur></DataBndl8Recur><DataBndl9Recur></DataBndl9Recur><MBB></MBB><MBBExpDate></MBBExpDate><MBBUnlimited></MBBUnlimited><MBBUnlimExpDate></MBBUnlimExpDate><MBB2GB></MBB2GB><MBB2GBExpDate></MBB2GBExpDate><MBB10GB></MBB10GB><MBB10GBExpDate></MBB10GBExpDate><MBBGraceAct></MBBGraceAct><MBBGraceEnd></MBBGraceEnd><MBBOfferExpDate></MBBOfferExpDate><TP_Social_Deact_Conf></TP_Social_Deact_Conf><cbAct></cbAct><PokeSMSOptoutDate></PokeSMSOptoutDate><PokeSMSOptinDate></PokeSMSOptinDate><BlckBrryActReqDate></BlckBrryActReqDate><BlckBrryDeActReqDate></BlckBrryDeActReqDate><BlckBrryDeactRbkDate></BlckBrryDeactRbkDate><BronzeDeactDate></BronzeDeactDate><BronzeActDate></BronzeActDate><umsCnfrmd></umsCnfrmd><umsInfSub></umsInfSub><ums></ums><umsF2M></umsF2M><umsSMS2F></umsSMS2F><umsVm2MMS></umsVm2MMS><TravSumOptInDate></TravSumOptInDate><PassOptInDate></PassOptInDate><PassOptOutDate></PassOptOutDate><TwinSIMNumber></TwinSIMNumber><FstTimeActivation></FstTimeActivation><Anniversarytopuppromo></Anniversarytopuppromo><AnniversarytopuppromoEnd></AnniversarytopuppromoEnd><SmartPhoneExpiry></SmartPhoneExpiry><DSP_Promo></DSP_Promo><guiBalAdjDate></guiBalAdjDate><guiBalAdjVal></guiBalAdjVal><BBBundName></BBBundName><BBPromo></BBPromo><BSCSAct></BSCSAct><BBPromoSubDate></BBPromoSubDate><BBPromoEndDate></BBPromoEndDate><BlckBrrySprssSMS></BlckBrrySprssSMS><BlckBrryDeActCnfrmDt></BlckBrryDeActCnfrmDt><Payg_Life_Optin></Payg_Life_Optin><gprsBasicSer></gprsBasicSer><gprsWap></gprsWap><smsMtPp></smsMtPp><gprsMms></gprsMms><smsMoPp></smsMoPp><callhold></callhold><callwait></callwait><multiParty></multiParty><IntRoam></IntRoam><clip></clip><VdioCall></VdioCall><DuCS></DuCS><BSCS_account_num></BSCS_account_num><CS_notification_num></CS_notification_num><cbGraceAct></cbGraceAct><cbGraceEnd></cbGraceEnd><cbGraceRenew></cbGraceRenew><gprsCarrier></gprsCarrier><PAYGDataLineOffer></PAYGDataLineOffer><PAYGDataWHSP></PAYGDataWHSP><PAYGDataWH></PAYGDataWH><msisdnChgDate></msisdnChgDate><mainMSISDN></mainMSISDN><CashReturn></CashReturn><NewTopUpValue></NewTopUpValue><bdgtCntrlTopUp></bdgtCntrlTopUp><BlckBrryBundle></BlckBrryBundle><MBB10GBWelcome></MBB10GBWelcome><MBB2GBWelcome></MBB2GBWelcome><MBBUnlimWelcome></MBBUnlimWelcome><MBBWelcome></MBBWelcome><guiBalAdjCount></guiBalAdjCount><LastChangeDateExpiry></LastChangeDateExpiry><NewPPBundle></NewPPBundle><SmsBndlType></SmsBndlType></schemasubscriberprofiledump_info></profiledump_info></subscriber_xml>";
+
+		
+		String sdpid, configPath, dataFolderPath, workingPath, output, pathtoApplicationContext, pathOfLogFolder = null;
+		
+		dataFolderPath = "C:\\Ericsson\\MyWorkingProject\\Charging_System\\dm_cs_2018_du_dubai\\dev\\src\\data";
+		configPath = "C:\\Ericsson\\MyWorkingProject\\Charging_System\\dm_cs_2018_du_dubai\\dev\\src\\config\\config";
+		workingPath = "C:\\Ericsson\\MyWorkingProject\\Charging_System\\dm_cs_2018_du_dubai\\dev\\src\\working\\";
+		output = "C:\\Ericsson\\MyWorkingProject\\Charging_System\\dm_cs_2018_du_dubai\\dev\\src\\output\\";
+		pathtoApplicationContext = "C:\\Ericsson\\MyWorkingProject\\Charging_System\\dm_cs_2018_du_dubai\\dev\\src\\";
+		pathOfLogFolder = "C:\\Ericsson\\MyWorkingProject\\Charging_System\\dm_cs_2018_du_dubai\\dev\\src\\logs\\";
+		//String filesToBeInserted = "INFILE_Subscriber_Balances.csv.gz,INFILE_Subscriber_cug_cli.csv.gz,INFILE_Subscriber_USMS.csv.gz";
+		//String filesToBeInserted = "sdp01_subscriber_balances_dump.csv.gz,sdp01_subscriber_cugcli_dump.csv.gz,sdp01_subscriber_usms_dump.csv.gz";
+		sdpid = "LOAD_MAPPING";
+		
+		LoadSubscriberMapping lsm = new LoadSubscriberMapping(sdpid, configPath, dataFolderPath, workingPath);
+		
+		ExecuteTransformation et = new ExecuteTransformation(output, pathtoApplicationContext, pathOfLogFolder);
+		et.businessLogicImplementation(xml);
+		et.generateCsv();
+		et.clearBuffer();
+		
+		//et.readSubuscriber(workingPath + "SDP_Data.csv.gz");
+		
+		
+		System.out.println("Completed the Execution!!!");
+	}
+	
+	public void readSubuscriber(String filePath) {
+	    //List<String> lines = new ArrayList<>();
+	    int counter = 0;
+		File file = new File(filePath);
+
+	    try (GZIPInputStream gzip = new GZIPInputStream(new FileInputStream(file));
+	            BufferedReader br = new BufferedReader(new InputStreamReader(gzip));) {
+	        String line = null;
+	        while ((line = br.readLine()) != null) {
+	        	businessLogicImplementation(line);	  
+	        	
+	        }
+	        generateCsv();
+	    } catch (FileNotFoundException e) {
+	        e.printStackTrace(System.err);
+	    } catch (IOException e) {
+	        e.printStackTrace(System.err);
+	    } catch (JiBXException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}	    
+	}
+	
+	public void generateCsv() {
+		//synchronized (ThreadLock)
+		{
+			// TODO Auto-generated method stub
+			/*System.out.println("Going to Write Output for subs: " + this.subscriberListBuffer.size());
+			System.out.println("Going to Write Output for offerAtr: " + this.offerAttributeListBuffer.size());
+			System.out.println("Going to Write Output for offer: " + this.offerListBuffer.size());
+			System.out.println("Going to Write Output for Account: " + this.accountListBuffer.size());
+			System.out.println("Going to Write Output for logs: " + onlyLog.size());*/
+			try {
+				File accountFile = new File(this.pathOfOutputFolder + "Account_" + uniqueNumber + ".csv");
+				File subscriberFile = new File(this.pathOfOutputFolder + "Subscriber_" + uniqueNumber + ".csv");
+				File offerFile = new File(this.pathOfOutputFolder + "Offer_" + uniqueNumber + ".csv");
+				File offerAttrFile = new File(this.pathOfOutputFolder + "OfferAttribute_" + uniqueNumber + ".csv");
+				File pamFile = new File(this.pathOfOutputFolder + "PamAccount_" + uniqueNumber + ".csv");
+				File accumulatorFile = new File(this.pathOfOutputFolder + "Accumulator_" + uniqueNumber + ".csv");
+				File cisOnceOffFile = new File(this.pathOfOutputFolder + "CIS_OnceOff_Bundles_" + uniqueNumber + ".csv");
+				File cisRenewalFile = new File(this.pathOfOutputFolder + "CIS_Renewal_Bundles_" + uniqueNumber + ".csv");
+				File cisParkingFile = new File(this.pathOfOutputFolder + "CIS_Parking_Products_" + uniqueNumber + ".csv");
+				File cisNwpcFile = new File(this.pathOfOutputFolder + "CIS_Notification_" + uniqueNumber + ".csv");
+				File servicenumberappFile = new File(this.pathOfOutputFolder + "Service_Number_Application_" + uniqueNumber + ".csv");
+				File subscriberFafFile = new File(this.pathOfOutputFolder + "SubscriberFaf_" + uniqueNumber + ".csv");
+				File RoundOffFile = new File(this.pathOfOutputFolder + "RoundOff_Records_" + uniqueNumber + ".csv");
+				// File bigSubsFile = new File(this.pathOfOutputFolder +
+				// "BigSubscriber.txt");
+	
+				File ucFile = new File(this.pathOfOutputFolder + "UsageCounter_" + uniqueNumber + ".csv");
+				File daFile = new File(this.pathOfOutputFolder + "DedicatedAccount_" + uniqueNumber + ".csv");
+				
+				File rejectedFile = new File(this.pathOfOutputFolder + "Rejected_" + uniqueNumber +".log");
+				File onlyLogFile = new File(this.pathOfOutputFolder + "Exception_" + uniqueNumber + ".log");
+				File trackLogFile = new File(this.pathOfOutputFolder + "Track_" + uniqueNumber + ".log");
+				
+				if (!accountFile.exists()) {
+					accountFile.createNewFile();
+				}
+				if (!subscriberFile.exists()) {
+					subscriberFile.createNewFile();
+				}
+				if (!offerFile.exists()) {
+					offerFile.createNewFile();
+				}
+				if (!offerAttrFile.exists()) {
+					offerAttrFile.createNewFile();
+				}
+				if (!pamFile.exists()) {
+					pamFile.createNewFile();
+				}
+				if (!ucFile.exists()) {
+					ucFile.createNewFile();
+				}
+				if (!daFile.exists()) {
+					daFile.createNewFile();
+				}
+				if (!rejectedFile.exists()) {
+					rejectedFile.createNewFile();
+				}
+				if (!onlyLogFile.exists()) {
+					onlyLogFile.createNewFile();
+				}
+				if (!accumulatorFile.exists()) {
+					accumulatorFile.createNewFile();
+				}
+				if (!cisOnceOffFile.exists()) {
+					cisOnceOffFile.createNewFile();
+				}
+				if (!cisRenewalFile.exists()) {
+					cisRenewalFile.createNewFile();
+				}
+				if (!cisParkingFile.exists()) {
+					cisParkingFile.createNewFile();
+				}
+				if (!cisNwpcFile.exists()) {
+					cisNwpcFile.createNewFile();
+				}
+				if (!servicenumberappFile.exists()) {
+					servicenumberappFile.createNewFile();
+				}
+				if (!subscriberFafFile.exists()) {
+					subscriberFafFile.createNewFile();
+				}
+				if (!rejectedFile.exists()) {
+					rejectedFile.createNewFile();
+				}		
+				if (!onlyLogFile.exists()) {
+					onlyLogFile.createNewFile();
+				}
+				if (!RoundOffFile.exists()) {
+					RoundOffFile.createNewFile();
+				}
+				if (!trackLogFile.exists()) {
+					trackLogFile.createNewFile();
+				}
+				/*
+				 * if(!bigSubsFile.exists()){ bigSubsFile.createNewFile(); }
+				 */
+				FileUtils.writeLines(accountFile, this.accountListBuffer, true);
+				FileUtils.writeLines(subscriberFile, this.subscriberListBuffer, true);
+				FileUtils.writeLines(offerFile, this.offerListBuffer, true);
+				FileUtils.writeLines(offerAttrFile, this.offerAttributeListBuffer, true);
+				FileUtils.writeLines(pamFile, this.pamListBuffer, true);
+				FileUtils.writeLines(ucFile, this.ucBuffer, true);
+				FileUtils.writeLines(daFile, this.daBuffer, true);
+				FileUtils.writeLines(accumulatorFile, this.accumulatorBuffer, true);
+				FileUtils.writeLines(cisOnceOffFile, this.cisOnceOff, true);
+				FileUtils.writeLines(cisRenewalFile, this.cisRenewal, true);
+				FileUtils.writeLines(cisParkingFile, this.cisParking, true);
+				FileUtils.writeLines(cisNwpcFile, this.cisNwpc, true);
+				FileUtils.writeLines(subscriberFafFile, this.subscriberFaFBuffer, true);
+				FileUtils.writeLines(servicenumberappFile, this.servicenumberBuffer, true);
+				FileUtils.writeLines(RoundOffFile, this.roundOffLog, true);
+				
+				//Remove duplicates from files			
+				synchronized (ThreadLock)
+				{
+					FileUtils.writeLines(rejectedFile, rejectAndLog, true);
+					FileUtils.writeLines(onlyLogFile, onlyLog, true);
+					FileUtils.writeLines(trackLogFile, trackLog, true);					
+				}
+				//onlyLog.forEach(action->{System.out.print(action);});
+		
+							
+				rejectAndLog.clear();
+				onlyLog.clear();
+				// FileUtils.writeLines(bigSubsFile, this.smallFiles, true);
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+				LOG.error("IO Exception ", e);
+			}
+		}
+	}
+	
+	public synchronized void generateLogs(){
+		try 
+		{
+			File rejectedFile = new File(this.pathOfOutputFolder + "Rejected_" + uniqueNumber +".log");
+			File onlyLogFile = new File(this.pathOfOutputFolder + "Exception_" + uniqueNumber + ".log");
+			if (!rejectedFile.exists()) {
+				rejectedFile.createNewFile();
+			}		
+			if (!onlyLogFile.exists()) {
+				onlyLogFile.createNewFile();
+			}
+			FileUtils.writeLines(rejectedFile, rejectAndLog, true);
+			FileUtils.writeLines(onlyLogFile, onlyLog, true);
+		
+			clearLogs();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			LOG.error("IO Exception ", e);
+		}	
+				
+	}
+	
+	public synchronized void clearLogs() throws IOException{
+		rejectAndLog.clear();
+		onlyLog.clear();
+	}
+
+	public synchronized void  clearBuffer() {
+		this.accountListBuffer.clear();
+		this.subscriberListBuffer.clear();
+		this.offerListBuffer.clear();
+		this.offerAttributeListBuffer.clear();
+		this.pamListBuffer.clear();
+		this.accumulatorBuffer.clear();
+		this.ucBuffer.clear();		
+		this.daBuffer.clear();
+		this.cisOnceOff.clear();
+		this.cisRenewal.clear();
+		this.cisParking.clear();
+		this.cisNwpc.clear();
+		this.subscriberFaFBuffer.clear();
+		this.servicenumberBuffer.clear();
+		
+		rejectAndLog.clear();
+		onlyLog.clear();
+		trackLog.clear();
+		
+	}
+
+	/*@Override
+	public int compare(SchemasubscriberbalancesdumpInfo o1, SchemasubscriberbalancesdumpInfo o2) {
+		int value1 = o1.getBEEXPIRY().compareTo(o2.getBEEXPIRY());
+        if (value1 == 0) {
+        	return o1.getBEBUCKETID().compareTo(o2.getBEBUCKETID());
+        }
+        return value1;
+
+	}*/
+}

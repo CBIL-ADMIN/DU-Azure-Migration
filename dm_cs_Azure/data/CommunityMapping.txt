@@ -1,0 +1,2 @@
+CUG_NAME:INFILE_Subscriber_CUG_CLI,Community_ID
+CR1156CUG,3033

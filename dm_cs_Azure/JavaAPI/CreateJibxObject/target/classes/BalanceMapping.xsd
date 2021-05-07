@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+ <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified" attributeFormDefault="unqualified">
+  <xs:element name="BALANCE_MAPPING_LIST">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element name="BALANCE_MAPPING_INFO"  maxOccurs="unbounded">
+          <xs:complexType>
+            <xs:all>
+				<xs:element type="xs:string" name="Balance_Type_Name"/>
+				<xs:element type="xs:string" name="BT_ID"/>
+				<xs:element type="xs:string" name="BT_TYPE"/>
+				<xs:element type="xs:string" name="Symbols"/>
+				<xs:element type="xs:string" name="BT_Value"/>
+				<xs:element type="xs:string" name="SubState"/>
+				<xs:element type="xs:string" name="SC_Identifier"/>
+				<xs:element type="xs:string" name="RP_ID"/>
+				<xs:element type="xs:string" name="PT_Name"/>
+				<xs:element type="xs:string" name="BT_Group_Identifier"/>
+				<xs:element type="xs:string" name="Resource"/>
+				<xs:element type="xs:string" name="Ignore_Flag"/>
+				<xs:element type="xs:string" name="Product_Private"/>
+				<xs:element type="xs:string" name="Offer_Type"/>
+				<xs:element type="xs:string" name="Offer_ID"/>
+				<xs:element type="xs:string" name="Offer_Flag"/>
+				<xs:element type="xs:string" name="Offer_Start_Date"/>
+				<xs:element type="xs:string" name="Offer_Expiry_Date"/>
+				<xs:element type="xs:string" name="PAM_CLASS_ID"/>
+				<xs:element type="xs:string" name="PAM_SERV_ID"/>
+				<xs:element type="xs:string" name="Attr_Offer_Id"/>
+				<xs:element type="xs:string" name="Attr_Name"/>
+				<xs:element type="xs:string" name="Attr_Type"/>
+				<xs:element type="xs:string" name="Attr_Value"/>
+				<xs:element type="xs:string" name="DA_Type"/>
+				<xs:element type="xs:string" name="DA_ID"/>
+				<xs:element type="xs:string" name="DA_Start_Date"/>
+				<xs:element type="xs:string" name="DA_Expiry_Date"/>
+				<xs:element type="xs:string" name="UC_Type"/>
+				<xs:element type="xs:string" name="UC_ID"/>
+				<xs:element type="xs:string" name="UT_ID"/>
+				<xs:element type="xs:string" name="UT_Value"/>
+				<xs:element type="xs:string" name="UA_Type"/>
+				<xs:element type="xs:string" name="UA_ID"/>
+				<xs:element type="xs:string" name="UA_Value"/>
+				<xs:element type="xs:string" name="CIS_Reference"/>
+				<xs:element type="xs:string" name="Add_Offer"/>
+				<xs:element type="xs:string" name="Add_UA"/>
+				<xs:element type="xs:string" name="Add_DA"/>
+				<xs:element type="xs:string" name="Add_UC"/>
+				<xs:element type="xs:string" name="Add_PAM"/>
+				<xs:element type="xs:string" name="Comment"/>
+            </xs:all>
+          </xs:complexType>
+        </xs:element>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+</xs:schema>

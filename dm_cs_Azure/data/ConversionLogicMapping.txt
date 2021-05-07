@@ -1,0 +1,19 @@
+TOUC1,Volume,UT_Value - (x*1024),N
+TOUC2,Time,UT_Value - (x/100),Y
+TOUC3,Units,UT_Value - x,N
+TOUC4,Volume,UT_Value - ((x-10000)*1048576),N
+DA,Money,x * 100,Y
+DATO1,Time,(((bt_value/10000) / 0.1667 )* 60 ) * 1000000,Y
+DATO2,Volume,(x*1024) * 1000000,N
+DATO3,Volume,((x/10000)*1048576) * 1000000,Y
+DATO4,Time,(x/100) * 1000000,Y
+DATO5,Units,x * 1000000,N
+DATO6,Money,x * 100,N
+TO,Timer Offer,,N
+DA1,Money,500-(x/10000),Y
+UC,Money,x/10000,Y
+UA,Units,x,N
+UCTO1,Money,x*100,N
+UCTO2,Units,x,N
+UA1,Units,x*30,N
+TBA,Timer Offer,,N

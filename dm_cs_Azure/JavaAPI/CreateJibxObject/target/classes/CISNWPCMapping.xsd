@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+ <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified" attributeFormDefault="unqualified">
+  <xs:element name="CIS_NWPC_LIST">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element name="CIS_NWPC_INFO"  maxOccurs="unbounded">
+          <xs:complexType>
+            <xs:all>
+				<xs:element type="xs:string" name="BT_Name"/>
+				<xs:element type="xs:string" name="BT_ID"/>
+				<xs:element type="xs:string" name="BT_Value"/>
+				<xs:element type="xs:string" name="status"/>
+				<xs:element type="xs:string" name="networkStatus"/>
+				<xs:element type="xs:string" name="OffSet_Days"/>
+				<xs:element type="xs:string" name="renewal_count"/>
+				<xs:element type="xs:string" name="Period"/>								
+            </xs:all>
+          </xs:complexType>
+        </xs:element>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+</xs:schema>

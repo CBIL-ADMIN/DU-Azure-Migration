@@ -1,0 +1,34 @@
+RATEPLAN_NAME,RATE_PLAN_ID,SOURCE_CNT,DISCARDED_CNT,DISCARDED_REMARK
+Du TEST 800,394,1,1,Service class Ignored-1;
+du BSIM Holiday,62,2,2,Service class Ignored-2;
+Pay as you Go Data Line,4,61419,2,Lifecycle lookup mismatch-2;
+Pay as you Go 2,214,9537126,44005,Lifecycle lookup mismatch-43965;Subscriber relation missing-40;
+du BSIM Vanilla,63,3,3,Service class Ignored-3;
+Visitor Mobile Line,5,513,513,Service class Ignored-513;
+du Family Prepaid,193,611,1,Lifecycle lookup mismatch-1;
+Visitor Data Line,6,16,16,Service class Ignored-16;
+Business Mobile PaYG plus 2,194,392003,27,Lifecycle lookup mismatch-22;Subscriber relation missing-5;
+Business Data PaYG plus,235,19,19,Service class Ignored-19;
+Du Basic 900,456,8,8,Service class Ignored-8;
+HotelPrepaid,602,2,0,
+Home Cam Pay as you Go,195,3,3,Service class Ignored-3;
+Tourist SIM Extra,561,1069269,83,Lifecycle lookup mismatch-14;Subscriber relation missing-69;
+du FUT Vanilla,110,27,27,Service class Ignored-27;
+duCC Access,314,4,4,Service class Ignored-4;
+Alo,255,1100625,17,Lifecycle lookup mismatch-12;Subscriber relation missing-5;
+Pay as you Go Million,196,3142,4,Lifecycle lookup mismatch-4;
+Non DU WiFi Prepaid,334,100003,0,
+MCR,276,526260,31,Subscriber relation missing-31;
+Test Ionut and Marcel,105,48,48,Service class Ignored-48;
+Postpaid Consumer,557,494549,72,Lifecycle lookup mismatch-1;Subscriber relation missing-71;
+EMP,277,199434,16,Lifecycle lookup mismatch-16;
+CS Testprod,106,4,4,Service class Ignored-4;
+NPP Value,558,27165,0,
+Homephone recharge,107,21702,21702,Service class Ignored-21702;
+NPP Special,559,57379,0,
+CS POST E,108,558164,691,Lifecycle lookup mismatch-691;
+Roaming_PT,415,27,27,Service class Ignored-27;
+du FUT Vanilla Data,136,2,2,Service class Ignored-2;
+Business Mobile PostPaid,172,263544,2,Lifecycle lookup mismatch-1;Subscriber relation missing-1;
+Business mobile Pay as you Go plus,25,33050,1,Lifecycle lookup mismatch-1;
+CS POST C,109,118306,197,Lifecycle lookup mismatch-197;

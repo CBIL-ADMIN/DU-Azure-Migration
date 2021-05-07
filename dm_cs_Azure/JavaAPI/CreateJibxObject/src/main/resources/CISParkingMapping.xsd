@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+ <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified" attributeFormDefault="unqualified">
+  <xs:element name="CIS_PARKING_LIST">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element name="CIS_PARKING_INFO"  maxOccurs="unbounded">
+          <xs:complexType>
+            <xs:all>
+				<xs:element type="xs:string" name="Product_name"/>
+				<xs:element type="xs:string" name="BT_Name"/>
+				<xs:element type="xs:string" name="BT_ID"/>
+				<xs:element type="xs:string" name="NWPC_State"/>
+				<xs:element type="xs:string" name="id"/>
+				<xs:element type="xs:string" name="msisdn"/>
+				<xs:element type="xs:string" name="product_id"/>
+				<xs:element type="xs:string" name="circle_id"/>
+				<xs:element type="xs:string" name="status"/>
+				<xs:element type="xs:string" name="expiry_date"/>
+				<xs:element type="xs:string" name="start_date"/>
+				<xs:element type="xs:string" name="product_type"/>
+				<xs:element type="xs:string" name="service_name"/>
+				<xs:element type="xs:string" name="last_action_date"/>
+				<xs:element type="xs:string" name="product_description"/>
+				<xs:element type="xs:string" name="pay_src"/>
+				<xs:element type="xs:string" name="ben_msisdn"/>
+				<xs:element type="xs:string" name="product_cost"/>
+				<xs:element type="xs:string" name="srcchannel"/>
+				<xs:element type="xs:string" name="offer_id"/>
+				<xs:element type="xs:string" name="product_category"/>
+				<xs:element type="xs:string" name="bundle_name"/>
+				<xs:element type="xs:string" name="base_bundle_name"/>
+				<xs:element type="xs:string" name="product_purchase_type"/>
+				<xs:element type="xs:string" name="language_id"/>
+				<xs:element type="xs:string" name="pre_notif_status"/>
+				<xs:element type="xs:string" name="post_notif_status"/>
+				<xs:element type="xs:string" name="retry_limit"/>
+				<xs:element type="xs:string" name="priority"/>
+				<xs:element type="xs:string" name="processing_state"/>
+				<xs:element type="xs:string" name="send_sms"/>
+				<xs:element type="xs:string" name="segment_id"/>
+				<xs:element type="xs:string" name="previous_status"/>
+				<xs:element type="xs:string" name="correlation_id"/>
+				<xs:element type="xs:string" name="pre_notification_count"/>
+				<xs:element type="xs:string" name="post_notification_count"/>
+				<xs:element type="xs:string" name="status_change_time"/>
+				<xs:element type="xs:string" name="subscription_mode"/>				
+            </xs:all>
+          </xs:complexType>
+        </xs:element>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+</xs:schema>

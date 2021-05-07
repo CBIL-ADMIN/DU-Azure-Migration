@@ -1,0 +1,16 @@
+SNA_SERIES-RATEPLANID,SOURCE_COUNT,DISCARDED_COUNT,DISCARDED_REMARK
+971600-582,54,0,
+971550-275,2,0,
+971217-275,1,0,
+97113-374,1,1,SNA length is less than six Digit-1;
+971800-275,3534,0,
+971809-374,1,1,SNA Destination number is empty-1;
+971043-275,1,0,
+971900-374,1,1,SNA Destination number is empty-1;
+971864-275,1,0,
+971802-374,1,1,SNA Destination number is empty-1;
+971800-374,12315,12315,SNA Destination number is empty-12315;
+971002-374,1,1,SNA Destination number is empty-1;
+971727-497,174,0,
+971766-374,1,1,SNA Destination number is empty-1;
+971890-275,5,0,

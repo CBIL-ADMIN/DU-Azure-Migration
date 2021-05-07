@@ -1,0 +1,197 @@
+package com.ericsson.dm.transform.implementation;
+
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
+import com.ericsson.dm.Utils.CommonUtilities;
+import com.ericsson.dm.inititialization.LoadSubscriberMapping;
+import com.ericsson.dm.transformation.ExecuteTransformation;
+import com.ericsson.jibx.beans.SubscriberXml;
+import com.ericsson.jibx.beans.SubscriberXml.SchemasubscriberusmsdumpInfo;
+
+public class Account {
+	SubscriberXml subscriber;	
+	String INITIAL_ACTIVATION_DATE;
+	Set<String> rejectAndLog = new HashSet<>();
+	Set<String> onlyLog = new HashSet<>();
+	boolean AccountProductIDFlag;
+	String msisdn;
+	public Account(SubscriberXml subscriber, String INITIAL_ACTIVATION_DATE, boolean AccountProductIDFlag) {
+		this.subscriber=subscriber;
+		
+		this.AccountProductIDFlag = AccountProductIDFlag;
+		this.INITIAL_ACTIVATION_DATE = INITIAL_ACTIVATION_DATE;	
+		this.msisdn = subscriber.getSubscriberInfoMSISDN();
+	}
+
+
+	public Collection<? extends String> execute() {
+		// TODO Auto-generated method stub
+		List<String> result = new ArrayList<String>();
+		result = applyRulesAccount();		
+		
+		ExecuteTransformation.onlyLog.addAll(this.onlyLog);
+		ExecuteTransformation.rejectAndLog.addAll(this.rejectAndLog);
+		return result;
+	}
+	
+	private List<String> applyRulesAccount() {
+		List<String> accountList = new ArrayList<>();
+		StringBuffer sb = new StringBuffer();
+		
+		//String msisdn = subscriber.getSubscriberInfoMSISDN();
+		String serviceClass = subscriber.getSubscriberInfoSERVICESTATE();
+		String AccountClass = "";
+		String MappingserviceClass = LoadSubscriberMapping.ServiceClassMap.get(subscriber.getSubscriberInfoCCSACCTTYPEID());
+		String Type = MappingserviceClass.split("\\|")[0];
+		String IgnoreFlag = MappingserviceClass.split("\\|")[1];
+		String Target = MappingserviceClass.split("\\|")[2];
+		if(IgnoreFlag.equals("N")){
+			AccountClass = Target;
+		}
+		/*else{	
+			onlyLog.add("INC4000:Service class Ignored :MSISDN=" + msisdn + ":CCS_ACCT_TYPE_ID=" + subscriber.getSubscriberInfoCCSACCTTYPEID() + ":SERVICE_STATE=" + serviceClass + ":ACTION=Logging");
+		}*/
+		
+		//String INITIAL_ACTIVATION_DATE = subscriber.getUsmsdumpInfoINITIALACTIVATIONDATE();
+		
+		String INITIAL_ACTIVATION_DATE_FLAG;
+		String WALLET_EXPIRY = subscriber.getSubscriberInfoWALLETEXPIRY();		
+		if(INITIAL_ACTIVATION_DATE.length() == 0){
+			INITIAL_ACTIVATION_DATE_FLAG = "Y";
+		}
+		else {
+			INITIAL_ACTIVATION_DATE_FLAG = "N";
+		}
+		
+		long actDate = 0;		
+		long sfeedate = 0;
+		long supdate = 0;
+
+		String units = "0";
+		String sfeeStatus = "0";
+		String supStatus = "0";
+
+		if (!(INITIAL_ACTIVATION_DATE_FLAG == "Y" && (serviceClass == "P" || serviceClass == "S" ))) 
+			actDate = CommonUtilities.convertDateToEpoch(INITIAL_ACTIVATION_DATE);
+			//2013-05-25 16:11:00
+		
+		if (!(INITIAL_ACTIVATION_DATE_FLAG == "Y" && (serviceClass == "P" || serviceClass == "S" ))) 
+			if(WALLET_EXPIRY.equals("1970-01-01 00:00:00"))
+			{	
+				String MAX_DATE = LoadSubscriberMapping.CommonConfigMap.get("max_date").substring(1, 11) + " 00:00:00";
+				sfeedate = CommonUtilities.convertDateToEpoch(MAX_DATE) + 10;
+			}			
+			else
+				sfeedate = CommonUtilities.convertDateToEpoch(WALLET_EXPIRY) + 10;
+		else
+			sfeedate = 0;
+		
+		if (!(INITIAL_ACTIVATION_DATE_FLAG == "Y" && (serviceClass == "P" || serviceClass == "S" ))) 
+			if(WALLET_EXPIRY.equals("1970-01-01 00:00:00"))
+			{	
+				String MAX_DATE = LoadSubscriberMapping.CommonConfigMap.get("max_date").substring(1, 11) + " 00:00:00";
+				supdate = CommonUtilities.convertDateToEpoch(MAX_DATE) + 10;
+			}			
+			else
+				supdate = CommonUtilities.convertDateToEpoch(WALLET_EXPIRY) + 10;
+		else
+			supdate = 0;
+		
+		if (!(INITIAL_ACTIVATION_DATE_FLAG == "Y" && (serviceClass == "P" || serviceClass == "S" ))) 
+		{			
+			sfeeStatus = LoadSubscriberMapping.LifeCycleMap.get(serviceClass+"|"+INITIAL_ACTIVATION_DATE_FLAG +"|N").split(",")[6];
+		}
+		else
+			sfeeStatus = "0";
+
+		if (!(INITIAL_ACTIVATION_DATE_FLAG == "Y" && (serviceClass == "P" || serviceClass == "S" ))) 
+			supStatus = LoadSubscriberMapping.LifeCycleMap.get(serviceClass+"|"+INITIAL_ACTIVATION_DATE_FLAG +"|N").split(",")[4];
+		else
+			supStatus = "0";
+		
+		List<String> CommunityList = CreateCommunity();
+
+		// validTo = ruleB(validTo);
+		sb.append(msisdn).append(",");
+		sb.append(AccountClass).append(",");
+		sb.append(AccountClass).append(",");
+		sb.append(LoadSubscriberMapping.CommonConfigMap.get("default_NULL")).append(",");
+		sb.append(units).append(",");
+		sb.append(actDate).append(",");
+		sb.append(sfeedate).append(",");
+		sb.append(supdate).append(",");
+		sb.append(LoadSubscriberMapping.CommonConfigMap.get("default_SFEE_DONE_Date")).append(",");
+		sb.append(LoadSubscriberMapping.CommonConfigMap.get("default_PREVIOUS_SFEE_DONE_Date")).append(",");
+		sb.append(sfeeStatus).append(",");
+		sb.append(supStatus).append(",");
+		sb.append(LoadSubscriberMapping.CommonConfigMap.get("default_NEG_BALANCE_START")).append(",");
+		sb.append(LoadSubscriberMapping.CommonConfigMap.get("default_NEG_BALANCE_BARRED")).append(",");
+		sb.append(LoadSubscriberMapping.CommonConfigMap.get("default_ACCOUNT_DISCONNECT")).append(",");
+		sb.append(LoadSubscriberMapping.CommonConfigMap.get("default_ACCOUNT_STATUS")).append(",");
+		sb.append(LoadSubscriberMapping.CommonConfigMap.get("default_PROM_NOTIFICATION")).append(",");
+		sb.append(LoadSubscriberMapping.CommonConfigMap.get("default_SERVICE_OFFERINGS")).append(",");
+		sb.append(LoadSubscriberMapping.CommonConfigMap.get("default_ACCOUNT_GROUP_ID")).append(",");
+		if(CommunityList.size() == 0)
+		{
+			sb.append(LoadSubscriberMapping.CommonConfigMap.get("default_ZERO")).append(",");
+			sb.append(LoadSubscriberMapping.CommonConfigMap.get("default_ZERO")).append(",");
+			sb.append(LoadSubscriberMapping.CommonConfigMap.get("default_ZERO")).append(",");
+		}
+		else
+		{
+			for(int i =0;i<3;i++)
+			{
+				sb.append(CommunityList.get(i)).append(",");
+			}		
+		}
+		sb.append(LoadSubscriberMapping.CommonConfigMap.get("default_account_home_region")).append(",");
+		sb.append(LoadSubscriberMapping.CommonConfigMap.get("default_account_lock")).append(",");
+		if(AccountProductIDFlag)
+			sb.append("500");
+		else
+			sb.append("0");
+		
+		accountList.add(sb.toString());
+		
+		sb = null;
+		return accountList;
+	}
+
+
+	private List<String> CreateCommunity() {
+		List<String> communityList = new ArrayList<>();
+		
+		List<String> SortedCUGList = new ArrayList<>();
+		subscriber.getCugclidumpInfoList().forEach(item->{
+			SortedCUGList.add(item.getCUGNAME());});
+		
+		Collections.sort(SortedCUGList); 
+		
+		for(String cugname : SortedCUGList)
+		{
+			String CommunityID =LoadSubscriberMapping.CommunityMap.get(cugname);
+			if( CommunityID != null)
+				communityList.add(CommunityID);
+			else
+				onlyLog.add("INC5001:Community Lookup failed :MSISDN=" + msisdn + ":CUG_NAME=" + cugname + ":ACTION=Logging");
+		}
+		// TODO Auto-generated method stub
+		//Collections.sort(communityList);
+		if(communityList.size() < 3)
+		{
+			int length = communityList.size();
+			for(int i=0; i < (3-length); i++)
+			{
+				communityList.add("0");
+			}
+		}
+		
+		return communityList;
+	}
+	
+}

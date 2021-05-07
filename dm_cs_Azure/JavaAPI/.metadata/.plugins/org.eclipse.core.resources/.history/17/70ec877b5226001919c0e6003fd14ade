@@ -1,0 +1,781 @@
+package com.ericsson.dm.transform.implementation;
+
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.concurrent.ExecutionException;
+import java.util.stream.Collectors;
+
+import com.ericsson.dm.Utils.CommonUtilities;
+import com.ericsson.dm.inititialization.LoadSubscriberMapping;
+import com.ericsson.dm.transformation.ExecuteTransformation;
+import com.ericsson.jibx.beans.SubscriberXml;
+import com.ericsson.jibx.beans.SubscriberXml.SchemasubscriberbalancesdumpInfo;
+
+public class UsageCounter implements Comparator<SchemasubscriberbalancesdumpInfo>{
+	SubscriberXml subscriber;
+	String msisdn;
+	Set<String> rejectAndLog;
+	Set<String> onlyLog;
+	Set<String> validMsisdn;
+	String[] ExceptionBalances = {"2112","1387","1219","21","1832","3011","1512","2432"};
+	public CopyOnWriteArrayList<SchemasubscriberbalancesdumpInfo> SortedBalanceInput;
+	
+	public UsageCounter()
+	{
+		
+	}
+	
+	public UsageCounter(SubscriberXml subscriber,Set<String> rejectAndLog, Set<String> onlyLog) {
+		this.subscriber = subscriber;
+		this.rejectAndLog=rejectAndLog;
+		this.onlyLog=onlyLog;
+		SortedBalanceInput = new CopyOnWriteArrayList<>();
+		// TODO Auto-generated constructor stub
+	}
+
+	@Override
+	public int compare(SchemasubscriberbalancesdumpInfo o1, SchemasubscriberbalancesdumpInfo o2) {
+		int value1 = o1.getBEEXPIRY().compareTo(o2.getBEEXPIRY());
+        if (value1 == 0) {
+        	return o1.getBEBUCKETID().compareTo(o2.getBEBUCKETID());
+        }
+        return value1;
+	}
+	
+	public List<String> execute() {
+		// TODO Auto-generated method stub
+		msisdn = subscriber.getSubscriberInfoMSISDN();
+		
+		SortedBalanceInput.addAll(subscriber.getBalancesdumpInfoList());
+		
+		/*SortedBalanceInput.forEach(item->{
+			System.out.println(item.getBALANCETYPE()+ "#" + item.getBEBUCKETID()+ "#" + item.getBALANCETYPENAME() + "#" + item.getBEEXPIRY());
+		});*/
+		
+		Collections.sort(SortedBalanceInput,new Offer());
+		
+		/*System.out.println("--------After sorting----------");
+		SortedBalanceInput.forEach(item->{
+		System.out.println(item.getBALANCETYPE()+ "#" + item.getBEBUCKETID()+ "#" + item.getBALANCETYPENAME() + "#" + item.getBEEXPIRY());});*/
+		
+		List<String> UCList = new ArrayList<>();
+		UCList.addAll(CounterFromBalanceMapping());
+		
+		SortedBalanceInput.clear();
+		return UCList;
+	}
+
+	
+	/*TOUC1	VOLUME	UT_VALUE - (X*1024)
+	TOUC2	TIME	UT_VALUE - (X/100)
+	TOUC3	SMS	UT_VALUE - X
+	TOUC4	VOLUME	UT_VALUE - ((X-10000)*1048576)
+	UC	Money	x/10000
+	TOUC	
+	*/
+	
+	private Collection<? extends String> CounterFromBalanceMapping() {
+		// TODO Auto-generated method stub
+		
+		Date currDate = new Date();
+		SimpleDateFormat sdfDaily = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		List<String> UsageCounterList =new ArrayList<>();
+		Set<String> CompletedGroup = new HashSet<>();
+		
+		Set<String> CompletedBT_ID = new HashSet<>();
+		
+		for(com.ericsson.jibx.beans.SubscriberXml.SchemasubscriberbalancesdumpInfo balanceInput : SortedBalanceInput)
+		{			
+			String Balance_ID = balanceInput.getBALANCETYPE();
+			//System.out.println("Master Balance_ID: " + Balance_ID);
+			String Balance_Value = balanceInput.getBEBUCKETVALUE();
+			String Balance_StartDate = balanceInput.getBEBUCKETSTARTDATE();
+			String Balance_ExpiryDate = balanceInput.getBEEXPIRY();
+			String Balance_Msisdn = balanceInput.getMSISDN();
+			/*if(CompletedBT_ID.contains(Balance_ID))
+				continue;*/			
+			
+			if((LoadSubscriberMapping.ProductMappingIgnoreFlag.get(Balance_ID) != null) && LoadSubscriberMapping.ProductMappingIgnoreFlag.get(Balance_ID) == "Y")
+			{
+				//CompletedBT_ID.add(Balance_ID);
+				continue;
+			}
+			
+			if(!Balance_ExpiryDate.equals("1970-01-01 00:00:00") && CommonUtilities.convertDateToEpoch(Balance_ExpiryDate) < CommonUtilities.convertDateToEpoch(sdfDaily.format(currDate)))
+			{
+				//CompletedBT_ID.add(Balance_ID);
+				continue;
+			}
+			
+			if(LoadSubscriberMapping.BalanceEmptyBTGroupIdentifierMap.get(Balance_ID + "|") != null)
+			{
+				String UC_ID = LoadSubscriberMapping.BalanceEmptyBTGroupIdentifierMap.get(Balance_ID + "|").getUCID();
+				String Symbol = LoadSubscriberMapping.BalanceEmptyBTGroupIdentifierMap.get(Balance_ID + "|").getSymbols();
+				String BT_Value = LoadSubscriberMapping.BalanceEmptyBTGroupIdentifierMap.get(Balance_ID + "|").getBTValue();
+				String UC_Value = LoadSubscriberMapping.BalanceEmptyBTGroupIdentifierMap.get(Balance_ID + "|").getUTValue();
+				String Resource = LoadSubscriberMapping.BalanceEmptyBTGroupIdentifierMap.get(Balance_ID + "|").getResource();		
+				if(!UC_ID.isEmpty())
+				{					
+					if(Symbol.isEmpty() && BT_Value.isEmpty())
+					{	
+						//String Resourse, String UTVal, String Balance,String balance_ID
+						long CalculatedBalance = CalculateBalance(Resource,UC_Value,BT_Value,Balance_ID);
+						UsageCounterList.add(msisdn +","+ UC_ID +","+ Balance_Msisdn +","+ CalculatedBalance +",0,"+ CalculatedBalance +",0");
+					}
+					else
+					{
+						if(Symbol.equals(">=") && Integer.parseInt(Balance_Value) >= Integer.parseInt(BT_Value))
+						{
+							long CalculatedBalance = CalculateBalance(Resource,UC_Value,BT_Value,Balance_ID);
+							UsageCounterList.add(msisdn +","+ UC_ID +","+ Balance_Msisdn +","+ CalculatedBalance +",0,"+ CalculatedBalance +",0");
+						}
+						else if(Symbol.equals(">") && Integer.parseInt(Balance_Value) > Integer.parseInt(BT_Value))
+						{
+							long CalculatedBalance = CalculateBalance(Resource,UC_Value,BT_Value,Balance_ID);
+							UsageCounterList.add(msisdn +","+ UC_ID +","+ Balance_Msisdn +","+ CalculatedBalance +",0,"+ CalculatedBalance +",0");
+						}
+						else if(Symbol.equals("=") && Integer.parseInt(Balance_Value) == Integer.parseInt(BT_Value))
+						{
+							long CalculatedBalance = CalculateBalance(Resource,UC_Value,BT_Value,Balance_ID);
+							UsageCounterList.add(msisdn +","+ UC_ID +","+ Balance_Msisdn +","+ CalculatedBalance +",0,"+ CalculatedBalance +",0");
+						}
+						else if(Symbol.equals("or"))
+						{
+							//Integer.parseInt(Balance_Value) == Integer.parseInt(BT_Value)
+							String[] values = BT_Value.split("\\|");
+							
+							if(Arrays.stream(values).anyMatch(Balance_Value::equals))
+							{
+								long CalculatedBalance = CalculateBalance(Resource,UC_Value,BT_Value,Balance_ID);
+								UsageCounterList.add(msisdn +","+ UC_ID +","+ Balance_Msisdn +","+ CalculatedBalance +",0,"+ CalculatedBalance +",0");
+							}
+							else
+								onlyLog.add("INC4004:Balance_Type match condition failed:MSISDN=" + msisdn + ":BALANCE_TYPE=" + Balance_ID + ":BE_BUCKET_VALUE=" + Balance_Value + ":BE_BUCKET_ID=" + balanceInput.getBEBUCKETID() +":ACTION=Logging");
+						}
+						else
+							onlyLog.add("INC4004:Balance_Type match condition failed:MSISDN=" + msisdn + ":BALANCE_TYPE=" + Balance_ID + ":BE_BUCKET_VALUE=" + Balance_Value + ":BE_BUCKET_ID=" + balanceInput.getBEBUCKETID() +":ACTION=Logging");
+					}
+				}	
+			}	
+			else
+			{	
+				if(Arrays.stream(ExceptionBalances).anyMatch(Balance_ID::equals))
+				{
+					
+				}
+				else
+				{
+					String GroupName = "";
+					List<String> CurrentGroupBalance = new ArrayList<>();
+					List<String> FinalUCList = new ArrayList<>();
+					List<String> ValidGroupBalanceCounter = new ArrayList<>();
+					boolean ExtraOfferFlag = false;
+					//Collections.sort(LoadSubscriberMapping.BalanceGroupingMap,new UsageCounter());
+					for(Set<String> valueList : LoadSubscriberMapping.BalanceGroupingMap.values()) 
+					{					
+						if(valueList.contains(Balance_ID)){
+							GroupName = LoadSubscriberMapping.getKey(LoadSubscriberMapping.BalanceGroupingMap, valueList);
+							if(GroupName.startsWith("D-"))
+							{
+								GroupName = ComputeDGroup(Balance_ID,GroupName);
+								CurrentGroupBalance.addAll(LoadSubscriberMapping.BalanceGroupingMap.get(GroupName));
+							}
+							if(GroupName.startsWith("A-"))
+							{
+								GroupName = ComputeAGroup(Balance_ID,GroupName);
+								CurrentGroupBalance.addAll(LoadSubscriberMapping.BalanceGroupingMap.get(GroupName));
+							}
+							/*if(GroupName.startsWith("C-"))
+							{
+								GroupName = ComputeCGroup(Balance_ID,GroupName);
+								CurrentGroupBalance.addAll(LoadSubscriberMapping.BalanceGroupingMap.get(GroupName));
+							}*/
+							if(GroupName.startsWith("F-"))
+							{
+								GroupName = ComputeFGroup(Balance_ID,GroupName);
+								CurrentGroupBalance.addAll(LoadSubscriberMapping.BalanceGroupingMap.get(GroupName));
+							}
+							else
+							{
+								CurrentGroupBalance.addAll(valueList);									
+							}
+							break;
+						}
+					}	
+					
+					if(!CompletedGroup.contains(GroupName))
+					{
+						//System.out.println(Balance_ID + "----" +GroupName);						
+						if(CurrentGroupBalance.size() > 0)
+						{
+							String FinalGroupName = GroupName;
+							//System.out.println(FinalGroupName);	
+							for(String id : CurrentGroupBalance)
+							{
+								//System.out.println(id);
+								
+								for(com.ericsson.jibx.beans.SubscriberXml.SchemasubscriberbalancesdumpInfo TempbalanceInput :  SortedBalanceInput)
+								{
+									String TempBalance_ID = TempbalanceInput.getBALANCETYPE();
+									String TempBalance_Name = TempbalanceInput.getBALANCETYPENAME();
+									String TempBalance_Value = TempbalanceInput.getBEBUCKETVALUE();
+									String TempBalance_StartDate = TempbalanceInput.getBEBUCKETSTARTDATE();
+									String TempBalance_ExpiryDate = TempbalanceInput.getBEEXPIRY();
+									String TempBalance_Msisdn = TempbalanceInput.getMSISDN();
+									if(id.equals(TempBalance_ID))
+									{
+										if(LoadSubscriberMapping.BalanceNonEmptyBTGroupIdentifierMap.get(id + "|" + FinalGroupName) != null)
+										{
+											if(!TempBalance_ExpiryDate.equals("1970-01-01 00:00:00") && CommonUtilities.convertDateToEpoch(TempBalance_ExpiryDate) < CommonUtilities.convertDateToEpoch(sdfDaily.format(currDate)))
+											{
+												CompletedBT_ID.add(TempbalanceInput.getBEBUCKETID());
+												continue;
+											}
+											String UC_ID = LoadSubscriberMapping.BalanceNonEmptyBTGroupIdentifierMap.get(TempBalance_ID + "|" + FinalGroupName).getUCID();
+											String Symbol = LoadSubscriberMapping.BalanceNonEmptyBTGroupIdentifierMap.get(TempBalance_ID + "|" + FinalGroupName).getSymbols();
+											String BT_Value = LoadSubscriberMapping.BalanceNonEmptyBTGroupIdentifierMap.get(TempBalance_ID + "|" + FinalGroupName).getBTValue();
+											String Product_Private = LoadSubscriberMapping.BalanceNonEmptyBTGroupIdentifierMap.get(TempBalance_ID + "|" + FinalGroupName).getProductPrivate();
+											String UC_Value = LoadSubscriberMapping.BalanceNonEmptyBTGroupIdentifierMap.get(TempBalance_ID + "|" + FinalGroupName).getUTValue();
+											String Resource = LoadSubscriberMapping.BalanceNonEmptyBTGroupIdentifierMap.get(TempBalance_ID + "|" + FinalGroupName).getResource();
+											String BT_Type = LoadSubscriberMapping.BalanceNonEmptyBTGroupIdentifierMap.get(TempBalance_ID + "|" + FinalGroupName).getBTTYPE();
+											if(Symbol.equals(">=") && Integer.parseInt(TempBalance_Value) >= Integer.parseInt(BT_Value))
+											{
+												CompletedGroup.add(FinalGroupName);
+												ValidGroupBalanceCounter.add(BT_Type + ";" + TempBalance_Name + ";" + TempBalance_ID + ";" + TempBalance_Value + ";" + TempBalance_Value + ";" + TempBalance_Msisdn +"|" + UC_ID + ";" + UC_Value + ";" + Resource + ";" + TempBalance_StartDate + ";" + TempBalance_ExpiryDate  + ";" + Product_Private);
+												if(!UC_ID.isEmpty())
+													FinalUCList.add(BT_Type + ";" + TempBalance_Name + ";" + TempBalance_ID + ";" + TempBalance_Value + ";" + TempBalance_Value + ";" + TempBalance_Msisdn +"|" + UC_ID + ";" + UC_Value + ";" + Resource + ";" + TempBalance_StartDate + ";" + TempBalance_ExpiryDate  + ";" + Product_Private);
+												break;
+											}
+											else if(Symbol.equals(">") && Integer.parseInt(TempBalance_Value) > Integer.parseInt(BT_Value))
+											{
+												CompletedGroup.add(FinalGroupName);
+												ValidGroupBalanceCounter.add(BT_Type + ";" + TempBalance_Name + ";" + TempBalance_ID + ";" + TempBalance_Value + ";" + TempBalance_Value + ";" + TempBalance_Msisdn +"|" + UC_ID + ";" + UC_Value + ";" + Resource + ";" + TempBalance_StartDate + ";" + TempBalance_ExpiryDate  + ";" + Product_Private);
+												if(!UC_ID.isEmpty())
+													FinalUCList.add(BT_Type + ";" + TempBalance_Name + ";" + TempBalance_ID + ";" + TempBalance_Value + ";" + TempBalance_Value + ";" + TempBalance_Msisdn +"|" + UC_ID + ";" + UC_Value + ";" + Resource + ";" + TempBalance_StartDate + ";" + TempBalance_ExpiryDate  + ";" + Product_Private);
+												break;
+											}
+											else if(Symbol.equals("=") && Integer.parseInt(TempBalance_Value) == Integer.parseInt(BT_Value))
+											{
+												CompletedGroup.add(FinalGroupName);
+												ValidGroupBalanceCounter.add(BT_Type + ";" + TempBalance_Name + ";" + TempBalance_ID + ";" + TempBalance_Value + ";" + TempBalance_Value + ";" + TempBalance_Msisdn +"|" + UC_ID + ";" + UC_Value + ";" + Resource + ";" + TempBalance_StartDate + ";" + TempBalance_ExpiryDate  + ";" + Product_Private);
+												if(!UC_ID.isEmpty())
+													FinalUCList.add(BT_Type + ";" + TempBalance_Name + ";" + TempBalance_ID + ";" + TempBalance_Value + ";" + TempBalance_Value + ";" + TempBalance_Msisdn +"|" + UC_ID + ";" + UC_Value + ";" + Resource + ";" + TempBalance_StartDate + ";" + TempBalance_ExpiryDate  + ";" + Product_Private);
+												break;
+											}
+											else if(Symbol.equals("or"))
+											{
+												//Integer.parseInt(Balance_Value) == Integer.parseInt(BT_Value)
+												String[] values = BT_Value.split("\\|");											
+												if(Arrays.stream(values).anyMatch(TempBalance_Value::equals))
+												{
+													CompletedGroup.add(FinalGroupName);
+													ValidGroupBalanceCounter.add(BT_Type + ";" + TempBalance_Name + ";" + TempBalance_ID + ";" + TempBalance_Value + ";" + TempBalance_Value + ";" + TempBalance_Msisdn +"|" + UC_ID + ";" + UC_Value + ";" + Resource + ";" + TempBalance_StartDate + ";" + TempBalance_ExpiryDate  + ";" + Product_Private);
+													if(!UC_ID.isEmpty())
+														FinalUCList.add(BT_Type + ";" + TempBalance_Name + ";" + TempBalance_ID + ";" + TempBalance_Value + ";" + TempBalance_Value + ";" + TempBalance_Msisdn +"|" + UC_ID + ";" + UC_Value + ";" + Resource + ";" + TempBalance_StartDate + ";" + TempBalance_ExpiryDate  + ";" + Product_Private);
+													break;
+												}
+												//else
+												//	onlyLog.add("INC4004:Balance_Type match condition failed:MSISDN=" + msisdn + ":BALANCE_TYPE=" + Balance_ID + ":BE_BUCKET_VALUE=" + Balance_Value + ":BE_BUCKET_ID=" + balanceInput.getBEBUCKETID() +":ACTION=Logging");
+											}
+											//else
+												//onlyLog.add("INC4004:Balance_Type match condition failed:MSISDN=" + msisdn + ":BALANCE_TYPE=" + Balance_ID + ":BE_BUCKET_VALUE=" + Balance_Value + ":BE_BUCKET_ID=" + balanceInput.getBEBUCKETID() +":ACTION=Logging");
+										}
+									
+									}
+								}
+							//Add code here
+							}
+							if(FinalGroupName.startsWith("F"))
+							{
+								if(ValidGroupBalanceCounter.size() == CurrentGroupBalance.size())
+								{	
+									//the reason for putting code in catch is some group doesn't have P so in that group check for M 
+									//BT_Type + ";" +TempBalance_Name + ";" + TempBalance_ID + ";" + TempBalance_Value + "|" + Offer_ID + ";" + Offer_Type + ";" + startFlag + ";" + expiryFalg + ";" + TempBalance_StartDate + ";" + TempBalance_ExpiryDate  + ";" + Product_Private + ";" + Offer_Flag + ";" + ExtraOffer
+									for(String UCValue : FinalUCList)
+									{
+										String UCId = UCValue.split("\\|",-1)[1].split(";",-1)[0];
+										if(!UCId.isEmpty())
+										{
+											String TargetOffer = UCValue.split("\\|",-1)[1];
+											String Resource = UCValue.split("\\|")[1].split(";")[2];
+											if(Resource.length() > 1)
+											{
+												long CalculatedBalance = CalculateBalance(Resource,(UCValue.split("\\|")[1].split(";")[1]),(UCValue.split("\\|")[0].split(";")[2]),UCValue.split("\\|")[0].split(";")[1]);
+												String Product_ID = "0";
+												UsageCounterList.add(msisdn +","+ UCValue.split("\\|")[1].split(";")[0] +","+ UCValue.split("\\|")[0].split(";")[4] +","+ CalculatedBalance +","+ Product_ID +","+ CalculatedBalance +",0");
+											}
+										}
+									}										
+								}
+								else
+								{
+									String MPresent = ValidGroupBalanceCounter.stream().filter(item->item.startsWith("M")).findFirst().orElse(null);
+									if(MPresent != null)
+									{
+										//if(ValidGroupBalanceCounter.size() == 1 && FinalUCList.size() == 0)
+										{
+											String GroupLastChar = FinalGroupName.substring(FinalGroupName.length()-1,FinalGroupName.length());
+											String MasterGroupName = FinalGroupName.replace(GroupLastChar, "M");
+											String BT_ID = MPresent.split("\\|")[0].split(";")[2];
+											String SourceBT_Value = MPresent.split("\\|")[0].split(";")[3];
+											//String BT_StartDate  = MPresent.split("\\|")[1].split(";")[4];
+											//String BT_ExpiryDate  = MPresent.split("\\|")[1].split(";")[5];
+											if(LoadSubscriberMapping.BalanceNonEmptyBTGroupIdentifierMap.get(BT_ID + "|" + MasterGroupName) != null)
+											{
+												String UC_ID = LoadSubscriberMapping.BalanceNonEmptyBTGroupIdentifierMap.get(BT_ID + "|" + MasterGroupName).getUCID();
+												String Symbol = LoadSubscriberMapping.BalanceNonEmptyBTGroupIdentifierMap.get(BT_ID + "|" + MasterGroupName).getSymbols();
+												String BT_Value = LoadSubscriberMapping.BalanceNonEmptyBTGroupIdentifierMap.get(BT_ID + "|" + MasterGroupName).getBTValue();
+												
+												String UC_Value = LoadSubscriberMapping.BalanceNonEmptyBTGroupIdentifierMap.get(BT_ID + "|" + MasterGroupName).getUTValue();
+												String MasterResource = LoadSubscriberMapping.BalanceNonEmptyBTGroupIdentifierMap.get(BT_ID + "|" + MasterGroupName).getResource();
+												String BT_Type = LoadSubscriberMapping.BalanceNonEmptyBTGroupIdentifierMap.get(BT_ID + "|" + MasterGroupName).getBTTYPE();
+												boolean bCreateUC = false;
+												if(Symbol.equals(">=") && Integer.parseInt(SourceBT_Value) >= Integer.parseInt(BT_Value))
+													bCreateUC = true;
+												else if(Symbol.equals(">") && Integer.parseInt(SourceBT_Value) > Integer.parseInt(BT_Value))
+													bCreateUC = true;
+												
+												if(MasterResource.length() > 1)
+												{
+													//String Resourse, String UTVal, String Balance,String balance_ID
+													long CalculatedBalance = CalculateBalance(MasterResource,UC_ID,SourceBT_Value,BT_ID);
+													String Product_ID = "0";
+													UsageCounterList.add(msisdn +","+UC_ID +","+ MPresent.split("\\|")[0].split(";")[4] +","+ CalculatedBalance +","+ Product_ID +","+ CalculatedBalance +",0");
+												}
+											}
+											/*else
+											{												
+												onlyLog.add("INC4004:Balance_Type match condition failed:MSISDN=" + msisdn + ":BALANCE_TYPE=" + BT_ID + ":BE_BUCKET_VALUE=" + SourceBT_Value + ":BE_BUCKET_ID="+ CurrentGroupBalanceID.get(BT_ID + "," + SourceBT_Value)  +":ACTION=Logging");
+											}*/											
+										}
+									}
+								}
+							}
+							
+							if(FinalGroupName.startsWith("TestF-"))
+							{
+								if(ValidGroupBalanceCounter.size() == CurrentGroupBalance.size())
+								{
+									FinalUCList.forEach(item->{
+										String Resource = item.split("\\|")[1].split(";")[2];
+										if(Resource.length() > 1)
+										{
+											long CalculatedBalance = CalculateBalance(Resource,(item.split("\\|")[1].split(";")[1]),(item.split("\\|")[0].split(";")[2]),item.split("\\|")[0].split(";")[1]);
+											String Product_ID = "0";
+											UsageCounterList.add(msisdn +","+ item.split("\\|")[1].split(";")[0] +","+ item.split("\\|")[0].split(";")[4] +","+ CalculatedBalance +","+ Product_ID +","+ CalculatedBalance +",0");
+										}										
+									});
+									CompletedBT_ID.addAll(CurrentGroupBalance);
+								}
+								else
+								{
+									for(String item: FinalUCList)
+									{
+										//TempBalance_Name + ";" + TempBalance_ID + ";" + TempBalance_Value + ";" + TempBalance_Value + ";" + TempBalance_Msisdn +"|" + UC_ID + ";" + UC_Value + ";" + Resource + ";" + TempBalance_StartDate + ";" + TempBalance_ExpiryDate  + ";" + Product_Private);
+										
+										String Resource = item.split("\\|")[1].split(";")[2];
+																						
+										if(Resource.length() > 1)
+										{
+											long CalculatedBalance = CalculateBalance(Resource,(item.split("\\|")[1].split(";")[1]),(item.split("\\|")[0].split(";")[2]),item.split("\\|")[0].split(";")[1]);
+											String Product_ID = "0";
+											UsageCounterList.add(msisdn +","+ item.split("\\|")[1].split(";")[0] +","+ item.split("\\|")[0].split(";")[4] +","+ CalculatedBalance +","+ Product_ID +","+ CalculatedBalance +",0");
+										}
+									}																			
+									CompletedBT_ID.addAll(CurrentGroupBalance);	
+								}
+							}
+							if(FinalGroupName.startsWith("A-") || FinalGroupName.startsWith("C-") || FinalGroupName.startsWith("D-"))
+							{
+								if(ValidGroupBalanceCounter.size() == CurrentGroupBalance.size())
+								{
+									FinalUCList.forEach(item->{
+										String Resource = item.split("\\|")[1].split(";")[2];
+										if(Resource.length() > 1)
+										{
+											long CalculatedBalance = CalculateBalance(Resource,(item.split("\\|")[1].split(";")[1]),(item.split("\\|")[0].split(";")[3]),item.split("\\|")[0].split(";")[2]);
+											String Product_ID = "0";
+											UsageCounterList.add(msisdn +","+ item.split("\\|")[1].split(";")[0] +","+ item.split("\\|")[0].split(";")[5] +","+ CalculatedBalance +","+ Product_ID +","+ CalculatedBalance +",0");
+										}										
+									});
+									//CompletedBT_ID.addAll(CurrentGroupBalance);
+								}
+								else
+								{
+									for(String item: FinalUCList)
+									{
+										//TempBalance_Name + ";" + TempBalance_ID + ";" + TempBalance_Value + ";" + TempBalance_Value + ";" + TempBalance_Msisdn +"|" + UC_ID + ";" + UC_Value + ";" + Resource + ";" + TempBalance_StartDate + ";" + TempBalance_ExpiryDate  + ";" + Product_Private);
+										String SourceValue =  item.split("\\|")[0];
+										//String TargetValue = item.split("\\|")[1];
+										if(LoadSubscriberMapping.BalanceNonEmptyBTGroupIdentifierMap.get(SourceValue.split(";")[2] + "|M") != null)
+										{
+											String UC_ID = LoadSubscriberMapping.BalanceNonEmptyBTGroupIdentifierMap.get(SourceValue.split(";")[2] + "|M").getUCID();
+											String Resource = LoadSubscriberMapping.BalanceNonEmptyBTGroupIdentifierMap.get(SourceValue.split(";")[2] + "|M").getResource();
+											String UTValue = LoadSubscriberMapping.BalanceNonEmptyBTGroupIdentifierMap.get(SourceValue.split(";")[2] + "|M").getUTValue();
+											
+											String Symbol = LoadSubscriberMapping.BalanceNonEmptyBTGroupIdentifierMap.get(SourceValue.split(";")[2] + "|M").getSymbols();
+											String BTValue = LoadSubscriberMapping.BalanceNonEmptyBTGroupIdentifierMap.get(SourceValue.split(";")[2] + "|M").getBTValue();
+											
+											if(Resource.length() > 1 && Symbol.equals(">") && Integer.parseInt((item.split("\\|")[0].split(";")[2])) > Integer.parseInt(BTValue))
+											{
+												long CalculatedBalance = CalculateBalance(Resource,UTValue,(item.split("\\|")[0].split(";")[3]),item.split("\\|")[0].split(";")[2]);
+												String Product_ID = "0";
+												UsageCounterList.add(msisdn +","+ UC_ID +","+ item.split("\\|")[0].split(";")[5] +","+ CalculatedBalance +","+ Product_ID +","+ CalculatedBalance +",0");
+											}
+											else
+											{
+												//onlyLog.add("INC4004:Balance_Type match condition failed:MSISDN=" + msisdn + ":BALANCE_TYPE=" + TargetValue.split(";")[2] + ":BE_BUCKET_VALUE=" + TargetValue.split(";")[3] + ":BE_BUCKET_ID=:ACTION=Logging");
+												//onlyLog.add("INC4004:Balance_Type match condition failed:MSISDN=" + msisdn + ":BALANCE_TYPE=" + SourceValue.split(";")[1] + ":BE_BUCKET_VALUE=" + SourceValue.split(";")[2] + ":BE_BUCKET_ID=:ACTION=Logging");
+											}	
+										}
+										else
+										{
+											//onlyLog.add("INC4002:Balance_Type lookup failed:MSISDN=" + msisdn + ":BALANCE_TYPE=" + SourceValue.split(";")[1] + ":BE_BUCKET_VALUE=" + SourceValue.split(";")[2] + ":BE_BUCKET_ID=:ACTION=Logging");
+											//onlyLog.add("INC4002:Balance_Type lookup failed:MSISDN=" + msisdn + ":BALANCE_TYPE=" + SourceValue.split(";")[1] + ":BE_BUCKET_VALUE=" + SourceValue.split(";")[2] + ":BE_BUCKET_ID=:ACTION=Logging");
+											
+										}		
+									}																			
+									//CompletedBT_ID.addAll(CurrentGroupBalance);	
+								}
+							}
+						}				
+					}
+				}
+			}
+		}
+		
+		return UsageCounterList.stream().distinct().collect(Collectors.toList());
+	}
+
+	public String ComputeAGroup(String inputBalance_ID, String inputGroupName) {
+		// TODO Auto-generated method stub
+		String FinalGroupName ="";
+		
+		List<String>AllAvailableGroup = new ArrayList<>();
+		
+		for(Set<String> valueList : LoadSubscriberMapping.BalanceGroupingMap.values()) {					
+			if(valueList.contains(inputBalance_ID)){
+				AllAvailableGroup.add(LoadSubscriberMapping.getKey(LoadSubscriberMapping.BalanceGroupingMap, valueList));	
+			}
+		}
+		
+		for(String A_ID: AllAvailableGroup)
+		{
+			if(LoadSubscriberMapping.BalanceOnlyAGroupMap.containsKey(A_ID))
+			{
+				Set<String> A_Items = Arrays.stream(LoadSubscriberMapping.BalanceOnlyAGroupMap.get(A_ID).split(",")).collect(Collectors.toSet());
+				int i =0;
+				for(com.ericsson.jibx.beans.SubscriberXml.SchemasubscriberbalancesdumpInfo balanceInput : SortedBalanceInput){
+					if(A_Items.contains(balanceInput.getBALANCETYPE()))
+					{
+						i++;
+						FinalGroupName = A_ID;
+						continue;
+					}
+					if(A_Items.size() == i)
+					{
+						FinalGroupName = A_ID;
+						break;
+					}						
+				}
+			}
+		}		
+		return FinalGroupName;
+	}
+	
+	public String ComputeCGroup(String inputBalance_ID, String inputGroupName) {
+		// TODO Auto-generated method stub
+		String FinalGroupName ="";
+		
+		List<String>AllAvailableGroup = new ArrayList<>();
+		
+		for(Set<String> valueList : LoadSubscriberMapping.BalanceGroupingMap.values()) {					
+			if(valueList.contains(inputBalance_ID)){
+				AllAvailableGroup.add(LoadSubscriberMapping.getKey(LoadSubscriberMapping.BalanceGroupingMap, valueList));	
+			}
+		}
+		
+		for(String C_ID: AllAvailableGroup)
+		{
+			if(LoadSubscriberMapping.BalanceOnlyAGroupMap.containsKey(C_ID))
+			{
+				Set<String> C_Items = Arrays.stream(LoadSubscriberMapping.BalanceOnlyAGroupMap.get(C_ID).split(",")).collect(Collectors.toSet());
+				int i =0;
+				for(com.ericsson.jibx.beans.SubscriberXml.SchemasubscriberbalancesdumpInfo balanceInput : SortedBalanceInput){
+					if(C_Items.contains(balanceInput.getBALANCETYPE()))
+					{
+						i++;
+						FinalGroupName = C_ID;
+						continue;
+					}
+					if(C_Items.size() == i)
+					{
+						FinalGroupName = C_ID;
+						break;
+					}						
+				}
+			}
+		}		
+		return FinalGroupName;
+	}
+	
+	public String ComputeFGroup(String inputBalance_ID, String inputGroupName) {
+		// TODO Auto-generated method stub
+		String FinalGroupName ="";
+		
+		List<String>AllAvailableGroup = new ArrayList<>();
+		
+		for(Set<String> valueList : LoadSubscriberMapping.BalanceGroupingMap.values()) {					
+			if(valueList.contains(inputBalance_ID)){
+				AllAvailableGroup.add(LoadSubscriberMapping.getKey(LoadSubscriberMapping.BalanceGroupingMap, valueList));	
+			}
+		}
+		boolean FirstMatchFound = false;
+		for(String F_ID: AllAvailableGroup)
+		{
+			//if(FirstMatchFound)
+			//	break;
+			if(LoadSubscriberMapping.BalanceOnlyFGroupMap.containsKey(F_ID))
+			{
+				Set<String> F_Items = Arrays.stream(LoadSubscriberMapping.BalanceOnlyFGroupMap.get(F_ID).split(",")).collect(Collectors.toSet());
+				int i =0;
+				for(com.ericsson.jibx.beans.SubscriberXml.SchemasubscriberbalancesdumpInfo balanceInput : SortedBalanceInput){
+					if(F_Items.contains(balanceInput.getBALANCETYPE()))
+					{
+						i++;
+						FinalGroupName = F_ID;
+						continue;
+					}
+					if(F_Items.size() == i)
+					{
+						FinalGroupName = F_ID;
+						//FirstMatchFound = true;
+						break;
+					}						
+				}
+			}
+		}		
+		return FinalGroupName;
+	}
+	
+	public String ComputeDGroup(String inputBalance_ID, String inputGroupName) {
+		// TODO Auto-generated method stub
+		String FinalGroupName ="";
+		
+		List<String>AllAvailableGroup = new ArrayList<>();
+		
+		for(Set<String> valueList : LoadSubscriberMapping.BalanceGroupingMap.values()) {					
+			if(valueList.contains(inputBalance_ID)){
+				AllAvailableGroup.add(LoadSubscriberMapping.getKey(LoadSubscriberMapping.BalanceGroupingMap, valueList));	
+			}
+		}
+		
+		for(String D_ID: AllAvailableGroup)
+		{
+			if(LoadSubscriberMapping.BalanceOnlyDGroupMap.containsKey(D_ID))
+			{
+				Set<String> D_Items = Arrays.stream(LoadSubscriberMapping.BalanceOnlyDGroupMap.get(D_ID).split(",")).collect(Collectors.toSet());
+				int i =0;
+				for(com.ericsson.jibx.beans.SubscriberXml.SchemasubscriberbalancesdumpInfo balanceInput : SortedBalanceInput){
+					if(D_Items.contains(balanceInput.getBALANCETYPE()))
+					{
+						i++;
+						FinalGroupName = D_ID;
+						continue;
+					}
+					if(D_Items.size() == i)
+					{
+						FinalGroupName = D_ID;
+						break;
+					}						
+				}
+			}
+		}		
+		return FinalGroupName;
+	}
+	
+
+	public long CalculateBalance(String Resourse, String UTVal, String Balance,String balance_ID)
+	{
+		
+		long UTValue = Long.parseLong(UTVal);
+		long Balance_Input = Long.parseLong(Balance);
+ 		long CalculatedValue = 0;
+		if(Resourse.equals("TOUC1")){
+			CalculatedValue = UTValue - (Balance_Input * 1024);}
+		else if(Resourse.equals("TOUC2")){
+			CalculatedValue = UTValue - (Balance_Input/100);}
+		else if(Resourse.equals("TOUC3")){
+			CalculatedValue = UTValue - Balance_Input;}
+		else if(Resourse.equals("TOUC4")){
+			CalculatedValue = UTValue - ((Balance_Input- 10000)*1048576);}
+		else if(Resourse.equals("UC")){
+			CalculatedValue = UTValue - (Balance_Input/10000);}
+		else if(Resourse.equals("TOUC")){
+		}
+		
+		if(CalculatedValue <= 0)
+		{
+			CalculatedValue = 0;
+			onlyLog.add("INC4010:Negative BT_Value found will be migrated as Zero:MSISDN=" + msisdn + ":BALANCE_TYPE_ID=" + balance_ID + ":BE_BUCKET_VALUE=" + Balance + ":ACTION=Logging");
+		}
+		
+		return CalculatedValue;
+	}
+
+	/*private Collection<? extends String> offerFromBalanceMapping() {
+		// TODO Auto-generated method stub
+		
+		List<String> UsageCounterList =new ArrayList<>();
+		Set<String> CompletedGroup = new HashSet<>();
+		for(com.ericsson.jibx.beans.SubscriberXml.SchemasubscriberbalancesdumpInfo balanceInput :  subscriber.getBalancesdumpInfoList())
+		{
+			String Balance_ID = balanceInput.getBALANCETYPE();
+			//System.out.println("Master Balance_ID: " + Balance_ID);
+			String Balance_Value = balanceInput.getBEBUCKETVALUE();
+			String Balance_StartDate = balanceInput.getBEBUCKETSTARTDATE();
+			String Balance_ExpiryDate = balanceInput.getBEEXPIRY();
+			
+			String GroupName = "";
+			List<String> CurrentGroupBalance = new ArrayList<>();
+			List<String> ValidGroupBalanceCounter = new ArrayList<>();
+			for(Set<String> valueList : LoadSubscriberMapping.BalanceGroupingMap.values()) {					
+				if(valueList.contains(Balance_ID)){
+					GroupName = LoadSubscriberMapping.getKey(LoadSubscriberMapping.BalanceGroupingMap, valueList);
+					for (String x : valueList)
+						CurrentGroupBalance.add(x); 
+					break;
+				}
+			}	
+			
+			if(!CompletedGroup.contains(GroupName))
+			{
+				//System.out.println(Balance_ID + "----" +GroupName);				
+				if(CurrentGroupBalance.size() > 0)
+				{
+					String FinalGroupName = GroupName;
+					//System.out.println(FinalGroupName);	
+					for(String id : CurrentGroupBalance)
+					{
+						//System.out.println(id);
+						for(com.ericsson.jibx.beans.SubscriberXml.SchemasubscriberbalancesdumpInfo TempbalanceInput :  subscriber.getBalancesdumpInfoList()){
+							String TempBalance_ID = TempbalanceInput.getBALANCETYPE();
+							String TempBalance_Name = TempbalanceInput.getBALANCETYPENAME();
+							String TempBalance_Value = TempbalanceInput.getBEBUCKETVALUE();
+							String TempBalance_StartDate = TempbalanceInput.getBEBUCKETSTARTDATE();
+							String TempBalance_ExpiryDate = TempbalanceInput.getBEEXPIRY();
+							String TempBalance_Msisdn = TempbalanceInput.getMSISDN();
+							if(id.equals(TempBalance_ID))
+							{
+								if(LoadSubscriberMapping.BalanceNonEmptyBTGroupIdentifierMapForUC.get(id + "|" + FinalGroupName) != null)
+								{
+									String UC_ID = LoadSubscriberMapping.BalanceNonEmptyBTGroupIdentifierMapForUC.get(TempBalance_ID + "|" + FinalGroupName).getUCID();
+									String Symbol = LoadSubscriberMapping.BalanceNonEmptyBTGroupIdentifierMapForUC.get(TempBalance_ID + "|" + FinalGroupName).getSymbols();
+									String BT_Value = LoadSubscriberMapping.BalanceNonEmptyBTGroupIdentifierMapForUC.get(TempBalance_ID + "|" + FinalGroupName).getBTValue();
+									String Product_Private = LoadSubscriberMapping.BalanceNonEmptyBTGroupIdentifierMapForUC.get(TempBalance_ID + "|" + FinalGroupName).getProductPrivate();
+									String UC_Value = LoadSubscriberMapping.BalanceNonEmptyBTGroupIdentifierMapForUC.get(TempBalance_ID + "|" + FinalGroupName).getUTValue();
+									String Resource = LoadSubscriberMapping.BalanceNonEmptyBTGroupIdentifierMapForUC.get(TempBalance_ID + "|" + FinalGroupName).getResource();
+									
+									if(Symbol.equals(">=") && Integer.parseInt(TempBalance_Value) >= Integer.parseInt(BT_Value))
+									{
+										CompletedGroup.add(FinalGroupName);
+										ValidGroupBalanceCounter.add(TempBalance_Name + ";" + TempBalance_ID + ";" + TempBalance_Value + ";" + TempBalance_Value + ";" + TempBalance_Msisdn +"|" + UC_ID + ";" + UC_Value + ";" + Resource + ";" + TempBalance_StartDate + ";" + TempBalance_ExpiryDate  + ";" + Product_Private);
+										break;
+									}
+									else if(Symbol.equals(">") && Integer.parseInt(TempBalance_Value) > Integer.parseInt(BT_Value))
+									{
+										CompletedGroup.add(FinalGroupName);
+										ValidGroupBalanceCounter.add(TempBalance_Name + ";" + TempBalance_ID + ";" + TempBalance_Value + ";" + TempBalance_Value + ";" + TempBalance_Msisdn +"|" + UC_ID + ";" + UC_Value + ";" + Resource + ";" + TempBalance_StartDate + ";" + TempBalance_ExpiryDate  + ";" + Product_Private);
+										break;
+									}
+									else if(Symbol.equals("=") && Integer.parseInt(TempBalance_Value) == Integer.parseInt(BT_Value))
+									{
+										CompletedGroup.add(FinalGroupName);
+										ValidGroupBalanceCounter.add(TempBalance_Name + ";" + TempBalance_ID + ";" + TempBalance_Value + ";" + TempBalance_Value + ";" + TempBalance_Msisdn +"|" + UC_ID + ";" + UC_Value + ";" + Resource + ";" + TempBalance_StartDate + ";" + TempBalance_ExpiryDate  + ";" + Product_Private);
+										break;
+									}
+									else if(Symbol.equals("or"))
+									{
+										//Integer.parseInt(Balance_Value) == Integer.parseInt(BT_Value)
+										String[] values = BT_Value.split(",");											
+										if(Arrays.stream(values).anyMatch(TempBalance_Value::equals))
+										{
+											CompletedGroup.add(FinalGroupName);
+											ValidGroupBalanceCounter.add(TempBalance_Name + ";" + TempBalance_ID + ";" + TempBalance_Value + ";" + TempBalance_Value + ";" + TempBalance_Msisdn +"|" + UC_ID + ";" + UC_Value + ";" + Resource + ";" + TempBalance_StartDate + ";" + TempBalance_ExpiryDate  + ";" + Product_Private);
+											break;
+										}
+										else
+											onlyLog.add("INC4004:Balance_Type lookup failed in Product_Mapping:MSISDN=" + msisdn + ":BALANCE_TYPE_ID=" + TempBalance_ID + ":BE_BUCKET_VALUE=" + TempBalance_Value + ":ACTION=Logging");
+									}
+									else
+										onlyLog.add("INC4004:Balance_Type lookup failed in Product_Mapping:MSISDN=" + msisdn + ":BALANCE_TYPE_ID=" + TempBalance_ID + ":BE_BUCKET_VALUE=" + TempBalance_Value + ":ACTION=Logging");
+								}
+								else
+								{
+									//System.out.println("Discarded Logs: " + id);
+									onlyLog.add("INC4004:Balance_Type lookup failed in Product_Mapping:MSISDN=" + msisdn + ":BALANCE_TYPE_ID=" + TempBalance_ID + ":BE_BUCKET_VALUE=" + TempBalance_Value + ":ACTION=Logging");
+								}
+							}
+						}
+					}
+					//G-Q-AN-I-K-N-R-T-Y ===Special case
+					//AB-AC-AD-AE-AF-AG-AH-AI-AJ-AK-AL-AO-C-D-E-F-H-J-M-O-S-V-W-X ===same group
+
+
+					if(FinalGroupName.startsWith("H") || FinalGroupName.startsWith("U") || FinalGroupName.startsWith("C") || FinalGroupName.startsWith("S")
+						||FinalGroupName.startsWith("D") || FinalGroupName.startsWith("E") || FinalGroupName.startsWith("F") || FinalGroupName.startsWith("J")
+						||FinalGroupName.startsWith("M") || FinalGroupName.startsWith("V") || FinalGroupName.startsWith("W") ||FinalGroupName.startsWith("X") 
+						|| FinalGroupName.startsWith("0") || (FinalGroupName.startsWith("1A") && !FinalGroupName.startsWith("1AN")))
+					{
+						//TempBalance_Name + ";" + TempBalance_ID + ";" + TempBalance_Value + ";" + TempBalance_Value + ";" + TempBalance_Msisdn +"|" + UC_ID + ";" + UC_Value + ";" + Resource + ";" + TempBalance_StartDate + ";" + TempBalance_ExpiryDate  + ";" + Product_Private
+						if(ValidGroupBalanceCounter.size() == CurrentGroupBalance.size())
+						{
+							ValidGroupBalanceCounter.forEach(item->{
+								String Resource = item.split("\\|")[1].split(";")[2];
+								if(Resource.length() > 1)
+								{
+									long CalculatedBalance = CalculateBalance(Resource,(item.split("\\|")[1].split(";")[1]),(item.split("\\|")[0].split(";")[2]),item.split("\\|")[0].split(";")[1]);
+									String Product_ID = "0";
+									UsageCounterList.add(msisdn +","+ item.split("\\|")[1].split(";")[0] +","+ item.split("\\|")[0].split(";")[4] +","+ CalculatedBalance +","+ Product_ID +","+ CalculatedBalance +",0");
+								}										
+							});
+						}
+					}
+					if(FinalGroupName.startsWith("G") || FinalGroupName.startsWith("Q") || FinalGroupName.startsWith("1AN") || FinalGroupName.startsWith("I")
+							|| FinalGroupName.startsWith("K") || FinalGroupName.startsWith("N") || FinalGroupName.startsWith("R") || FinalGroupName.startsWith("T")
+							|| FinalGroupName.startsWith("Y"))
+					{
+						//TempBalance_Name + ";" + TempBalance_ID + ";" + TempBalance_Value + ";" + TempBalance_Value + ";" + TempBalance_Msisdn +"|" + UC_ID + ";" + UC_Value + ";" + Resource + ";" + TempBalance_StartDate + ";" + TempBalance_ExpiryDate  + ";" + Product_Private
+						if(ValidGroupBalanceCounter.size() == CurrentGroupBalance.size())
+						{
+							ValidGroupBalanceCounter.forEach(item->{
+								String Resource = item.split("\\|")[1].split(";")[2];
+								if(Resource.length() > 1)
+								{
+									long CalculatedBalance = CalculateBalance(Resource,(item.split("\\|")[1].split(";")[1]),(item.split("\\|")[0].split(";")[2]),item.split("\\|")[0].split(";")[1]);
+									String Product_ID = "0";
+									UsageCounterList.add(msisdn +","+ item.split("\\|")[1].split(";")[0] +","+ item.split("\\|")[0].split(";")[4] +","+ CalculatedBalance +","+ Product_ID +","+ CalculatedBalance +",0");
+								}										
+							});
+						}	
+					}
+					
+					//add code here
+				}
+			}
+		}
+		return UsageCounterList.stream().distinct().collect(Collectors.toList());
+	}*/
+	
+}

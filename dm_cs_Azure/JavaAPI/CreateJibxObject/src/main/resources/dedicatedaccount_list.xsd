@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+   <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified" attributeFormDefault="unqualified">
+         <!-- XML Schema Generated from XML Document on Sun Apr 29 2018 14:41:43 GMT+0530 (India Standard Time) -->
+         <!-- with XmlGrid.net Free Online Service http://xmlgrid.net -->
+         <xs:element name="dedicatedaccount_list">
+               <xs:complexType>
+                     <xs:sequence>
+                           <xs:element name="dedicatedaccount_info" maxOccurs="unbounded">
+                                 <xs:complexType>
+                                       <xs:all>
+                                             <xs:element name="account_id" type="xs:string"></xs:element>
+                                             <xs:element name="sequence_id" type="xs:string"></xs:element>
+                                             <xs:element name="id_1" type="xs:string"></xs:element>
+                                             <xs:element name="balance_1" type="xs:string"></xs:element>
+                                             <xs:element name="expiry_date_1" type="xs:string"></xs:element>
+                                             <xs:element name="id_2" type="xs:string"></xs:element>
+                                             <xs:element name="balance_2" type="xs:string"></xs:element>
+                                             <xs:element name="expiry_date_2" type="xs:string"></xs:element>
+                                             <xs:element name="id_3" type="xs:string"></xs:element>
+                                             <xs:element name="balance_3" type="xs:string"></xs:element>
+                                             <xs:element name="expiry_date_3" type="xs:string"></xs:element>
+                                             <xs:element name="id_4" type="xs:string"></xs:element>
+                                             <xs:element name="balance_4" type="xs:string"></xs:element>
+                                             <xs:element name="expiry_date_4" type="xs:string"></xs:element>
+                                             <xs:element name="id_5" type="xs:string"></xs:element>
+                                             <xs:element name="balance_5" type="xs:string"></xs:element>
+                                             <xs:element name="expiry_date_5" type="xs:string"></xs:element>
+                                             <xs:element name="id_6" type="xs:string"></xs:element>
+                                             <xs:element name="balance_6" type="xs:string"></xs:element>
+                                             <xs:element name="expiry_date_6" type="xs:string"></xs:element>
+                                             <xs:element name="id_7" type="xs:string"></xs:element>
+                                             <xs:element name="balance_7" type="xs:string"></xs:element>
+                                             <xs:element name="expiry_date_7" type="xs:string"></xs:element>
+                                             <xs:element name="id_8" type="xs:string"></xs:element>
+                                             <xs:element name="balance_8" type="xs:string"></xs:element>
+                                             <xs:element name="expiry_date_8" type="xs:string"></xs:element>
+                                             <xs:element name="id_9" type="xs:string"></xs:element>
+                                             <xs:element name="balance_9" type="xs:string"></xs:element>
+                                             <xs:element name="expiry_date_9" type="xs:string"></xs:element>
+                                             <xs:element name="id_10" type="xs:string"></xs:element>
+                                             <xs:element name="balance_10" type="xs:string"></xs:element>
+                                             <xs:element name="expiry_date_10" type="xs:string"></xs:element>
+                                             <xs:element name="start_date_1" type="xs:string"></xs:element>
+                                             <xs:element name="start_date_2" type="xs:string"></xs:element>
+                                             <xs:element name="start_date_3" type="xs:string"></xs:element>
+                                             <xs:element name="start_date_4" type="xs:string"></xs:element>
+                                             <xs:element name="start_date_5" type="xs:string"></xs:element>
+                                             <xs:element name="start_date_6" type="xs:string"></xs:element>
+                                             <xs:element name="start_date_7" type="xs:string"></xs:element>
+                                             <xs:element name="start_date_8" type="xs:string"></xs:element>
+                                             <xs:element name="pam_service_id_10" type="xs:string"></xs:element>
+                                             <xs:element name="start_date_9" type="xs:string"></xs:element>
+                                             <xs:element name="product_id_10" type="xs:string"></xs:element>
+                                             <xs:element name="product_id_1" type="xs:string"></xs:element>
+                                             <xs:element name="product_id_2" type="xs:string"></xs:element>
+                                             <xs:element name="product_id_3" type="xs:string"></xs:element>
+                                             <xs:element name="product_id_4" type="xs:string"></xs:element>
+                                             <xs:element name="product_id_5" type="xs:string"></xs:element>
+                                             <xs:element name="product_id_6" type="xs:string"></xs:element>
+                                             <xs:element name="product_id_7" type="xs:string"></xs:element>
+                                             <xs:element name="product_id_8" type="xs:string"></xs:element>
+                                             <xs:element name="product_id_9" type="xs:string"></xs:element>
+                                             <xs:element name="pam_service_id_1" type="xs:string"></xs:element>
+                                             <xs:element name="pam_service_id_2" type="xs:string"></xs:element>
+                                             <xs:element name="pam_service_id_3" type="xs:string"></xs:element>
+                                             <xs:element name="pam_service_id_4" type="xs:string"></xs:element>
+                                             <xs:element name="pam_service_id_5" type="xs:string"></xs:element>
+                                             <xs:element name="pam_service_id_6" type="xs:string"></xs:element>
+                                             <xs:element name="pam_service_id_7" type="xs:string"></xs:element>
+                                             <xs:element name="pam_service_id_8" type="xs:string"></xs:element>
+                                             <xs:element name="pam_service_id_9" type="xs:string"></xs:element>
+                                             <xs:element name="start_date_10" type="xs:string"></xs:element>
+                                       </xs:all>
+                                 </xs:complexType>
+                           </xs:element>
+                     </xs:sequence>
+               </xs:complexType>
+         </xs:element>
+   </xs:schema>

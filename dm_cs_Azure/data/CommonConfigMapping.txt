@@ -1,0 +1,65 @@
+Element,Value,Description
+wanted_decimal_precision,6,target system decimal precision to be applied for account balance conversion
+default_SDP_ID,meylvvmsdp06a,Default SDP ID for the MSISDNs which are not in SDP_Distribution range
+is_sdp_default_enabled,Y,Default substitution
+Enable_Logging_for_RoundOff,Y,Enable Y / N to write logging for RoundOff to log file RoundOff_Records.log
+default_NULL,NULL,Default substitution
+default_ZERO,0,Default substitution
+default_ONE,1,Default substitution
+default_EMPTY,,Default substitution
+default_language,2,Default substitution
+migration_date,2019-06-16 00:00:00,Migration Date which will be used for handling expiry date of Product BT.
+max_date,'2037-12-31',Max date which SDP can accommodate
+default_wanted_block_status,0,Wanted block status of the subscriber.
+default_actual_block_status,0,Actual block status of the subscriber.
+default_eoc_selection_id,0,End of call notification for subscriber.
+default_Currency,AED,Default Currency of Du Dubai.
+default_SFEE_DONE_Date,0,Default SFEE_DONE_Date value.
+default_PREVIOUS_SFEE_DONE_Date,0,Default Previous_SFEE_Done_Date.
+default_NEG_BALANCE_START,0,Default Negative Balance start.
+default_NEG_BALANCE_BARRED,0,Default Negative Balance barred.
+default_ACCOUNT_DISCONNECT,0,Default Account Disconnect.
+default_ACCOUNT_STATUS,0,Default Account Status.
+default_PROM_NOTIFICATION,0,Default Promotion Notification.
+default_SERVICE_OFFERINGS,0,Default Service offering value.
+default_ACCOUNT_GROUP_ID,0,Default Account group id value.
+default_refill_failed,0,Default Refill failed value.
+default_refill_bar_end,0,Default_Refill_bar_end
+default_special_announc_played,0,Default special announc played value.
+default_sfee_warn_played,0,Default sfee warn played value.
+default_sup_warn_played,0,Default sup warn played
+default_low_level_warn_played,0,Default low level warn played
+default_pin_code,0,default pin code
+default_usage_statistic_flags,0,default usage statistic flags
+default_last_reset_Date,1,default last reset Date
+default_account_home_region,0,default account home region
+default_account_lock,0,default_account_lock
+SNA_Rate_Plan_ID_Identifier,374|275|582|497,Added Rate_Plan_ID to consider to populate SNA file.
+Lifetime_validity_value,1970-01-01 04:00:00,Never Expiry date to be used for LFC data and BT migration.
+CIS_Renewal_Grace_Status,3,CIS Renewal Grace status value.
+CIS_Renewal-OPTOUT_Status,19,Status of Optout Cases
+CIS_Renewal_OPTOUT_Network_Status,DeprovisioningCompleted,Network Status of Optout Cases
+CIS_Renewal-OPTOUT_PPT,1,product_purchase_type of OptOut cases
+Calling_card_default_CC_SFEE_DONE_Date,0,Calling_card default_CC_SFEE_DONE_Date
+Calling_card_default_CC_PREVIOUS_SFEE_DONE_Date,0,Calling_card default_CC_PREVIOUS_SFEE_DONE_Date
+Calling_card_default_CC_NEG_BALANCE_START,0,Calling_card default_CC_NEG_BALANCE_START
+Calling_card_default_CC_NEG_BALANCE_BARRED,0,Calling_card default_CC_NEG_BALANCE_BARRED
+Calling_card_default_CC_ACCOUNT_DISCONNECT,0,Calling_card default_CC_ACCOUNT_DISCONNECT
+Calling_card_default_CC_ACCOUNT_STATUS,0,Calling_card default_CC_ACCOUNT_STATUS
+Calling_card_default_CC_PROM_NOTIFICATION,0,Calling_card default_CC_PROM_NOTIFICATION
+Calling_card_default_CC_SERVICE_OFFERINGS,0,Calling_card default_CC_SERVICE_OFFERINGS
+Calling_card_default_CC_ACCOUNT_GROUP_ID,0,Calling_card default_CC_ACCOUNT_GROUP_ID
+Calling_card_default_CC_ACCOUNT_HOME_REGION,0,Calling_card default_CC_ACCOUNT_HOME_REGION
+Calling_card_default_CC_ACCOUNT_LOCK,0,Calling_card default_CC_ACCOUNT_LOCK
+Calling_Card_default_refill_failed,0,Calling_Card_default_refill_failed
+Calling_Card_default_refill_bar_end,0,Calling_Card_default_refill_bar_end
+Calling_Card_default_language_id,1,Calling_Card_default_language_id
+Calling_Card_default_special_announc_played,0,Calling_Card_default_special_announc_played
+Calling_Card_default_sfee_warn_played,0,Calling_Card_default_sfee_warn_played
+Calling_Card_default_sup_warn_played,0,Calling_Card_default_sup_warn_played
+Calling_Card_default_low_level_warn_played,0,Calling_Card_default_low_level_warn_played
+Calling_Card_default_wanted_block_status,0,Calling_Card_default_wanted_block_status
+Calling_Card_default_actual_block_status,0,Calling_Card_default_actual_block_status
+Calling_Card_default_eoc_selection_id,0,Calling_Card_default_eoc_selection_id
+Calling_Card_default_pin_code,0,Calling_Card_default_pin_code
+Calling_Card_default_usage_statistic_flags,0,Calling_Card_default_usage_statistic_flags

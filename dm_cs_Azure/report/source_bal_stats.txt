@@ -1,0 +1,1164 @@
+BALANCE_TYPE_NAME,BT_ID,SOURCE_CNT,SOURCE_VAL,DISCARDED_CNT,DISCARDED_VAL,BT-CONDITION,CONDITIONAL_SOURCE_CNT,CONDITIONAL_SOURCE_VAL,CONDITIONAL_DISCARDED_CNT,CONDITIONAL_DISCARDED_VAL,TRACK_EXTRA,DISCARDED_REMARK,BT_UNIT_TYPE,SOURCE_NEGATIVE_BALANCE,DISCARDED_NEGATIVE_BALANCE
+_pc_DataBndl5GBRec,3220,16,49,0,0,3220:or:7#8#9:::;,0,0,0,0,,,State,0,0
+_pc_DataBndl5GBRec,3220,16,49,0,0,3220:or:3#4#5#6:::;,16,49,0,0,,,State,0,0
+Hybrid_Flexi_Min_2,3222,1099,199594516,0,0,3222:>=:-99999999:::;,1099,199594516,0,0,,,Time,0,0
+Hybrid_Flexi_Data_2,3223,1100,2592599857,1,0,3223:>=:-99999999:::;,1100,2592599313,1,-544,,Balance_Type match condition failed-1;,Data,0,0
+Hybrid_Nat_Min_2,3224,1232,459881484,0,0,3224:>=:-99999999:::;,1232,459881484,0,0,,,Time,0,0
+Hybrid_Nat_Data_2,3225,1232,2772084993,0,0,3225:>=:-99999999:::;,1232,2772084993,0,0,,,Data,0,0
+DlyBndl1,3226,14724,569745664,5179,130692352,3226:>=:-99999999:::;,14724,453858816,5179,14919296,;5004-1137;,Balance_Type match condition failed-915;Balance_Type expired-4263;Subscriber relation missing-1;,Data,-113792,0
+DlyBndl2,3227,15984,1361282816,6653,292497792,3227:>=:-99999999:::;,15984,1149545824,6653,80903616,;5005-971;,Balance_Type match condition failed-1784;Balance_Type expired-4869;,Data,-142816,0
+DlyBndl3,3228,10625,679507936,3668,150559680,3228:>=:-99999999:::;,10625,558523936,3668,29575680,;5006-787;,Balance_Type match condition failed-654;Balance_Type expired-3014;,Data,0,0
+DlyType,3229,56066,104677,32439,59777,3229:=:2:::;,20180,40360,11557,23114,,Balance_Type match condition failed-31136;Balance_Type expired-1302;Subscriber relation missing-1;,Units,0,0
+DlyType,3229,56066,104677,32439,59777,3229:=:1:::;,18597,18597,9918,9918,,Balance_Type match condition failed-31136;Balance_Type expired-1302;Subscriber relation missing-1;,Units,0,0
+DlyType,3229,56066,104677,32439,59777,3229:=:3:::;,15240,45720,8915,26745,,Balance_Type match condition failed-31136;Balance_Type expired-1302;Subscriber relation missing-1;,Units,0,0
+more data highspeed,780,117,2682379007,55,0,780:>=:1:::;,62,2682379007,0,0,,Balance_Type match condition failed-42;Balance_Type expired-13;,Cash,0,0
+MBB10GBDiscount,740,14,0,14,0,740:::::;,14,0,14,0,,Balance_Type Ignored-14;,Cash,0,0
+Srv-PassportActive,700,4532,4460,73,1,700:>=:1:::;,4460,4460,1,1,,Service class Ignored-1;Balance_Type match condition failed-72;,Units,0,0
+LifeTimePAYG,435,166581,3569929349,131434,0,435:>=:1:::;,35147,3569929349,0,0,,Balance_Type match condition failed-131432;Balance_Type expired-2;,Cash,0,0
+_pc_PAYGLifeTimeRenewal,436,791961,2395961,665,485,436:or:3#4#5#6#7#8#9:::;,791301,2395503,5,27,,Periodic Charge is not active-534;Balance_Type expired-131;,State,0,0
+_pc_AnnualPromoRenewal,437,2079,9973,2079,9973,437:::::;,2079,9973,2079,9973,,Balance_Type Ignored-2079;,State,0,0
+Combined Eligibility Tracker,438,15,27,15,27,438:::::;,15,27,15,27,,Balance_Type Ignored-15;,Units,0,0
+Promo SMS ON OFF,1692,943,932,11,0,1692:>=:1:::;,932,932,0,0,,Balance_Type match condition failed-11;,Units,0,0
+IDD SMS Counter,1693,52595,95862,35002,63242,1693:>=:0:::;,52595,95862,35002,63242,,Balance_Type expired-35000;Subscriber relation missing-2;,Units,0,0
+_pc_MicroData_PC,1653,4661,15625,2776,4315,1653:or:3#4#5#6:::;,1890,11340,5,30,,Periodic Charge is not active-2677;Balance_Type expired-99;,State,0,0
+_pc_MicroData_PC,1653,4661,15625,2776,4315,1653:or:7#8#9:::;,0,0,0,0,,Periodic Charge is not active-2677;Balance_Type expired-99;,State,0,0
+Micro NatMobMinutes,1613,50531,0,50531,0,1613:>=:1:::;,0,0,0,0,,Service class Ignored-1;Balance_Type match condition failed-50530;,Time,0,0
+Blacklist Customer529,1381,202363,189106,202363,189106,1381:::::;,202363,189106,202363,189106,,Balance_Type Ignored-202363;,Units,0,0
+Micro Data,1614,1603062,472773556,1601106,5107816,1614:>=:0:::;,1441730,472773556,1439774,5107816,;353-72;,Service class Ignored-28;Lifecycle lookup mismatch-1;Balance_Type match condition failed-1601033;Balance_Type expired-39;Subscriber relation missing-5;,Cash,-312812,0
+Pepsi SMS,1300,22,0,22,0,1300:::::;,22,0,22,0,,Balance_Type Ignored-22;,Units,0,0
+Data Gift,1382,3,0,3,0,1382:::::;,3,0,3,0,,Balance_Type Ignored-3;,Units,0,0
+Micro IDD,1615,53653,0,53653,0,1615:>=:1:::;,0,0,0,0,,Service class Ignored-2;Balance_Type match condition failed-53651;,Time,0,0
+Data Pack CVM,1383,3,0,0,0,1383:>:314572800:::;,0,0,0,0,,,Data,-960,0
+Data Pack CVM,1383,3,0,0,0,1383:<=:314572800:::;,3,-960,0,0,,,Data,-960,0
+Pepsi Data,1301,471,0,471,0,1301:::::;,471,-558933,471,-558933,,Balance_Type Ignored-471;,Cash,0,0
+MicroRechCheck,1616,1668283,1293287,1668283,1293287,1616:::::;,1668283,1293287,1668283,1293287,,Balance_Type Ignored-1668232;Service class Ignored-29;Lifecycle lookup mismatch-17;Subscriber relation missing-5;,Units,0,0
+PepsiRechargeBalance,1302,5528,0,5528,0,1302:::::;,5528,0,5528,0,,Balance_Type Ignored-5528;,Units,0,0
+DataBundle,1384,20709,0,20709,0,1384:::::;,20709,0,20709,0,,Balance_Type Ignored-20709;,Units,0,0
+MicroRechargeValue,1617,2429,40000,2428,20000,1617:>=:1:::;,2,40000,1,20000,,Balance_Type match condition failed-1999;Balance_Type expired-429;,Cash,0,0
+DataBundleCount,1385,37120,0,37120,0,1385:::::;,37120,0,37120,0,,Service class Ignored-2;Balance_Type Ignored-37118;,Units,0,0
+DataPackOptOut,1386,2199,0,2199,0,1386:::::;,2199,0,2199,0,,Balance_Type Ignored-2199;,Units,0,0
+Premier Plan,1387,33431,146985,626,5,1387:=:5:::;,23731,118655,1,5,,Balance_Type match condition failed-625;Subscriber relation missing-1;,Units,0,0
+Premier Plan,1387,33431,146985,626,5,1387:=:3:::;,4835,14505,0,0,,Balance_Type match condition failed-625;Subscriber relation missing-1;,Units,0,0
+Premier Plan,1387,33431,146985,626,5,1387:=:4:::;,2721,10884,0,0,,Balance_Type match condition failed-625;Subscriber relation missing-1;,Units,0,0
+Premier Plan,1387,33431,146985,626,5,1387:=:2:::;,1422,2844,0,0,,Balance_Type match condition failed-625;Subscriber relation missing-1;,Units,0,0
+Premier Plan,1387,33431,146985,626,5,1387:=:1:::;,97,97,0,0,,Balance_Type match condition failed-625;Subscriber relation missing-1;,Units,0,0
+Monthly1RecFullData,2920,8024,2758822848,1311,14090112,2920:>=:-99999999:::;,8024,3561902464,1311,-3045312,;3004-226;,Balance_Type match condition failed-1067;Balance_Type expired-244;,Data,-1356576,0
+Monthly2RecFullData,2921,21932,17286809184,2550,80152864,2921:>=:-99999999:::;,21932,21452992992,2550,55105184,;3005-604;,Balance_Type match condition failed-2056;Balance_Type expired-490;Subscriber relation missing-4;,Data,-1523520,0
+Monthly3RecFullData,2922,12317,21985495200,1161,162606144,2922:>=:-99999999:::;,12317,27297644672,1161,145673536,;3006-412;,Balance_Type match condition failed-904;Balance_Type expired-256;Subscriber relation missing-1;,Data,-1100512,0
+Monthly4RecFullData,2923,8267,30296730304,760,134219360,2923:>=:-99999999:::;,8267,37286445312,760,126449568,;3007-270;,Balance_Type match condition failed-613;Balance_Type expired-147;,Data,-237184,0
+MonthlyRecSocData,2924,3377,9661046016,3377,9661046016,2924:>=:-99999999:::;,3377,9540485888,3377,9540485888,,Balance_Type match condition failed-3241;Balance_Type expired-136;,Data,0,0
+HardCap CUGMin AddOn2,2692,8118,483862369200,1,59661000,2692:>=:-99999999:::;,8118,483862369200,1,59661000,;1030-21;,Subscriber relation missing-1;,Time,0,0
+ComboGrace,2925,530194,161317,530194,161317,2925:::::;,530194,149029,530194,149029,,Balance_Type Ignored-530193;Subscriber relation missing-1;,Units,0,0
+_pc_C_HardCapBCC10KMins_PC,2693,8097,48582,1,6,2693:or:3#4#5#6:::;,8097,48582,1,6,,Subscriber relation missing-1;,State,0,0
+_pc_C_HardCapBCC10KMins_PC,2693,8097,48582,1,6,2693:or:7#8#9:::;,0,0,0,0,,Subscriber relation missing-1;,State,0,0
+ComboGraceOut,2926,308,308,308,308,2926:::::;,308,308,308,308,,Balance_Type Ignored-308;,Units,0,0
+ComboRecServ,2927,625830,15752443,581454,15558679,2927:=:6:::;,8200,49200,932,5592,,Lifecycle lookup mismatch-1;Balance_Type match condition failed-581440;Balance_Type expired-7;Subscriber relation missing-6;,Units,0,0
+ComboRecServ,2927,625830,15752443,581454,15558679,2927:=:3:::;,7871,23613,1338,4014,,Lifecycle lookup mismatch-1;Balance_Type match condition failed-581440;Balance_Type expired-7;Subscriber relation missing-6;,Units,0,0
+ComboRecServ,2927,625830,15752443,581454,15558679,2927:=:1:::;,1109,1109,473,473,,Lifecycle lookup mismatch-1;Balance_Type match condition failed-581440;Balance_Type expired-7;Subscriber relation missing-6;,Units,0,0
+ComboRecServ,2927,625830,15752443,581454,15558679,2927:=:5:::;,12305,61525,1536,7680,,Lifecycle lookup mismatch-1;Balance_Type match condition failed-581440;Balance_Type expired-7;Subscriber relation missing-6;,Units,0,0
+ComboRecServ,2927,625830,15752443,581454,15558679,2927:=:4:::;,22079,88316,3211,12844,,Lifecycle lookup mismatch-1;Balance_Type match condition failed-581440;Balance_Type expired-7;Subscriber relation missing-6;,Units,0,0
+ComboRecServ,2927,625830,15752443,581454,15558679,2927:=:2:::;,448,896,146,292,,Lifecycle lookup mismatch-1;Balance_Type match condition failed-581440;Balance_Type expired-7;Subscriber relation missing-6;,Units,0,0
+ServiceCount,2928,614,614,473,473,2928:>=:1:::;,614,614,473,473,,Lifecycle lookup mismatch-1;Balance_Type expired-472;,Units,0,0
+_pc_DailyRecCombo1,2929,1413,4377,924,1443,2929:or:3#4#5#6:::;,593,3558,104,624,,Periodic Charge is not active-818;Balance_Type match condition failed-103;Balance_Type expired-3;,State,0,0
+Data WH,2072,118,40339036,32,0,2072:>=:1:::;PAYGDataWHSP-=-1,85,39290460,0,0,,Balance_Type match condition failed-6;Balance_Type expired-26;,Data,0,0
+Data WH,2072,118,40339036,32,0,2072:>=:1:::;PAYGDataWH-=-1,1,1048576,0,0,,Balance_Type match condition failed-6;Balance_Type expired-26;,Data,0,0
+BCP CUG Minutes,2032,67511,3261739303400,200,4607587500,2032:>=:-99999999:::;,67511,3290740496800,200,4607587500,;2532-4352;,Balance_Type match condition failed-96;Balance_Type expired-99;Subscriber relation missing-5;,Time,0,0
+BCP Flexi SMS,2033,2120,142381,39,142,2033:>=:-99999999:::;,2120,148337,39,142,;2539-916;,Balance_Type match condition failed-35;Balance_Type expired-4;,Units,0,0
+_pc_BCP2NatTopUp9_PC,2034,166,986,2,2,2034:or:7#8#9:::;,0,0,0,0,,Periodic Charge is not active-2;,State,0,0
+_pc_BCP2NatTopUp9_PC,2034,166,986,2,2,2034:or:3#4#5#6:::;,164,984,0,0,,Periodic Charge is not active-2;,State,0,0
+_pc_BCP2NatTopUp10_PC,2035,1,6,0,0,2035:or:7#8#9:::;,0,0,0,0,,,State,0,0
+_pc_BCP2NatTopUp10_PC,2035,1,6,0,0,2035:or:3#4#5#6:::;,1,6,0,0,,,State,0,0
+_pc_BCP2IDDTopUp10_PC,2037,1,6,0,0,2037:or:3#4#5#6:::;,1,6,0,0,,,State,0,0
+_pc_BCP2IDDTopUp10_PC,2037,1,6,0,0,2037:or:7#8#9:::;,0,0,0,0,,,State,0,0
+_pc_BCP2DataTopUp9_PC,2038,127,757,1,1,2038:or:7#8#9:::;,0,0,0,0,,Periodic Charge is not active-1;,State,0,0
+_pc_BCP2DataTopUp9_PC,2038,127,757,1,1,2038:or:3#4#5#6:::;,126,756,0,0,,Periodic Charge is not active-1;,State,0,0
+_pc_BCP2DataTopUp10_PC,2039,1,6,0,0,2039:or:3#4#5#6:::;,1,6,0,0,,,State,0,0
+_pc_BCP2DataTopUp10_PC,2039,1,6,0,0,2039:or:7#8#9:::;,0,0,0,0,,,State,0,0
+_pc_AloBndl1Grant_PC,3650,11483,68543,11483,68543,3650:::::;,0,0,0,0,,Balance_Type expired-2;Balance_Type lookup failed-11481;,State,0,0
+NewSoftDeactStatus,3341,3,3,0,0,3341:>=:1:::;,3,3,0,0,,,Units,0,0
+BronzeDailyActive,3300,57110,50526,57110,50526,3300:or:2#3:::;,428,955,428,955,,NetworkBundle specific BT ignored-428;Balance_Type match condition failed-55512;Balance_Type expired-1170;,Units,0,0
+BronzeDailyActive,3300,57110,50526,57110,50526,3300:=:1:::;,49571,49571,49571,49571,,NetworkBundle specific BT ignored-428;Balance_Type match condition failed-55512;Balance_Type expired-1170;,Units,0,0
+_pc_Mercury7D_PC,3302,3037,11811,849,1629,3302:or:3#4#5#6:::;,2488,11271,300,1089,,Periodic Charge is not active-540;Service class Ignored-1;Balance_Type match condition failed-299;Balance_Type expired-9;,State,0,0
+_pc_Mercury7D_PC,3302,3037,11811,849,1629,3302:or:7#8#9:::;,0,0,0,0,,Periodic Charge is not active-540;Service class Ignored-1;Balance_Type match condition failed-299;Balance_Type expired-9;,State,0,0
+_pc_Mercury1D_PC,3303,2423,10080,943,1200,3303:or:3#4#5#6:::;,1532,9192,52,312,,Periodic Charge is not active-887;Service class Ignored-1;Balance_Type match condition failed-52;Balance_Type expired-3;,State,0,0
+_pc_Mercury1D_PC,3303,2423,10080,943,1200,3303:or:7#8#9:::;,0,0,0,0,,Periodic Charge is not active-887;Service class Ignored-1;Balance_Type match condition failed-52;Balance_Type expired-3;,State,0,0
+StartStopStatePH2,3304,6775,39533,6754,39472,3304:or:1#2#3:::;,21,61,0,0,,Balance_Type match condition failed-6754;,Units,0,0
+RRMCMessageIVR,3387,1187249,1184648,1187249,1184648,3387:::::;,1187249,1184648,1187249,1184648,,Service class Ignored-1;Balance_Type Ignored-1187246;Lifecycle lookup mismatch-2;,Units,0,0
+CreditFlexiCampNew,3072,56,21000,55,0,3072:>=:1:::;,1,21000,0,0,,Balance_Type expired-55;,Cash,0,0
+StartStopCountPH2,3305,77,131,54,92,3305:or:1#2#3#4#5:::;,77,131,54,92,;5069-15;,Balance_Type expired-54;,Units,0,0
+Monthly1Off1,3388,331,0,331,0,3388:>=:1:::;,0,0,0,0,,Balance_Type match condition failed-326;Balance_Type expired-5;,Data,0,0
+StartStopTimePH2,3306,165,732000,135,84000,3306:>=:-99999999:::;,165,618000,135,-30000,;5069-10;,Balance_Type match condition failed-87;Balance_Type expired-48;,Time,0,0
+SpecialGrace,3032,4642,193,4642,193,3032:::::;,4642,193,4642,193,,Balance_Type Ignored-4642;,Units,0,0
+AddOnCtrl,3389,2289,2290,0,0,3389:>=:1:::;,2289,2290,0,0,,,Units,0,0
+Dunning Active,3074,13,16093689,1,0,3074:>=:1:::;,12,16093689,0,0,,Balance_Type match condition failed-1;,Units,0,0
+HardCap FlexiMin,3075,1,0,1,0,3075:>=:-99999999:::;,1,0,1,0,,Balance_Type match condition failed-1;,Time,0,0
+_pc_StartStopAutoStopPH2_PC,3308,6776,6921,6752,6777,3308:or:3#4#5#6:::;,22,126,0,0,;91-2;,Periodic Charge is not active-6749;Balance_Type match condition failed-1;Balance_Type expired-2;,State,0,0
+_pc_StartStopAutoStopPH2_PC,3308,6776,6921,6752,6777,3308:or:7#8#9:::;,2,18,0,0,;91-2;,Periodic Charge is not active-6749;Balance_Type match condition failed-1;Balance_Type expired-2;,State,0,0
+SplRecSocServRetry,3034,120934,188311,120934,188311,3034:=:0:::;,120870,0,120870,0,,NetworkBundle specific BT ignored-52;Lifecycle lookup mismatch-1;Balance_Type match condition failed-120880;Subscriber relation missing-1;,Units,0,0
+SplRecSocServRetry,3034,120934,188311,120934,188311,3034:or:1#2#3:::;,52,135,52,135,,NetworkBundle specific BT ignored-52;Lifecycle lookup mismatch-1;Balance_Type match condition failed-120880;Subscriber relation missing-1;,Units,0,0
+HardCap FlexiSMS,3076,50,4521,16,0,3076:>=:-99999999:::;,50,4521,16,0,,Balance_Type match condition failed-16;,Units,0,0
+_pc_BronzeDaily_PC,3309,560057,678865,537145,541393,3309:or:3#4#5#6:::;,22925,137550,13,78,,Periodic Charge is not active-537127;Balance_Type match condition failed-2;Balance_Type expired-16;,State,0,0
+SplSocServDeactStatus,3035,315317,4039948,315317,4039948,3035:::::;,315317,4039948,315317,4039948,,Balance_Type Ignored-315315;Subscriber relation missing-2;,Units,0,0
+_pc_HardCapAlphaIN50_PC,3077,3,18,0,0,3077:or:7#8#9:::;,0,0,0,0,,,State,0,0
+_pc_HardCapAlphaIN50_PC,3077,3,18,0,0,3077:or:3#4#5#6:::;,3,18,0,0,,,State,0,0
+SplRecSocDeactServRetry,3036,95918,967787,95918,967787,3036:or:1#2#3:::;,1536,4563,1536,4563,,NetworkBundle specific BT ignored-1536;Lifecycle lookup mismatch-1;Balance_Type match condition failed-94380;Balance_Type expired-1;,Units,0,0
+_pc_HardCapAlphaIN100_PC,3078,29,174,0,0,3078:or:3#4#5#6:::;,29,174,0,0,,,State,0,0
+_pc_HardCapAlphaIN100_PC,3078,29,174,0,0,3078:or:7#8#9:::;,0,0,0,0,,,State,0,0
+_pc_MonthlyRecSpecial1,3037,5154,5157,5154,5157,3037:or:3#4#5#6:::;,2,6,2,6,,Periodic Charge is not active-5152;Balance_Type match condition failed-2;,State,0,0
+_pc_MonthlyRecSpecial1,3037,5154,5157,5154,5157,3037:or:1#2:::;,5151,5151,5151,5151,,Periodic Charge is not active-5152;Balance_Type match condition failed-2;,State,0,0
+MnpLoyaltyEligibility,860,369,0,369,0,860:::::;,369,0,369,0,,Balance_Type Ignored-369;,Units,0,0
+_pc_HardCapAlphaIN200_PC,3079,2,12,0,0,3079:or:3#4#5#6:::;,2,12,0,0,,,State,0,0
+_pc_HardCapAlphaIN200_PC,3079,2,12,0,0,3079:or:7#8#9:::;,0,0,0,0,,,State,0,0
+_pc_GraceSpecial1,3038,4639,4639,0,0,3038:or:3#4#5#6#7#8#9:::;,0,0,0,0,,,State,0,0
+_pc_GraceSpecial1,3038,4639,4639,0,0,3038:or:1#2:::;,4639,4639,0,0,,,State,0,0
+_pc_SplRecSocServPC1,3039,28601,28595,28601,28595,3039:or:3#4#5#6:::;,0,0,0,0,,Periodic Charge is not active-28584;Balance_Type expired-16;Subscriber relation missing-1;,State,0,0
+Free SMS,240,14471676,13028,14471592,49,240:>:0:::;,0,0,0,0,;1170-77;,SNA subs balance record ignored-16091;Service class Ignored-21956;Lifecycle lookup mismatch-44391;Balance_Type match condition failed-14388932;Subscriber relation missing-222;,SMSs,0,0
+Free SMS,240,14471676,13028,14471592,49,240:>=:1:::;SmsBndlType-=-1#SmsBndl1Recur-=-T,0,0,0,0,;1170-77;,SNA subs balance record ignored-16091;Service class Ignored-21956;Lifecycle lookup mismatch-44391;Balance_Type match condition failed-14388932;Subscriber relation missing-222;,SMSs,0,0
+Free SMS,240,14471676,13028,14471592,49,240:>=:1:::;SmsBndlType-=-2#SmsBndl2Recur-=-T,0,0,0,0,;1170-77;,SNA subs balance record ignored-16091;Service class Ignored-21956;Lifecycle lookup mismatch-44391;Balance_Type match condition failed-14388932;Subscriber relation missing-222;,SMSs,0,0
+Free SMS,240,14471676,13028,14471592,49,240:>=:1:::;SmsBndlType-=-2#SmsBndl2Recur-!=-T,0,0,0,0,;1170-77;,SNA subs balance record ignored-16091;Service class Ignored-21956;Lifecycle lookup mismatch-44391;Balance_Type match condition failed-14388932;Subscriber relation missing-222;,SMSs,0,0
+Free SMS,240,14471676,13028,14471592,49,240:>=:1:::;SmsBndlType-=-1#SmsBndl1Recur-!=-T,0,0,0,0,;1170-77;,SNA subs balance record ignored-16091;Service class Ignored-21956;Lifecycle lookup mismatch-44391;Balance_Type match condition failed-14388932;Subscriber relation missing-222;,SMSs,0,0
+Last Expiry Offset,241,113903,882268,113903,882268,241:::::;,0,0,0,0,,Balance_Type Ignored-97703;SNA subs balance record ignored-16091;Service class Ignored-106;Lifecycle lookup mismatch-3;,Days to wallet expiry,-390315,0
+_pc_PC_CRD_BusAuto40_MRC,599,17813,106878,0,0,599:or:7#8#9:::;,0,0,0,0,,,State,0,0
+_pc_PC_CRD_BusAuto40_MRC,599,17813,106878,0,0,599:or:3#4#5#6:::;,17813,106878,0,0,,,State,0,0
+_pc_IntTakerOffer1Prim,559,308,308,308,308,559:::::;,0,0,0,0,,Balance_Type lookup failed-308;,State,0,0
+_pc_0050 AED Auto Topup,519,423,2518,4,4,519:or:7#8#9:::;,0,0,0,0,,Periodic Charge is not active-4;,State,0,0
+_pc_0050 AED Auto Topup,519,423,2518,4,4,519:or:3#4#5#6:::;,419,2514,0,0,,Periodic Charge is not active-4;,State,0,0
+Micro IDD1,1732,11411,0,11411,0,1732:>=:1:::;,0,0,0,0,,Balance_Type match condition failed-11411;,Time,0,0
+_pc_NPP VP-3,1460,78,253,7,3,1460:or:3#4#5#6:::;,69,234,0,0,;91-2;,Periodic Charge is not active-7;,State,0,0
+_pc_NPP VP-3,1460,78,253,7,3,1460:or:7#8#9:::;,2,16,0,0,;91-2;,Periodic Charge is not active-7;,State,0,0
+_pc_NPP VP-4,1461,13,34,2,1,1461:or:7#8#9:::;,0,0,0,0,,Periodic Charge is not active-1;Balance_Type expired-1;,State,0,0
+_pc_NPP VP-4,1461,13,34,2,1,1461:or:3#4#5#6:::;,11,33,0,0,,Periodic Charge is not active-1;Balance_Type expired-1;,State,0,0
+Bonus Data Offer,1420,70304,0,70304,0,1420:::::;,70304,-3787068,70304,-3787068,,Balance_Type Ignored-70304;,Cash,0,0
+_pc_NPP Data Bundle D1,1462,254,629,190,189,1462:or:3#4#5#6:::;,34,204,0,0,;91-30;,Periodic Charge is not active-189;Balance_Type expired-1;,State,0,0
+_pc_NPP Data Bundle D1,1462,254,629,190,189,1462:or:7#8#9:::;,30,236,0,0,;91-30;,Periodic Charge is not active-189;Balance_Type expired-1;,State,0,0
+NPP Limited,1421,427,0,427,0,1421:>=:1:::;,0,0,0,0,,Balance_Type match condition failed-18;Balance_Type expired-409;,Cash,0,0
+_pc_NPP Data Bundle D2,1463,57,164,38,37,1463:or:7#8#9:::;,7,55,0,0,;91-7;,Periodic Charge is not active-37;Balance_Type expired-1;,State,0,0
+_pc_NPP Data Bundle D2,1463,57,164,38,37,1463:or:3#4#5#6:::;,12,72,0,0,;91-7;,Periodic Charge is not active-37;Balance_Type expired-1;,State,0,0
+_pc_NPP Data Bundle M1,1464,65,334,12,12,1464:or:3#4#5#6:::;,51,306,0,0,;91-2;,Periodic Charge is not active-12;,State,0,0
+_pc_NPP Data Bundle M1,1464,65,334,12,12,1464:or:7#8#9:::;,2,16,0,0,;91-2;,Periodic Charge is not active-12;,State,0,0
+_pc_PeerCounterReset,1190,90838,330270,48466,76038,1190:or:3#4#5#6:::;,42401,254406,29,174,,Periodic Charge is not active-48213;Service class Ignored-1;Lifecycle lookup mismatch-1;Balance_Type expired-251;,State,0,0
+_pc_PeerCounterReset,1190,90838,330270,48466,76038,1190:or:7#8#9:::;,0,0,0,0,,Periodic Charge is not active-48213;Service class Ignored-1;Lifecycle lookup mismatch-1;Balance_Type expired-251;,State,0,0
+_pc_NPP Data Bundle M2,1465,77,416,10,10,1465:or:7#8#9:::;,2,16,0,0,;91-2;,Periodic Charge is not active-10;,State,0,0
+_pc_NPP Data Bundle M2,1465,77,416,10,10,1465:or:3#4#5#6:::;,65,390,0,0,;91-2;,Periodic Charge is not active-10;,State,0,0
+IDDPromo,1191,122879,1310901,122856,0,1191:>=:-99999999:::;,122879,764601,122856,-546300,;1137-9;,Service class Ignored-12;Balance_Type match condition failed-122843;Subscriber relation missing-1;,Time,0,0
+_pc_NPP Data Bundle M3,1466,25,135,3,3,1466:or:3#4#5#6:::;,22,132,0,0,,Periodic Charge is not active-3;,State,0,0
+_pc_NPP Data Bundle M3,1466,25,135,3,3,1466:or:7#8#9:::;,0,0,0,0,,Periodic Charge is not active-3;,State,0,0
+_pc_IntMin15Expiry,1192,58,129,44,45,1192:or:3#4#5#6:::;,14,84,0,0,,Periodic Charge is not active-28;Balance_Type expired-16;,State,0,0
+_pc_IntMin15Expiry,1192,58,129,44,45,1192:or:7#8#9:::;,0,0,0,0,,Periodic Charge is not active-28;Balance_Type expired-16;,State,0,0
+_pc_0200 AED Auto Topup,1111,223,358,196,196,1111:or:3#4#5#6:::;,27,162,0,0,,Periodic Charge is not active-196;,State,0,0
+_pc_0200 AED Auto Topup,1111,223,358,196,196,1111:or:7#8#9:::;,0,0,0,0,,Periodic Charge is not active-196;,State,0,0
+_pc_NPP Data Bundle M4,1467,35,207,1,1,1467:or:7#8#9:::;,2,14,0,0,;91-2;,Periodic Charge is not active-1;,State,0,0
+_pc_NPP Data Bundle M4,1467,35,207,1,1,1467:or:3#4#5#6:::;,32,192,0,0,;91-2;,Periodic Charge is not active-1;,State,0,0
+PrepaidTPlan,1193,145828,135807,145828,135807,1193:::::;,145828,135807,145828,135807,,Service class Ignored-2;Balance_Type Ignored-145826;,Units,0,0
+_pc_TopUp_PC,1152,69,342,69,342,1152:::::;,0,0,0,0,,Balance_Type lookup failed-69;,State,0,0
+_pc_NPP XL-Data Bundle M1,1468,1,6,0,0,1468:or:3#4#5#6:::;,1,6,0,0,,,State,0,0
+_pc_NPP XL-Data Bundle M1,1468,1,6,0,0,1468:or:7#8#9:::;,0,0,0,0,,,State,0,0
+MNMI,1194,5449,0,5449,0,1194:::::;,5449,-8600,5449,-8600,,Balance_Type Ignored-5449;,Time,0,0
+Data24hFree,1153,131083,125467,5616,0,1153:=:1:::;,125467,125467,0,0,,Balance_Type match condition failed-5616;,Units,0,0
+_pc_NPP XL-Data Bundle M2,1469,2,12,0,0,1469:or:7#8#9:::;,0,0,0,0,,,State,0,0
+_pc_NPP XL-Data Bundle M2,1469,2,12,0,0,1469:or:3#4#5#6:::;,2,12,0,0,,,State,0,0
+MobileDataInit,1154,25836,0,25836,0,1154:=:1:::;,0,0,0,0,,Balance_Type match condition failed-25836;,Units,0,0
+RoamDataDailyA,1196,5550,29442972,1,0,1196:>=:-99999999:::;,5550,227810467,1,-4102,;5056-5492;,Service class Ignored-1;,Cash,-4374292,0
+RoamDataDailyB,1197,472,0,0,0,1197:>=:-99999999:::;,472,-24318,0,0,;5049-472;,,Cash,-24318,0
+BlockPPU,1156,973834,3634724,963088,3623978,1156:=:1:::;,11396,11396,650,650,,Service class Ignored-73;Lifecycle lookup mismatch-3;Balance_Type match condition failed-962360;Balance_Type expired-649;Subscriber relation missing-3;,Units,0,0
+_pc_0300 AED Auto Topup,1116,11,51,3,3,1116:or:7#8#9:::;,0,0,0,0,,Periodic Charge is not active-3;,State,0,0
+_pc_0300 AED Auto Topup,1116,11,51,3,3,1116:or:3#4#5#6:::;,8,48,0,0,,Periodic Charge is not active-3;,State,0,0
+RoamingDataWeekly,1198,3263,159909472,0,0,1198:>=:-99999999:::;,3263,1218041691,0,0,;5057-3200;,,Cash,-1883445,0
+MobileData,1157,249445,0,249445,0,1157:>=:1:::;,0,0,0,0,,Service class Ignored-30;Balance_Type match condition failed-249413;Balance_Type expired-1;Subscriber relation missing-1;,Cash,-113125,0
+RaomingDataMonthly,1199,454,404247233,0,0,1199:>=:-99999999:::;,454,3291227279,0,0,;5058-399;,,Cash,-108114,0
+AllValueActive,2772,79,79,16,16,2772:=:1:::;,79,79,16,16,,Balance_Type match condition failed-9;Balance_Type expired-7;,Units,0,0
+AllValuePurchCount,2773,8,9,8,9,2773:>=:1:::;,8,9,8,9,,Balance_Type expired-8;,Units,0,0
+ZSocialActRetry,2732,94,36,94,36,2732:or:1#2#3:::;,13,36,13,36,,NetworkBundle specific BT ignored-13;Balance_Type match condition failed-81;,Units,0,0
+ZSocialActRetry,2732,94,36,94,36,2732:=:0:::;,81,0,81,0,,NetworkBundle specific BT ignored-13;Balance_Type match condition failed-81;,Units,0,0
+AllValueCUG,2774,52,7891700,52,7891700,2774:>=:-99999999:::;,52,7891700,52,7891700,;3041-8;,Balance_Type match condition failed-51;Balance_Type expired-1;,Time,0,0
+ZChatActRetry,2733,199,24,199,24,2733:=:0:::;,191,0,191,0,,NetworkBundle specific BT ignored-8;Balance_Type match condition failed-191;,Units,0,0
+ZChatActRetry,2733,199,24,199,24,2733:or:1#2#3:::;,8,24,8,24,,NetworkBundle specific BT ignored-8;Balance_Type match condition failed-191;,Units,0,0
+AllValueNat,2775,4,1055700,1,0,2775:>=:-99999999:::;,4,1055700,1,0,,Balance_Type match condition failed-1;,Time,0,0
+AllValueFlexi,2776,46,2675400,46,2675400,2776:>=:-99999999:::;,46,2675400,46,2675400,,Balance_Type match condition failed-45;Balance_Type expired-1;,Time,0,0
+AllValueFlexiDaily,2777,32,357300,32,357300,2777:>=:-99999999:::;,32,357300,32,357300,,Balance_Type match condition failed-25;Balance_Type expired-7;,Time,0,0
+_pc_EarlyBird25GBNotification_B4Exp_PC,1030,2,2,2,2,1030:::::;,0,0,0,0,,Balance_Type lookup failed-2;,State,0,0
+AllValueData,2778,4,201984,1,0,2778:>=:-99999999:::;,4,201984,1,0,,Balance_Type match condition failed-1;,Data,0,0
+_pc_SmartPhone_Instalment12_PC,1031,952,951,952,951,1031:::::;,0,0,0,0,,Balance_Type expired-1;Balance_Type lookup failed-951;,State,0,0
+AllValueDataDaily,2779,4,51200,4,51200,2779:>=:-99999999:::;,4,51200,4,51200,,Balance_Type match condition failed-2;Balance_Type expired-2;,Data,0,0
+_pc_SmartPhone_Instalment24_PC,1032,330,330,330,330,1032:::::;,0,0,0,0,,Balance_Type lookup failed-330;,State,0,0
+_pc_Instalment12Notification_B4Exp_PC,1033,3597,3596,3597,3596,1033:::::;,0,0,0,0,,Balance_Type lookup failed-3597;,State,0,0
+_pc_RoamingDataDailyBundle,2192,95,367,45,67,2192:or:7#8#9:::;,0,0,0,0,,Periodic Charge is not active-44;Balance_Type expired-1;,State,0,0
+_pc_RoamingDataDailyBundle,2192,95,367,45,67,2192:or:3#4#5#6:::;,50,300,0,0,,Periodic Charge is not active-44;Balance_Type expired-1;,State,0,0
+_pc_RoamingDataDailyGrace,2193,36,102,25,36,2193:or:3#4#5#6#7#8#9:::;,11,66,0,0,,Periodic Charge is not active-24;Balance_Type expired-1;,State,0,0
+Camp Int Disc,2152,140037,10778270,1093,87600,2152:or:10#20#25#30#50#65#70#80#85:::;,139964,10767190,1020,76520,,Lifecycle lookup mismatch-1;Balance_Type match condition failed-73;Balance_Type expired-1019;,Units,0,0
+_pc_Instalment24Notification_B4Exp_PC,1034,560,593,560,593,1034:::::;,0,0,0,0,,Balance_Type lookup failed-560;,State,0,0
+Blackberry Bundle,1035,268312,178322,268312,178322,1035:=:6:::;,26808,160848,26808,160848,,Service class Ignored-13;NetworkBundle specific BT ignored-234826;Balance_Type match condition failed-33473;,Units,0,0
+Blackberry Bundle,1035,268312,178322,268312,178322,1035:=:4:::;,574,2296,574,2296,,Service class Ignored-13;NetworkBundle specific BT ignored-234826;Balance_Type match condition failed-33473;,Units,0,0
+Blackberry Bundle,1035,268312,178322,268312,178322,1035:=:3:::;,902,2706,902,2706,,Service class Ignored-13;NetworkBundle specific BT ignored-234826;Balance_Type match condition failed-33473;,Units,0,0
+Blackberry Bundle,1035,268312,178322,268312,178322,1035:=:1:::;,580,580,580,580,,Service class Ignored-13;NetworkBundle specific BT ignored-234826;Balance_Type match condition failed-33473;,Units,0,0
+Blackberry Bundle,1035,268312,178322,268312,178322,1035:=:5:::;,79,395,79,395,,Service class Ignored-13;NetworkBundle specific BT ignored-234826;Balance_Type match condition failed-33473;,Units,0,0
+Blackberry Bundle,1035,268312,178322,268312,178322,1035:=:7:::;,487,3409,487,3409,,Service class Ignored-13;NetworkBundle specific BT ignored-234826;Balance_Type match condition failed-33473;,Units,0,0
+Blackberry Bundle,1035,268312,178322,268312,178322,1035:=:2:::;,4044,8088,4044,8088,,Service class Ignored-13;NetworkBundle specific BT ignored-234826;Balance_Type match condition failed-33473;,Units,0,0
+Blackberry Bundle,1035,268312,178322,268312,178322,1035:=:0:::;,234838,0,234838,0,,Service class Ignored-13;NetworkBundle specific BT ignored-234826;Balance_Type match condition failed-33473;,Units,0,0
+ZingerPPU,2112,1456660,505862,1027508,54,2112:=:1:::;,352536,352536,40,40,,Service class Ignored-54;Lifecycle lookup mismatch-3;Balance_Type match condition failed-1027445;Subscriber relation missing-6;,Units,0,0
+ZingerPPU,2112,1456660,505862,1027508,54,2112:=:2:::;,76663,153326,7,14,,Service class Ignored-54;Lifecycle lookup mismatch-3;Balance_Type match condition failed-1027445;Subscriber relation missing-6;,Units,0,0
+Camp Int Disc Dest,2154,573579,1159788,434635,881900,2154:or:1#2#3#4#5#6#7#8#9#10#11#12#13#14#15:::;,573579,1159788,434635,881900,,Service class Ignored-1;Lifecycle lookup mismatch-1;Balance_Type match condition failed-434632;Subscriber relation missing-1;,Units,0,0
+_pc_BlackBerry100MB_R,1036,31,186,1,6,1036:or:7#8#9:::;,0,0,0,0,,Balance_Type match condition failed-1;,State,0,0
+_pc_BlackBerry100MB_R,1036,31,186,1,6,1036:or:3#4#5#6:::;,31,186,1,6,,Balance_Type match condition failed-1;,State,0,0
+_pc_BlackBerry1GB_R,1037,19,114,0,0,1037:or:3#4#5#6:::;,19,114,0,0,,,State,0,0
+_pc_BlackBerry1GB_R,1037,19,114,0,0,1037:or:7#8#9:::;,0,0,0,0,,,State,0,0
+_pc_BlackBerry4GB_R,1038,22,134,0,0,1038:or:3#4#5#6:::;,21,126,0,0,;91-1;,,State,0,0
+_pc_BlackBerry4GB_R,1038,22,134,0,0,1038:or:7#8#9:::;,1,8,0,0,;91-1;,,State,0,0
+_pc_BlackBerry25GB_R,1039,10,60,0,0,1039:or:7#8#9:::;,0,0,0,0,,,State,0,0
+_pc_BlackBerry25GB_R,1039,10,60,0,0,1039:or:3#4#5#6:::;,10,60,0,0,,,State,0,0
+Camp Int Disc Promo,2159,573579,573713,434635,434769,2159:or:1#2#3#4#5:::;,573579,573713,434635,434769,,Service class Ignored-1;Lifecycle lookup mismatch-1;Balance_Type match condition failed-434632;Subscriber relation missing-1;,Units,0,0
+OneWayFnF,3461,57555,224789,57552,224782,3461:>=:-99999999:::;,57555,224789,57552,224782,,Balance_Type match condition failed-57212;Balance_Type expired-340;,Units,0,0
+OneWayFnFWActive,3462,11759,40636,6932,22353,3462:=:3:::;,2080,6240,951,2853,,Balance_Type match condition failed-6542;Balance_Type expired-390;,Units,0,0
+OneWayFnFWActive,3462,11759,40636,6932,22353,3462:=:7:::;,442,3094,214,1498,,Balance_Type match condition failed-6542;Balance_Type expired-390;,Units,0,0
+OneWayFnFWActive,3462,11759,40636,6932,22353,3462:=:2:::;,1029,2058,462,924,,Balance_Type match condition failed-6542;Balance_Type expired-390;,Units,0,0
+OneWayFnFWActive,3462,11759,40636,6932,22353,3462:=:6:::;,2128,12768,1101,6606,,Balance_Type match condition failed-6542;Balance_Type expired-390;,Units,0,0
+OneWayFnFWActive,3462,11759,40636,6932,22353,3462:=:1:::;,1521,1521,677,677,,Balance_Type match condition failed-6542;Balance_Type expired-390;,Units,0,0
+OneWayFnFWActive,3462,11759,40636,6932,22353,3462:=:5:::;,2991,14955,1959,9795,,Balance_Type match condition failed-6542;Balance_Type expired-390;,Units,0,0
+_pc_MoviePassAutoStop_PC,3422,196,884,72,140,3422:or:3#4#5#6:::;,127,762,3,18,,Periodic Charge is not active-62;Balance_Type expired-10;,State,0,0
+OneWayFnFMActive,3463,47778,127031,8779,22401,3463:=:7:::;,458,3206,78,546,,Balance_Type match condition failed-8493;Balance_Type expired-286;,Units,0,0
+OneWayFnFMActive,3463,47778,127031,8779,22401,3463:=:2:::;,2566,5132,401,802,,Balance_Type match condition failed-8493;Balance_Type expired-286;,Units,0,0
+OneWayFnFMActive,3463,47778,127031,8779,22401,3463:=:6:::;,8838,53028,1846,11076,,Balance_Type match condition failed-8493;Balance_Type expired-286;,Units,0,0
+OneWayFnFMActive,3463,47778,127031,8779,22401,3463:=:1:::;,25797,25797,4440,4440,,Balance_Type match condition failed-8493;Balance_Type expired-286;,Units,0,0
+OneWayFnFMActive,3463,47778,127031,8779,22401,3463:=:5:::;,5786,28930,778,3890,,Balance_Type match condition failed-8493;Balance_Type expired-286;,Units,0,0
+OneWayFnFMActive,3463,47778,127031,8779,22401,3463:=:3:::;,3646,10938,549,1647,,Balance_Type match condition failed-8493;Balance_Type expired-286;,Units,0,0
+_pc_MoviePass2AutoStop_PC,3423,339,1593,101,165,3423:or:3#4#5#6:::;,250,1500,12,72,,Periodic Charge is not active-56;Balance_Type expired-45;,State,0,0
+OneWayFnFReset,3464,44498,36384,44495,36383,3464:>=:-99999999:::;,44498,36384,44495,36383,,Balance_Type match condition failed-44148;Balance_Type expired-347;,Units,0,0
+CashRechPromoState,3424,12893,12893,0,0,3424:>=:1:::;,12893,12893,0,0,,,Units,0,0
+AutoTopUp Active,3192,59101,56624,2478,1,3192:=:1:::;,56624,56624,1,1,,Balance_Type match condition failed-2477;Subscriber relation missing-1;,Units,0,0
+OneWayOptOutW,3466,244,0,241,0,3466:>=:-99999999:::;,244,0,241,0,,Balance_Type match condition failed-197;Balance_Type expired-44;,Units,0,0
+_pc_NewDaily_PC,3152,178680,1059487,178680,1059487,3152:::::;,178680,990565,178680,990565,,Balance_Type Ignored-178680;,State,0,0
+OneWayOptOutM,3467,301,0,298,0,3467:>=:-99999999:::;,301,0,298,0,,Balance_Type match condition failed-239;Balance_Type expired-59;,Units,0,0
+WiFiCardValue,3112,1,0,1,0,3112:::::;,0,0,0,0,,Balance_Type lookup failed-1;,Cash,0,0
+OneWayFnFWeekly1,3427,993,631535800,100,12317400,3427:>=:-99999999:::;,993,631535800,100,12317400,;1322-52;,Balance_Type match condition failed-73;Balance_Type expired-27;,Time,0,0
+_pc_NewDailyGrace_PC,3153,160463,2171117,160463,2171117,3153:::::;,160463,2021095,160463,2021095,,Balance_Type Ignored-160463;,State,0,0
+Azure_bonus_grant_New,3468,209,1913671968,3,0,3468:>=:1:::;,206,1913671968,0,0,,Balance_Type match condition failed-3;,Data,0,0
+HotelPrepaidVoice,3154,2,1200000,0,0,3154:>=:-99999999:::;,2,1200000,0,0,,,Time,0,0
+OneWayFnFWeekly2,3428,676,347890700,90,4039900,3428:>=:-99999999:::;,676,347890700,90,4039900,;1323-24;,Balance_Type match condition failed-73;Balance_Type expired-17;,Time,0,0
+HotelPrepaidData,3155,2,1200000,0,0,3155:>=:-99999999:::;,2,3145728,0,0,,,Data,0,0
+OneWayFnFWeekly3,3429,1317,948308500,146,15987400,3429:>=:-99999999:::;,1317,948308500,146,15987400,;1324-50;,Balance_Type match condition failed-95;Balance_Type expired-51;,Time,0,0
+_pc_HotelPrepaidTopUp_PC,3156,2,12,0,0,3156:or:7#8#9:::;,0,0,0,0,,,State,0,0
+_pc_HotelPrepaidTopUp_PC,3156,2,12,0,0,3156:or:3#4#5#6:::;,2,12,0,0,,,State,0,0
+RamadanSMS,985,4,3326,4,3326,985:::::;,4,3326,4,3326,,Balance_Type Ignored-4;,Units,0,0
+MonthlySMSCheck,1892,832578,967229,8021,8624,1892:>=:0:::;,832578,967229,8021,8624,,Service class Ignored-125;Lifecycle lookup mismatch-2;Balance_Type expired-7892;Subscriber relation missing-2;,Units,0,0
+Music Bundle Daily,1852,293,8387520,285,0,1852:>=:-99999999:::;,293,8384800,285,-2720,,Balance_Type match condition failed-285;,Data,0,0
+Music Bundle Monthly,1853,1,0,1,0,1853:>=:-99999999:::;,1,0,1,0,,Balance_Type match condition failed-1;,Data,0,0
+Music Bundle Status,1854,314,33,314,33,1854:=:1:::;,23,23,23,23,,NetworkBundle specific BT ignored-4;Balance_Type match condition failed-310;,Units,0,0
+Music Bundle Status,1854,314,33,314,33,1854:or:2#3:::;,4,10,4,10,,NetworkBundle specific BT ignored-4;Balance_Type match condition failed-310;,Units,0,0
+Music Bundle Flavour,1855,314,51,302,35,1855:=:1:::;,18,18,10,10,,Balance_Type match condition failed-302;,Units,0,0
+Music Bundle Flavour,1855,314,51,302,35,1855:=:4:::;,0,0,0,0,,Balance_Type match condition failed-302;,Units,0,0
+Music Bundle Flavour,1855,314,51,302,35,1855:=:2:::;,4,8,0,0,,Balance_Type match condition failed-302;,Units,0,0
+Music Bundle Free Count,1857,3,13,3,13,1857:::::;,3,13,3,13,,Balance_Type Ignored-3;,Units,0,0
+_pc_MusicBndlDaily_PC,1858,8,48,0,0,1858:or:3#4#5#6:::;,8,48,0,0,,,State,0,0
+FlexiCamp,1543,8872,2428329165,3013,9932900,1543:>=:1:::;,5886,2428329165,27,9932900,,Balance_Type match condition failed-2945;Balance_Type expired-68;,Time,0,0
+_pc_MusicBndlDailyGrace_PC,1859,1,1,1,1,1859:or:3#4#5#6#7#8#9:::;,0,0,0,0,,Periodic Charge is not active-1;,State,0,0
+BOICCredit,1270,157793,8137743000,20156,236000,1270:>=:1:::;,137642,8137743000,5,236000,,Service class Ignored-4;Balance_Type match condition failed-20151;Subscriber relation missing-1;,Cash,0,0
+LocalCamp,1271,7815,1645437936,2207,4596600,1271:>=:1:::;,5652,1645437936,44,4596600,,Balance_Type match condition failed-2104;Balance_Type expired-103;,Time,0,0
+InterCamp,1272,430502,28106271600,395403,35487200,1272:>=:1:::;,35482,28106271600,383,35487200,,Service class Ignored-1;Balance_Type match condition failed-394525;Balance_Type expired-875;Subscriber relation missing-2;,Time,0,0
+International Community,1547,24522,19439,5083,0,1547:>=:1:::;,19439,19439,0,0,,Balance_Type match condition failed-5079;Balance_Type expired-4;,Units,0,0
+CreditInterCamp,1274,1,0,1,0,1274:>=:1:::;,0,0,0,0,,Balance_Type match condition failed-1;,Cash,0,0
+DataCamp,1275,241797,356976338895,140702,8472105952,1275:>=:1:::;,103174,356976338895,2079,8472105952,,Service class Ignored-1;Lifecycle lookup mismatch-2;Balance_Type match condition failed-98991;Balance_Type expired-41708;,Data,0,0
+InterCampOFF,1509,1,0,1,0,1509:>=:1:::;,0,0,0,0,,Balance_Type match condition failed-1;,Time,0,0
+DataCampOFF,1278,194,0,194,0,1278:>=:1:::;,0,0,0,0,,Balance_Type match condition failed-188;Balance_Type expired-6;,Data,0,0
+NFCNOL_Active,1239,53,25,0,0,1239:=:0:::;,28,0,0,0,,,Units,0,0
+NFCNOL_Active,1239,53,25,0,0,1239:>=:1:::;,25,25,0,0,,,Units,0,0
+Data FNL WH,2892,2308,2158705460,825,9374020,2892:>=:1:::;,1492,2158705460,9,9374020,,Balance_Type match condition failed-435;Balance_Type expired-390;,Data,0,0
+IDDRateCuttersActive,2852,45545,42299,41933,38687,2852:=:1:::;,42299,42299,38687,38687,,Balance_Type match condition failed-41928;Balance_Type expired-5;,Units,0,0
+HardCap CUGMin AddOn1,2540,39,206301900,0,0,2540:>=:-99999999:::;,39,206301900,0,0,,,Time,0,0
+HardCap NatSMS Addon1,2541,4,600,0,0,2541:>=:-99999999:::;,4,600,0,0,,,Units,0,0
+TWIN SIM Count,2816,4,12,4,12,2816:::::;,0,0,0,0,,Balance_Type lookup failed-4;,Units,0,0
+_pc_C_HardCapGMM100_PC,2542,702,4212,0,0,2542:or:7#8#9:::;,0,0,0,0,,,State,0,0
+_pc_C_HardCapGMM100_PC,2542,702,4212,0,0,2542:or:3#4#5#6:::;,702,4212,0,0,,,State,0,0
+_pc_C_HardCapGMM250_PC,2543,3888,23328,1,6,2543:or:3#4#5#6:::;,3888,23328,1,6,,Subscriber relation missing-1;,State,0,0
+_pc_C_HardCapGMM250_PC,2543,3888,23328,1,6,2543:or:7#8#9:::;,0,0,0,0,,Subscriber relation missing-1;,State,0,0
+Zinger_Grace_End,2272,4,4,4,4,2272:::::;,4,4,4,4,,Balance_Type Ignored-4;,Units,0,0
+SF Monthly Recharge,2233,740,180940000,635,0,2233:>=:1:::;,105,180940000,0,0,,Balance_Type match condition failed-635;,Cash,0,0
+_pc_C_HardCapRNatVB500_PC,2549,137,822,0,0,2549:or:3#4#5#6:::;,137,822,0,0,,,State,0,0
+_pc_C_HardCapRNatVB500_PC,2549,137,822,0,0,2549:or:7#8#9:::;,0,0,0,0,,,State,0,0
+SF Bonus,2234,18,3625438,4,0,2234:>=:1:::;,14,3625438,0,0,,Balance_Type match condition failed-4;,Cash,0,0
+SF Status,2235,302,716,179,354,2235:=:3:::;,116,348,0,0,;1141-5;,Balance_Type match condition failed-179;,Units,0,0
+SF Status,2235,302,716,179,354,2235:=:1:::;,4,4,4,4,;1141-5;,Balance_Type match condition failed-179;,Units,0,0
+SF Status,2235,302,716,179,354,2235:=:2:::;,182,364,175,350,;1141-5;,Balance_Type match condition failed-179;,Units,0,0
+BronzeMPromoFlexiMins,3581,6826,1093224500,6826,1093224500,3581:::::;,0,0,0,0,,Balance_Type expired-129;Balance_Type lookup failed-6697;,Time,0,0
+_pc_BusHybridCUG3_PC,3500,3,18,3,18,3500:::::;,0,0,0,0,,Balance_Type lookup failed-3;,State,0,0
+_pc_BronzeMonPromoGrace_PC,3582,2115,6442,1253,1270,3582:or:3#4#5#6#7#8#9:::;,864,5184,2,12,;91-862;,Periodic Charge is not active-1251;Balance_Type expired-2;,State,0,0
+Mar2Act,3583,3805,3799,3805,3799,3583:::::;,0,0,0,0,,Balance_Type expired-12;Balance_Type lookup failed-3793;,Units,0,0
+_pc_BusHybridCUG5_PC,3542,8,48,8,48,3542:::::;,0,0,0,0,,Balance_Type lookup failed-8;,State,0,0
+_pc_BusHybridCUG6_PC,3543,1,6,1,6,3543:::::;,0,0,0,0,,Balance_Type lookup failed-1;,State,0,0
+Marine2Type,3584,3805,3789,3805,3789,3584:::::;,0,0,0,0,,Balance_Type expired-12;Balance_Type lookup failed-3793;,Units,0,0
+_pc_BusHybridNat1_PC,3544,2,2,2,2,3544:::::;,0,0,0,0,,Balance_Type lookup failed-2;,State,0,0
+Mar2UpdownType,3585,134,0,134,0,3585:::::;,0,0,0,0,,Balance_Type expired-106;Balance_Type lookup failed-28;,Units,0,0
+KhaleejiControl,3503,225,447,0,0,3503:=:2:::;,220,440,0,0,,,Units,0,0
+KhaleejiControl,3503,225,447,0,0,3503:=:1:::;,4,4,0,0,,,Units,0,0
+KhaleejiControl,3503,225,447,0,0,3503:=:3:::;,1,3,0,0,,,Units,0,0
+DlyGrace,3230,41425,141187,41425,141187,3230:::::;,41425,141187,41425,141187,,Balance_Type Ignored-41424;Subscriber relation missing-1;,Units,0,0
+Mar2Count,3586,569,569,569,569,3586:::::;,0,0,0,0,,Balance_Type expired-125;Balance_Type lookup failed-444;,Units,0,0
+KhaleejiMins,3504,255,42318000,250,0,3504:>=:-99999999:::;,255,42318000,250,0,,Balance_Type match condition failed-250;,Time,0,0
+DlyCount,3231,3520,3520,2281,2281,3231:>=:1:::;,3520,3520,2281,2281,,Balance_Type expired-2281;,Units,0,0
+Marine2Grace,3587,355,634,355,634,3587:::::;,0,0,0,0,,Balance_Type expired-125;Balance_Type lookup failed-230;,Units,0,0
+TPVoice1,3272,465,12822000,53,792000,3272:>=:-99999999:::;,465,12822000,53,792000,;2506-4;,Balance_Type match condition failed-2;Balance_Type expired-44;Subscriber relation missing-7;,Time,0,0
+DWL,3232,1403068,36773081,24221,5899494,3232:=:1:::;,37010,37010,0,0,,Lifecycle lookup mismatch-4;Balance_Type match condition failed-24217;,Units,0,0
+DWL,3232,1403068,36773081,24221,5899494,3232:=:23:::;,1339507,30808661,4,92,,Lifecycle lookup mismatch-4;Balance_Type match condition failed-24217;,Units,0,0
+DWL,3232,1403068,36773081,24221,5899494,3232:=:12:::;,2334,28008,0,0,,Lifecycle lookup mismatch-4;Balance_Type match condition failed-24217;,Units,0,0
+Marine2FnF,3588,4571,622,4571,622,3588:::::;,0,0,0,0,,Balance_Type lookup failed-4571;,Units,0,0
+TPVoice2,3273,744,47298000,54,1818000,3273:>=:-99999999:::;,744,47298000,54,1818000,;2507-7;,Lifecycle lookup mismatch-1;Balance_Type match condition failed-6;Balance_Type expired-42;Subscriber relation missing-5;,Time,0,0
+DSWL,3233,445191,445199,4,4,3233:>=:1:::;,445191,445199,4,4,,Lifecycle lookup mismatch-2;Subscriber relation missing-2;,Units,0,0
+Marine2FnFReset,3589,3723,3644,3723,3644,3589:::::;,0,0,0,0,,Balance_Type expired-9;Balance_Type lookup failed-3714;,Units,0,0
+_pc_BusHybridNat3_PC,3548,3,18,3,18,3548:::::;,0,0,0,0,,Balance_Type lookup failed-3;,State,0,0
+TPVoice3,3274,965,124512000,15,762000,3274:>=:-99999999:::;,965,124512000,15,762000,;2508-1;,Lifecycle lookup mismatch-2;Balance_Type match condition failed-6;Balance_Type expired-5;Subscriber relation missing-2;,Time,0,0
+TPData1,3275,505,54967488,65,5237064,3275:>=:-99999999:::;,505,54948088,65,5217664,;2506-32;,Balance_Type match condition failed-4;Balance_Type expired-54;Subscriber relation missing-7;,Data,0,0
+_pc_PC_Monthly_Hybrid2_Nat,3235,2,2,2,2,3235:::::;,0,0,0,0,,Balance_Type lookup failed-2;,State,0,0
+TPData2,3276,775,239691272,56,10473792,3276:>=:-99999999:::;,775,239689072,56,10471592,;2507-36;,Lifecycle lookup mismatch-2;Balance_Type match condition failed-4;Balance_Type expired-45;Subscriber relation missing-5;,Data,0,0
+TPData3,3277,1007,1292162424,16,18849256,3277:>=:-99999999:::;,1007,1292162424,16,18849256,;2508-42;,Lifecycle lookup mismatch-3;Balance_Type match condition failed-2;Balance_Type expired-9;Subscriber relation missing-2;,Data,0,0
+FirstRechVal,3278,2033,960150000,20,9890000,3278:>=:1:::;,2033,960150000,20,9890000,,Lifecycle lookup mismatch-2;Subscriber relation missing-18;,Cash,0,0
+TPFlag,3279,13302,13302,62,62,3279:=:1:::;,13302,13302,62,62,,Lifecycle lookup mismatch-8;Balance_Type expired-3;Subscriber relation missing-51;,Units,0,0
+_pc_DailyRecData1,3238,63676,181874,40049,40112,3238:or:3#4#5#6:::;,23647,141882,20,120,,Periodic Charge is not active-39977;Balance_Type match condition failed-2;Balance_Type expired-69;Subscriber relation missing-1;,State,0,0
+_pc_DailyGrcData1,3239,62935,213895,32754,32809,3239:or:3#4#5#6#7#8#9:::;,30200,181200,19,114,;91-30181;,Periodic Charge is not active-32691;Balance_Type expired-62;Subscriber relation missing-1;,State,0,0
+Yearly Expenditure,92,14573000,14565424947842,7486642,20317571826,92:>=:1:::;,7091858,14565424947842,5500,20317571826,,SNA subs balance record ignored-16091;Service class Ignored-21996;Lifecycle lookup mismatch-44395;Balance_Type match condition failed-7396817;Balance_Type expired-7121;Subscriber relation missing-222;,Cash,0,0
+OnNet Voice,51,100060,438800,100055,94700,51:>=:1:::;,6,438800,1,94700,,Service class Ignored-1;Lifecycle lookup mismatch-49;Balance_Type match condition failed-100005;,Time,0,0
+BOICBonus,480,15498,5546042,11137,0,480:>=:1:::;,4361,5546042,0,0,,Balance_Type match condition failed-11136;Balance_Type expired-1;,Cash,0,0
+WiFi Free Access,400,3178,0,3178,0,400:::::;,3178,0,3178,0,,Balance_Type Ignored-3178;,Units,0,0
+Data,55,14473016,49831493951,14456067,202441204,55:>=:-99999999:::;,14473016,49688960531,14456067,-6437928,;5017-1931;,Service class Ignored-21945;Lifecycle lookup mismatch-44391;Balance_Type match condition failed-14388221;Balance_Type expired-1288;Subscriber relation missing-222;,Data,-470520,0
+BOICAct,799,5578,21150,5578,21150,799:::::;,5578,21150,5578,21150,,Balance_Type Ignored-5578;,Units,0,0
+DataHighS,759,24241,48577410,22997,0,759:>=:1:::;MBBUnlimited-=-T,0,0,0,0,;363-1243;,Balance_Type match condition failed-22997;,Data,0,0
+DataHighS,759,24241,48577410,22997,0,759:>=:1:::;MBB-=-T,0,0,0,0,;363-1243;,Balance_Type match condition failed-22997;,Data,0,0
+DataHighS,759,24241,48577410,22997,0,759:>:0:::;,1244,48577410,0,0,;363-1243;,Balance_Type match condition failed-22997;,Data,0,0
+DataHighS,759,24241,48577410,22997,0,759:>=:1:::;MBB10GB-=-T,1,60,0,0,;363-1243;,Balance_Type match condition failed-22997;,Data,0,0
+DataHighS,759,24241,48577410,22997,0,759:>=:1:::;MBB2GB-=-T,0,0,0,0,;363-1243;,Balance_Type match condition failed-22997;,Data,0,0
+ThunderBolt Bonus,1973,396,0,396,0,1973:::::;,396,-127232,396,-127232,,Balance_Type Ignored-396;,Data,0,0
+Srv-TravelSummer,719,2,2,0,0,719:>=:1:::;,2,2,0,0,,,Units,0,0
+_pc_Smart NatVoice Bundle NoLimit,405,10,10,10,10,405:::::;,10,10,10,10,,Balance_Type Ignored-10;,State,0,0
+_pc_Smart IntVoice Bundle NoLimit,406,6,6,6,6,406:::::;,0,0,0,0,,Balance_Type lookup failed-6;,State,0,0
+ThunderBolt P2P Block,1975,344,344,1,1,1975:>=:1:::;,344,344,1,1,,Balance_Type expired-1;,Units,0,0
+Push Email 5Mb,176,5,0,5,0,176:::::;,5,0,5,0,,Balance_Type Ignored-5;,Units,0,0
+More Credit,135,44353,15447945849,16846,32976727,135:>=:1:::;,27604,15447945849,97,32976727,,Service class Ignored-5;Balance_Type match condition failed-13713;Balance_Type expired-3128;,Cash,0,0
+DataGiftCount,1392,7,7,7,7,1392:::::;,7,7,7,7,,Balance_Type Ignored-7;,Units,0,0
+VML Act Minutes,1394,48,0,48,0,1394:::::;,48,0,48,0,,Balance_Type Ignored-48;,Time,0,0
+VML Act SMSs,1395,48,0,48,0,1395:::::;,48,0,48,0,,Balance_Type Ignored-48;,Units,0,0
+RoamingDataWeeklyB,1359,197,0,197,0,1359:::::;,0,0,0,0,,Balance_Type lookup failed-197;,Cash,0,0
+Social Bundle,1319,1151775,426578,1151775,426578,1319:or:2#3:::;,776,1886,776,1886,,NetworkBundle specific BT ignored-776;Lifecycle lookup mismatch-2;Balance_Type match condition failed-1150244;Balance_Type expired-750;Subscriber relation missing-3;,Units,0,0
+Social Bundle,1319,1151775,426578,1151775,426578,1319:=:1:::;,109692,109692,109692,109692,,NetworkBundle specific BT ignored-776;Lifecycle lookup mismatch-2;Balance_Type match condition failed-1150244;Balance_Type expired-750;Subscriber relation missing-3;,Units,0,0
+_pc_WeeklyRecCombo1,2930,509,1230,267,399,2930:or:3#4#5#6:::;,290,1011,48,180,,Periodic Charge is not active-219;Lifecycle lookup mismatch-1;Balance_Type match condition failed-46;Balance_Type expired-1;,State,0,0
+SplRecSocServ,2972,7528,2673,2302,1802,2972:=:1:::;,2671,2671,1800,1800,,Balance_Type match condition failed-2285;Balance_Type expired-17;,Units,0,0
+SplRecSocServ,2972,7528,2673,2302,1802,2972:=:0:::;,4856,0,501,0,,Balance_Type match condition failed-2285;Balance_Type expired-17;,Units,0,0
+_pc_MonthlyRecCombo1,2931,49350,143319,5912,5925,2931:or:3#4#5#6:::;,43451,137442,13,48,,Periodic Charge is not active-5849;Balance_Type match condition failed-1;Balance_Type expired-57;Subscriber relation missing-5;,State,0,0
+_pc_GraceCombo1,2932,16572,55149,8865,8907,2932:or:3#4#5#6#7#8#9:::;,7716,46296,9,54,;91-7707;,Periodic Charge is not active-8852;Balance_Type match condition failed-1;Balance_Type expired-12;,State,0,0
+MPOS_Dealer_Wallet,2392,713,0,713,0,2392:>=:1:::;,0,0,0,0,,Balance_Type match condition failed-713;,Cash,0,0
+ZingerPepsi,2393,4456,2,4456,2,2393:::::;,4456,2,4456,2,,Balance_Type Ignored-4456;,Units,0,0
+OOB_Protection,2352,1095886,10645332,37661,140196,2352:>=:1:::;,1095882,10645332,37657,140196,,Service class Ignored-58;Lifecycle lookup mismatch-12;Balance_Type match condition failed-2;Balance_Type expired-37530;Subscriber relation missing-59;,Units,0,0
+ZingerPepsiCounter,2394,4456,2,4456,2,2394:::::;,4456,2,4456,2,,Balance_Type Ignored-4456;,Units,0,0
+OOB_Migration_flag,2353,1024320,1024320,1024320,1024320,2353:::::;,1024320,1024320,1024320,1024320,,Balance_Type Ignored-1024304;Service class Ignored-12;Lifecycle lookup mismatch-2;Subscriber relation missing-2;,Units,0,0
+RRMCMessageCountSMS,2312,1187249,11868631,1187249,11868631,2312:::::;,1187249,11868631,1187249,11868631,,Service class Ignored-1;Balance_Type Ignored-1187246;Lifecycle lookup mismatch-2;,Units,0,0
+ZingerPepsiOptOut,2395,3539,323,3539,323,2395:::::;,3539,323,3539,323,,Balance_Type Ignored-3539;,Units,0,0
+Daily_PPU_count,2354,80363,80363,80363,80363,2354:::::;,0,0,0,0,,Service class Ignored-1;Lifecycle lookup mismatch-4;Balance_Type expired-49196;Subscriber relation missing-6;Balance_Type lookup failed-31156;,Units,0,0
+GCC Daily Purchased,2313,240,24,216,0,2313:>:0:::;,24,24,0,0,,Balance_Type match condition failed-215;Balance_Type expired-1;,Units,0,0
+Roam Special Offer Mass,2396,582,0,582,0,2396:::::;,582,-29298,582,-29298,,Balance_Type Ignored-582;,Cash,0,0
+GCC Weekly Purchased,2314,80,9,71,0,2314:>:0:::;,9,9,0,0,,Balance_Type match condition failed-71;,Units,0,0
+_pc_BCPComboNat50_PC,2040,14822,76987,2391,2401,2040:or:7#8#9:::;,0,0,0,0,,Periodic Charge is not active-2389;Subscriber relation missing-2;,State,0,0
+_pc_BCPComboNat50_PC,2040,14822,76987,2391,2401,2040:or:3#4#5#6:::;,12433,74598,2,12,,Periodic Charge is not active-2389;Subscriber relation missing-2;,State,0,0
+Roam Special Offer Premium,2397,392,0,392,0,2397:::::;,392,-16993,392,-16993,,Balance_Type Ignored-392;,Cash,0,0
+GCC Daily Quota,2315,2367,16777216,0,0,2315:>=:-99999999:::;,2367,128119364,0,0,;5053-2359;,,Cash,-974762,0
+_pc_BCPComboNat100_PC,2041,412,2157,63,63,2041:or:3#4#5#6:::;,349,2094,0,0,,Periodic Charge is not active-63;,State,0,0
+_pc_BCPComboNat100_PC,2041,412,2157,63,63,2041:or:7#8#9:::;,0,0,0,0,,Periodic Charge is not active-63;,State,0,0
+DailyOneOffChat,2000,53618,629568,53616,0,2000:>=:-99999999:::;,53618,-2140320,53616,-2769888,,Balance_Type match condition failed-8396;Balance_Type expired-45220;,Data,0,0
+_pc_RoamSpecialOfferMass,2398,583,583,583,583,2398:::::;,0,0,0,0,,Balance_Type lookup failed-583;,State,0,0
+GCC Weekly Quota,2316,693,71303372,0,0,2316:>=:-99999999:::;,693,498751775,0,0,;5054-675;,,Cash,-160259,0
+_pc_BCPComboNat200_PC,2042,31,171,3,3,2042:or:7#8#9:::;,0,0,0,0,,Periodic Charge is not active-3;,State,0,0
+_pc_BCPComboNat200_PC,2042,31,171,3,3,2042:or:3#4#5#6:::;,28,168,0,0,,Periodic Charge is not active-3;,State,0,0
+DailyOneOffSocial,2001,53528,299296,53527,0,2001:>=:-99999999:::;,53528,239520,53527,-59776,,Balance_Type match condition failed-8396;Balance_Type expired-45131;,Data,0,0
+_pc_RoamSpecialOfferPremium,2399,392,392,392,392,2399:::::;,0,0,0,0,,Balance_Type lookup failed-392;,State,0,0
+GCC Daily Grace,2317,1660,1259,404,0,2317:=:1:::;,1253,1253,0,0,,Balance_Type match condition failed-403;Balance_Type expired-1;,Units,0,0
+GCC Daily Grace,2317,1660,1259,404,0,2317:=:2:::;,3,6,0,0,,Balance_Type match condition failed-403;Balance_Type expired-1;,Units,0,0
+_pc_BCPComboNat250_PC,2043,9,44,2,2,2043:or:7#8#9:::;,0,0,0,0,,Periodic Charge is not active-2;,State,0,0
+_pc_BCPComboNat250_PC,2043,9,44,2,2,2043:or:3#4#5#6:::;,7,42,0,0,,Periodic Charge is not active-2;,State,0,0
+DailyOneOffAll,2002,53525,0,53525,0,2002:>=:-99999999:::;,53525,0,53525,0,,Balance_Type match condition failed-8396;Balance_Type expired-45129;,Data,0,0
+_pc_GCCDailyBundle,2318,18,65,10,17,2318:or:3#4#5#6:::;,8,48,0,0,,Periodic Charge is not active-10;,State,0,0
+_pc_GCCDailyBundle,2318,18,65,10,17,2318:or:7#8#9:::;,0,0,0,0,,Periodic Charge is not active-10;,State,0,0
+_pc_BCPFlexiSMS100_PC,2044,2,2,2,2,2044:or:7#8#9:::;,0,0,0,0,,Periodic Charge is not active-2;,State,0,0
+_pc_BCPFlexiSMS100_PC,2044,2,2,2,2,2044:or:3#4#5#6:::;,0,0,0,0,,Periodic Charge is not active-2;,State,0,0
+MonthRecFlexiVoice,2003,9647,609395100,3652,0,2003:>=:-99999999:::;,9647,599142200,3652,-10252900,;3012-22;,Balance_Type match condition failed-3293;Balance_Type expired-359;,Time,0,0
+_pc_BCPFlexiSMS101_PC,2045,1,6,0,0,2045:or:7#8#9:::;,0,0,0,0,,,State,0,0
+_pc_BCPFlexiSMS101_PC,2045,1,6,0,0,2045:or:3#4#5#6:::;,1,6,0,0,,,State,0,0
+_pc_GCCDailyGrace,2319,14,31,11,13,2319:or:3#4#5#6#7#8#9:::;,3,18,0,0,,Periodic Charge is not active-10;Balance_Type expired-1;,State,0,0
+MonthRecChat,2004,246887,19072279840,241791,130194016,2004:>=:-99999999:::;,246887,12475628448,241791,-6466457376,;3008-27;,Balance_Type match condition failed-110;Balance_Type expired-241681;,Data,0,0
+_pc_BCPFlexiSMS102_PC,2046,1,6,0,0,2046:or:3#4#5#6:::;,1,6,0,0,,,State,0,0
+_pc_BCPFlexiSMS102_PC,2046,1,6,0,0,2046:or:7#8#9:::;,0,0,0,0,,,State,0,0
+MonthRecSocial,2005,20079,5304980864,19225,0,2005:>=:-99999999:::;,20079,4819403776,19225,-485577088,;3009-11;,Balance_Type match condition failed-18;Balance_Type expired-19207;,Data,0,0
+MonthRecAll,2006,4352,128903488,4182,0,2006:>=:-99999999:::;,4352,46211872,4182,-82691616,;3012-5;,Balance_Type match condition failed-2;Balance_Type expired-4180;,Data,0,0
+MonthOneOffFlexiVoice,2007,809,2432700,800,0,2007:>=:-99999999:::;,809,2432700,800,0,;3028-1;,Balance_Type match condition failed-66;Balance_Type expired-734;,Time,0,0
+_pc_BCPNatCUG105_PC,2049,3,13,1,1,2049:or:7#8#9:::;,0,0,0,0,,Periodic Charge is not active-1;,State,0,0
+_pc_BCPNatCUG105_PC,2049,3,13,1,1,2049:or:3#4#5#6:::;,2,12,0,0,,Periodic Charge is not active-1;,State,0,0
+MonthOneOffChat,2008,813,15291488,808,0,2008:>=:-99999999:::;,813,15089472,808,-202016,,Balance_Type match condition failed-65;Balance_Type expired-743;,Data,0,0
+MonthOneOffSocial,2009,808,35512640,803,0,2009:>=:-99999999:::;,808,35291872,803,-220768,;3025-3;,Balance_Type match condition failed-65;Balance_Type expired-738;,Data,0,0
+RateCutterIndia,3390,25655,25632,237,214,3390:>=:1:::;,25632,25632,214,214,,Balance_Type match condition failed-15;Balance_Type expired-222;,Units,0,0
+Monthly1Off2,3391,13,0,13,0,3391:>=:1:::;,0,0,0,0,,Balance_Type match condition failed-7;Balance_Type expired-6;,Data,0,0
+Monthly1Off3,3392,52,0,52,0,3392:>=:1:::;,0,0,0,0,,Balance_Type match condition failed-48;Balance_Type expired-4;,Data,0,0
+_pc_BronzeDailyGrace_PC,3310,494187,610633,470965,471335,3310:or:3#4#5#6#7#8#9:::;,23299,139691,77,393,;91-23222;,Periodic Charge is not active-470871;Balance_Type match condition failed-79;Balance_Type expired-15;,State,0,0
+Hajj Voice,3311,2,2592000,0,0,3311:>=:-99999999:::;,2,259044000,0,0,,,Time,0,0
+Hajj Data,3312,2,29360128,0,0,3312:>=:-99999999:::;,2,262105631,0,0,,,Cash,0,0
+Daily1Off1,3394,5692,0,5692,0,3394:>=:1:::;,0,0,0,0,,Balance_Type match condition failed-5551;Balance_Type expired-141;,Data,0,0
+RateCutterIndiaFlg,3395,1952595,1953707,60,60,3395:>=:1:::;,1952595,1953707,60,60,,Lifecycle lookup mismatch-35;Subscriber relation missing-25;,Units,0,0
+BronzeMonPromoActive,3313,22343,40021,22343,40021,3313:=:1:::;,21730,21730,21730,21730,,NetworkBundle specific BT ignored-104;Lifecycle lookup mismatch-3;Balance_Type match condition failed-22193;Balance_Type expired-41;Subscriber relation missing-2;,Units,0,0
+BronzeMonPromoActive,3313,22343,40021,22343,40021,3313:or:2#3:::;,104,291,104,291,,NetworkBundle specific BT ignored-104;Lifecycle lookup mismatch-3;Balance_Type match condition failed-22193;Balance_Type expired-41;Subscriber relation missing-2;,Units,0,0
+AloRechP2PBlock,3396,5581,5581,37,37,3396:>=:1:::;,5581,5581,37,37,,Balance_Type expired-37;,Units,0,0
+_pc_HardCapAlphaN50_PC,3081,7,42,0,0,3081:or:3#4#5#6:::;,7,42,0,0,,,State,0,0
+_pc_HardCapAlphaN50_PC,3081,7,42,0,0,3081:or:7#8#9:::;,0,0,0,0,,,State,0,0
+BronzeMPromoBundle,3314,1006023,95016478848,999365,2652469248,3314:>=:-99999999:::;,1006023,55300773728,999365,-37063235872,;5099-27;,Balance_Type match condition failed-476;Balance_Type expired-998889;,Data,0,0
+_pc_SplRecSocServPC2,3040,234,234,234,234,3040:or:3#4#5#6:::;,0,0,0,0,,Periodic Charge is not active-234;,State,0,0
+_pc_BCP2DataTopUp11_PC,3000,2,7,1,1,3000:or:3#4#5#6:::;,1,6,0,0,,Periodic Charge is not active-1;,State,0,0
+_pc_BCP2DataTopUp11_PC,3000,2,7,1,1,3000:or:7#8#9:::;,0,0,0,0,,Periodic Charge is not active-1;,State,0,0
+_pc_HardCapAlphaN100_PC,3082,18,108,0,0,3082:or:3#4#5#6:::;,18,108,0,0,,,State,0,0
+_pc_HardCapAlphaN100_PC,3082,18,108,0,0,3082:or:7#8#9:::;,0,0,0,0,,,State,0,0
+MercuryDState,3397,17231,956,17257,1022,3397:or:2#3:::;,26,66,26,66,,Service class Ignored-3;NetworkBundle specific BT ignored-26;Balance_Type match condition failed-17184;Balance_Type expired-42;Subscriber relation missing-2;,Units,0,0
+MercuryDState,3397,17231,956,17257,1022,3397:=:1:::;,890,890,890,890,,Service class Ignored-3;NetworkBundle specific BT ignored-26;Balance_Type match condition failed-17184;Balance_Type expired-42;Subscriber relation missing-2;,Units,0,0
+HCapMinBill,3315,6091,6091,1,1,3315:>=:1:::;,6091,6091,1,1,,Subscriber relation missing-1;,Units,0,0
+_pc_SplRecSocDeactServPC1,3041,23540,23545,23540,23545,3041:or:3#4#5#6:::;,3,18,3,18,,Periodic Charge is not active-23520;NetworkBundle specific BT ignored-3;Balance_Type expired-17;,State,0,0
+_pc_HardCapAlphaN200_PC,3083,2,12,0,0,3083:or:3#4#5#6:::;,2,12,0,0,,,State,0,0
+_pc_HardCapAlphaN200_PC,3083,2,12,0,0,3083:or:7#8#9:::;,0,0,0,0,,,State,0,0
+MercuryDaily,3398,1379,1216404576,449,330417792,3398:>=:-99999999:::;,1379,1215589152,449,329602368,;6668-331;,Balance_Type match condition failed-55;Balance_Type expired-391;Subscriber relation missing-3;,Data,0,0
+_pc_SplRecSocDeactServPC2,3042,177,168,177,168,3042:or:3#4#5#6:::;,0,0,0,0,,Periodic Charge is not active-167;Balance_Type expired-10;,State,0,0
+_pc_BCP2DataTopUp13_PC,3002,181,1081,1,1,3002:or:3#4#5#6:::;,180,1080,0,0,,Periodic Charge is not active-1;,State,0,0
+_pc_BCP2DataTopUp13_PC,3002,181,1081,1,1,3002:or:7#8#9:::;,0,0,0,0,,Periodic Charge is not active-1;,State,0,0
+MercuryDailyCap,3399,20557,951,19686,80,3399:>=:1:::;,951,951,80,80,,Service class Ignored-4;Balance_Type match condition failed-19602;Balance_Type expired-77;Subscriber relation missing-3;,Units,0,0
+_pc_HardCapAlphaN400_NPC,3084,123,738,0,0,3084:or:7#8#9:::;,0,0,0,0,,,State,0,0
+_pc_HardCapAlphaN400_NPC,3084,123,738,0,0,3084:or:3#4#5#6:::;,123,738,0,0,,,State,0,0
+NewLifeCycle,3317,2580994,1508271,67,9,3317:>=:0:::;,2580994,1508271,67,9,,Lifecycle lookup mismatch-40;Subscriber relation missing-27;,Units,0,0
+_pc_BCP2DataTopUp14_PC,3003,6,36,0,0,3003:or:7#8#9:::;,0,0,0,0,,,State,0,0
+_pc_BCP2DataTopUp14_PC,3003,6,36,0,0,3003:or:3#4#5#6:::;,6,36,0,0,,,State,0,0
+NewRGEMonths,3318,2581138,3982383,67,20,3318:>=:0:::;,2581138,3982383,67,20,,Lifecycle lookup mismatch-40;Subscriber relation missing-27;,Units,0,0
+_pc_BCP2DataTopUp15_PC,3004,52,152,32,32,3004:or:3#4#5#6:::;,20,120,0,0,,Periodic Charge is not active-32;,State,0,0
+_pc_BCP2DataTopUp15_PC,3004,52,152,32,32,3004:or:7#8#9:::;,0,0,0,0,,Periodic Charge is not active-32;,State,0,0
+NewRGETracker,3319,1011828,955014,10220,9988,3319:>=:0:::;,1011828,955014,10220,9988,,Lifecycle lookup mismatch-7;Balance_Type expired-10196;Subscriber relation missing-17;,Units,0,0
+_pc_BCPNatSMS1_PC,3005,9,54,0,0,3005:or:3#4#5#6:::;,9,54,0,0,,,State,0,0
+_pc_BCPNatSMS1_PC,3005,9,54,0,0,3005:or:7#8#9:::;,0,0,0,0,,,State,0,0
+_pc_BCPNatSMS2_PC,3006,22,117,3,3,3006:or:3#4#5#6:::;,19,114,0,0,,Periodic Charge is not active-3;,State,0,0
+_pc_BCPNatSMS2_PC,3006,22,117,3,3,3006:or:7#8#9:::;,0,0,0,0,,Periodic Charge is not active-3;,State,0,0
+NewDailyBundleActive,3089,361998,255831,361998,255831,3089:::::;,361998,220983,361998,220983,,Balance_Type Ignored-361997;Subscriber relation missing-1;,Units,0,0
+_pc_BCPNatSMS4_PC,3008,6,36,0,0,3008:or:3#4#5#6:::;,6,36,0,0,,,State,0,0
+_pc_BCPNatSMS4_PC,3008,6,36,0,0,3008:or:7#8#9:::;,0,0,0,0,,,State,0,0
+_pc_BCPNatCUG110_PC,3009,2,2,2,2,3009:or:7#8#9:::;,0,0,0,0,,Periodic Charge is not active-2;,State,0,0
+_pc_BCPNatCUG110_PC,3009,2,2,2,2,3009:or:3#4#5#6:::;,0,0,0,0,,Periodic Charge is not active-2;,State,0,0
+_pc_IntTakerOffer1Sec,560,1849,1849,1849,1849,560:::::;,0,0,0,0,,Balance_Type lookup failed-1849;,State,0,0
+_pc_0150 AED Auto Topup,520,9,54,0,0,520:or:7#8#9:::;,0,0,0,0,,,State,0,0
+_pc_0150 AED Auto Topup,520,9,54,0,0,520:or:3#4#5#6:::;,9,54,0,0,,,State,0,0
+_pc_0250 AED Auto Topup,521,4,24,0,0,521:or:7#8#9:::;,0,0,0,0,,,State,0,0
+_pc_0250 AED Auto Topup,521,4,24,0,0,521:or:3#4#5#6:::;,4,24,0,0,,,State,0,0
+_pc_BlackBerry10GB,563,1,6,1,6,563:::::;,0,0,0,0,,Service class Ignored-1;,State,0,0
+_pc_ConsBISSocial_PC,839,200,934,56,70,839:or:3#4#5#6:::;,147,882,3,18,,Periodic Charge is not active-52;Balance_Type match condition failed-2;Balance_Type expired-2;,State,0,0
+_pc_ConsBISSocial_PC,839,200,934,56,70,839:or:7#8#9:::;,0,0,0,0,,Periodic Charge is not active-52;Balance_Type match condition failed-2;Balance_Type expired-2;,State,0,0
+_pc_Consumer Promo,295,5,5,5,5,295:::::;,0,0,0,0,,Service class Ignored-2;Balance_Type lookup failed-3;,State,0,0
+_pc_950 AED Auto Topup,528,190,1140,0,0,528:or:7#8#9:::;,0,0,0,0,,,State,0,0
+_pc_950 AED Auto Topup,528,190,1140,0,0,528:or:3#4#5#6:::;,190,1140,0,0,,,State,0,0
+_pc_Visitor Promo,296,6,6,6,6,296:::::;,0,0,0,0,,Balance_Type lookup failed-6;,State,0,0
+_pc_Enterprise Promo,297,1,1,1,1,297:::::;,0,0,0,0,,Service class Ignored-1;,State,0,0
+More talk time,215,676,0,676,0,215:::::;,676,0,676,0,,Balance_Type Ignored-676;,Cash,0,0
+_pc_NPP Voice Bundle D1,1470,39,85,30,30,1470:or:3#4#5#6:::;,8,48,0,0,;91-1;,Periodic Charge is not active-30;,State,0,0
+_pc_NPP Voice Bundle D1,1470,39,85,30,30,1470:or:7#8#9:::;,1,7,0,0,;91-1;,Periodic Charge is not active-30;,State,0,0
+Total Recharges,216,10598,169339,2723,94,216:>=:1:::;,7877,169339,2,94,,Service class Ignored-3;Lifecycle lookup mismatch-1054;Balance_Type match condition failed-1666;,Units,0,0
+Remaining Bonus,217,1,20,1,20,217:::::;,0,0,0,0,,Service class Ignored-1;,Units,0,0
+_pc_NPP Voice Bundle M1,1471,24,126,4,4,1471:or:3#4#5#6:::;,18,108,0,0,;91-2;,Periodic Charge is not active-4;,State,0,0
+_pc_NPP Voice Bundle M1,1471,24,126,4,4,1471:or:7#8#9:::;,2,14,0,0,;91-2;,Periodic Charge is not active-4;,State,0,0
+Remaining Recharges,218,1,0,1,0,218:::::;,1,0,1,0,,Balance_Type Ignored-1;,Units,0,0
+_pc_NPP Voice Bundle Daily Limit,1472,16,43,12,19,1472:or:3#4#5#6:::;,4,24,0,0,,Periodic Charge is not active-12;,State,0,0
+_pc_NPP BBService Check,1473,346,1281,159,159,1473:or:7#8#9:::;,0,0,0,0,,Periodic Charge is not active-159;,State,0,0
+_pc_NPP BBService Check,1473,346,1281,159,159,1473:or:3#4#5#6:::;,187,1122,0,0,,Periodic Charge is not active-159;,State,0,0
+_pc_NPP Wallet RGE Check,1474,107936,528100,0,0,1474:::::;,107936,528096,0,0,,,State,0,0
+PAYGData,1477,2,6291456,0,0,1477:>=:-99999999:::;,2,6291456,0,0,,,Data,0,0
+NPP Unlimited,1439,97438,5923996539,0,0,1439:>=:0:::;,93279,5988093828,0,0,,,Cash,0,0
+NPP Unlimited,1439,97438,5923996539,0,0,1439:<:0:::;,4159,-64097289,0,0,,,Cash,0,0
+_pc_500 AED Auto Topup,1127,1,6,0,0,1127:or:7#8#9:::;,0,0,0,0,,,State,0,0
+_pc_500 AED Auto Topup,1127,1,6,0,0,1127:or:3#4#5#6:::;,1,6,0,0,,,State,0,0
+AllValueChat,2780,51,246218496,51,246218496,2780:>=:-99999999:::;,51,246174816,51,246174816,,Balance_Type match condition failed-50;Balance_Type expired-1;,Data,0,0
+more data face val,2740,1,0,1,0,2740:::::;,0,0,0,0,,Balance_Type lookup failed-1;,Units,0,0
+AllValueChatDaily,2781,46,8927360,46,8927360,2781:>=:-99999999:::;,46,8828128,46,8828128,,Balance_Type match condition failed-38;Balance_Type expired-8;,Data,0,0
+AllValueSoc,2782,5,26085152,5,26085152,2782:>=:-99999999:::;,5,26085152,5,26085152,,Balance_Type match condition failed-5;,Data,0,0
+AllValueSocDaily,2783,22,3763296,22,3763296,2783:>=:-99999999:::;,22,2264224,22,2264224,,Balance_Type match condition failed-17;Balance_Type expired-5;,Data,0,0
+_pc_BBSamplerPack100MB,1080,2,2,2,2,1080:::::;,0,0,0,0,,Balance_Type lookup failed-2;,State,0,0
+duduo status,2472,1104,107,1104,107,2472:::::;,1104,107,1104,107,,Balance_Type Ignored-1104;,Units,0,0
+duduo nonTelco,2473,15399,2820000,15346,0,2473:>=:1:::;,53,2820000,0,0,,Balance_Type match condition failed-15346;,Cash,0,0
+HardCap Active,2432,8673,8838,20,1,2432:=:1:::;,8470,8470,1,1,,Balance_Type match condition failed-19;Subscriber relation missing-1;,Units,0,0
+HardCap Active,2432,8673,8838,20,1,2432:=:2:::;,184,368,0,0,,Balance_Type match condition failed-19;Subscriber relation missing-1;,Units,0,0
+_pc_BBInstallmentPack1GB,1081,18,18,18,18,1081:::::;,0,0,0,0,,Balance_Type lookup failed-18;,State,0,0
+_pc_SprssNtfctn,1040,39,54,39,54,1040:::::;,39,54,39,54,,Balance_Type Ignored-39;,State,0,0
+FacebookActive,1000,7,0,7,0,1000:::::;,7,0,7,0,,Balance_Type Ignored-7;,Units,0,0
+HardCap NatMin,2433,8672,7465686800,19,600000,2433:>=:-99999999:::;,8672,7465686800,19,600000,;2523-1;,Balance_Type match condition failed-18;Subscriber relation missing-1;,Time,0,0
+duduo nonTelcoAll,2475,27596,2890313911,675,0,2475:>=:1:::;,26921,2890313911,0,0,,Balance_Type match condition failed-675;,Cash,0,0
+HardCap IntMin,2434,8519,450247600,8045,0,2434:>=:-99999999:::;,8519,450247600,8045,0,,Balance_Type match condition failed-8044;Subscriber relation missing-1;,Time,0,0
+_pc_BBNtfctnB4ExpSamplerPack100MB,1083,4,4,4,4,1083:::::;,0,0,0,0,,Balance_Type lookup failed-4;,State,0,0
+HardCap NatSMS,2435,8623,881908,4,98,2435:>=:-99999999:::;,8623,881908,4,98,;2523-1;,Balance_Type match condition failed-3;Subscriber relation missing-1;,Units,0,0
+_pc_BBNtfctnB4ExpEasyPayment1GB,1084,18,18,18,18,1084:::::;,0,0,0,0,,Balance_Type lookup failed-18;,State,0,0
+HardCap IntSMS,2436,8470,41210,8030,0,2436:>=:-99999999:::;,8470,41210,8030,0,,Balance_Type match condition failed-8029;Subscriber relation missing-1;,Units,0,0
+_pc_ConsBISSocialControl_PC,1085,254,860,250,836,1085:or:7#8#9:::;,0,0,0,0,,Periodic Charge is not active-146;Balance_Type match condition failed-100;Balance_Type expired-4;,State,0,0
+_pc_ConsBISSocialControl_PC,1085,254,860,250,836,1085:or:3#4#5#6:::;,104,624,100,600,,Periodic Charge is not active-146;Balance_Type match condition failed-100;Balance_Type expired-4;,State,0,0
+HardCap CUGMin,2437,8673,5719445400,20,600000,2437:>=:-99999999:::;,8673,5719445400,20,600000,;2505-1;,Balance_Type match condition failed-19;Subscriber relation missing-1;,Time,0,0
+_pc_EntBISSocialControl_PC,1086,35,160,34,154,1086:or:7#8#9:::;,0,0,0,0,,Periodic Charge is not active-10;Balance_Type match condition failed-24;,State,0,0
+_pc_EntBISSocialControl_PC,1086,35,160,34,154,1086:or:3#4#5#6:::;,25,150,24,144,,Periodic Charge is not active-10;Balance_Type match condition failed-24;,State,0,0
+HardCap Cash,2438,8559,574038431,8059,0,2438:>=:1:::;,500,574038431,0,0,,Balance_Type match condition failed-8059;,Cash,0,0
+_pc_HardCapBMP50_PC,2439,7890,47335,2,7,2439:or:7#8#9:::;,0,0,0,0,,Periodic Charge is not active-1;Subscriber relation missing-1;,State,0,0
+_pc_HardCapBMP50_PC,2439,7890,47335,2,7,2439:or:3#4#5#6:::;,7889,47334,1,6,,Periodic Charge is not active-1;Subscriber relation missing-1;,State,0,0
+OneWayFnFWeekly5,3431,1171,856561600,95,3724500,3431:>=:-99999999:::;,1171,856561600,95,3724500,;1325-49;,Balance_Type match condition failed-66;Balance_Type expired-29;,Time,0,0
+OneWayFnFWeekly6,3432,1195,625700000,141,5628800,3432:>=:-99999999:::;,1195,625700000,141,5628800,;1326-40;,Balance_Type match condition failed-98;Balance_Type expired-43;,Time,0,0
+OneWayFnFWeekly7,3433,289,219789300,40,6236500,3433:>=:-99999999:::;,289,219789300,40,6236500,;1327-26;,Balance_Type match condition failed-26;Balance_Type expired-14;,Time,0,0
+OneWayFnFMonthly1,3434,23287,70887957000,1582,176945300,3434:>=:-99999999:::;,23287,70887957000,1582,176945300,;1329-427;,Balance_Type match condition failed-1405;Balance_Type expired-177;,Time,0,0
+OneWayFnFMonthly2,3435,2343,6678638100,142,5857300,3435:>=:-99999999:::;,2343,7019297300,142,5857300,;1330-40;,Balance_Type match condition failed-130;Balance_Type expired-12;,Time,0,0
+OneWayFnFMonthly3,3436,3441,10455073000,271,23259700,3436:>=:-99999999:::;,3441,10455073000,271,23259700,;1331-81;,Balance_Type match condition failed-246;Balance_Type expired-25;,Time,0,0
+OneWayFnFMonthly5,3437,5490,15576417700,363,31392400,3437:>=:-99999999:::;,5490,15576417700,363,31392400,;1332-130;,Balance_Type match condition failed-328;Balance_Type expired-35;,Time,0,0
+OneWayFnFMonthly6,3438,7699,21538594600,486,43924300,3438:>=:-99999999:::;,7699,23080067500,486,43924300,;1333-242;,Balance_Type match condition failed-430;Balance_Type expired-56;,Time,0,0
+OneWayFnFMonthly7,3439,460,1435622700,48,3942100,3439:>=:-99999999:::;,460,1435622700,48,3942100,;1334-33;,Balance_Type match condition failed-46;Balance_Type expired-2;,Time,0,0
+_pc_PC_CRD_BusAuto100_MRC,600,922,5532,0,0,600:or:7#8#9:::;,0,0,0,0,,,State,0,0
+_pc_PC_CRD_BusAuto100_MRC,600,922,5532,0,0,600:or:3#4#5#6:::;,922,5532,0,0,,,State,0,0
+_pc_PC_CRD_BusAuto150_MRC,601,33,198,0,0,601:or:7#8#9:::;,0,0,0,0,,,State,0,0
+_pc_PC_CRD_BusAuto150_MRC,601,33,198,0,0,601:or:3#4#5#6:::;,33,198,0,0,,,State,0,0
+Facebook,999,7,0,7,0,999:::::;,7,0,7,0,,Balance_Type Ignored-7;,Cash,0,0
+_pc_PC_CRD_BusAuto200_MRC,602,124,744,0,0,602:or:7#8#9:::;,0,0,0,0,,,State,0,0
+_pc_PC_CRD_BusAuto200_MRC,602,124,744,0,0,602:or:3#4#5#6:::;,124,744,0,0,,,State,0,0
+RenewalChargeReward,959,138949,761052571,138949,761052571,959:::::;,0,0,0,0,,Balance_Type expired-389;Balance_Type lookup failed-138560;,Units,0,0
+Tourist IRStatus,1865,24,24,0,0,1865:>=:1:::;,24,24,0,0,,,Units,0,0
+Double Data,1592,1739,3,1739,3,1592:::::;,1739,3,1739,3,,Balance_Type Ignored-1739;,Units,0,0
+_pc_BCP10FLVR_PC,1552,46,156,46,156,1552:::::;,0,0,0,0,,Balance_Type lookup failed-46;,State,0,0
+InterCampIDDFlag,1511,1397843,3386438,24,522034,1511:or:1#2#3#4#5#6#7#8#9#10#11#12#13#14#15#16:::;,1397838,2864438,19,34,,Service class Ignored-13;Lifecycle lookup mismatch-2;Balance_Type match condition failed-5;Subscriber relation missing-4;,Units,0,0
+International SMS,1593,76,1167,16,20,1593:>=:-99999999:::;,76,1167,16,20,;1009-8;,Balance_Type match condition failed-14;Balance_Type expired-2;,Units,0,0
+_pc_BCP20FLVR_PC,1553,1389,1404,1389,1404,1553:::::;,0,0,0,0,,Balance_Type lookup failed-1389;,State,0,0
+NewAlo,1512,747690,1089544,9,341863,1512:=:1:::;,747684,747684,3,3,,Lifecycle lookup mismatch-2;Balance_Type match condition failed-6;Subscriber relation missing-1;,Units,0,0
+_pc_PC_InternatWeekly,1594,57,162,16,15,1594:or:7#8#9:::;,2,18,0,0,;91-2;,Periodic Charge is not active-16;,State,0,0
+_pc_PC_InternatWeekly,1594,57,162,16,15,1594:or:3#4#5#6:::;,39,129,0,0,;91-2;,Periodic Charge is not active-16;,State,0,0
+_pc_BCP40FLVR_PC,1554,1,6,1,6,1554:::::;,0,0,0,0,,Balance_Type lookup failed-1;,State,0,0
+Roaming Email,1513,1,0,1,0,1513:::::;,1,0,1,0,,Balance_Type Ignored-1;,Cash,0,0
+_pc_PC_InternatMonthly,1595,18,56,2,2,1595:or:7#8#9:::;,1,9,0,0,;91-1;,Periodic Charge is not active-2;,State,0,0
+_pc_PC_InternatMonthly,1595,18,56,2,2,1595:or:3#4#5#6:::;,15,45,0,0,;91-1;,Periodic Charge is not active-2;,State,0,0
+Roaming Email Plus,1514,1,0,1,0,1514:::::;,1,0,1,0,,Balance_Type Ignored-1;,Cash,0,0
+_pc_BCP2NatTopUp1_PC,1555,5860,22995,2433,2433,1555:or:7#8#9:::;,0,0,0,0,,Periodic Charge is not active-2433;,State,0,0
+_pc_BCP2NatTopUp1_PC,1555,5860,22995,2433,2433,1555:or:3#4#5#6:::;,3427,20562,0,0,,Periodic Charge is not active-2433;,State,0,0
+CreditFlexiCamp,1281,20745,2423662324,10855,0,1281:>=:1:::;,9890,2423662324,0,0,,Balance_Type match condition failed-10755;Balance_Type expired-100;,Cash,0,0
+Roaming Bundle Status,1515,1,0,1,0,1515:::::;,1,0,1,0,,Balance_Type Ignored-1;,Units,0,0
+_pc_BCP2NatTopUp2_PC,1556,16323,94133,762,767,1556:or:3#4#5#6:::;,15562,93372,1,6,,Periodic Charge is not active-761;Subscriber relation missing-1;,State,0,0
+_pc_BCP2NatTopUp2_PC,1556,16323,94133,762,767,1556:or:7#8#9:::;,0,0,0,0,,Periodic Charge is not active-761;Subscriber relation missing-1;,State,0,0
+VGYDThreshold,1282,211,140353196,208,0,1282:>=:1:::;,3,140353196,0,0,,Balance_Type match condition failed-208;,Cash,0,0
+NFCNOL_NationalMinute,1241,53,0,53,0,1241:>=:-99999999:::;,53,0,53,0,,Balance_Type match condition failed-53;,Time,0,0
+_pc_RoamDataDailyA_PC,1200,22,66,15,24,1200:or:7#8#9:::;,0,0,0,0,,Periodic Charge is not active-15;,State,0,0
+_pc_RoamDataDailyA_PC,1200,22,66,15,24,1200:or:3#4#5#6:::;,7,42,0,0,,Periodic Charge is not active-15;,State,0,0
+ProvNFCNOL,1242,12,2,10,0,1242:>=:1:::;,2,2,0,0,,Balance_Type match condition failed-10;,Units,0,0
+_pc_BCP2NatTopUp3_PC,1557,166,911,17,17,1557:or:3#4#5#6:::;,149,894,0,0,,Periodic Charge is not active-17;,State,0,0
+_pc_BCP2NatTopUp3_PC,1557,166,911,17,17,1557:or:7#8#9:::;,0,0,0,0,,Periodic Charge is not active-17;,State,0,0
+VGYDdata,1283,209,0,209,0,1283:::::;,209,-446564,209,-446564,,Balance_Type Ignored-209;,Cash,0,0
+_pc_BCP2NatTopUp4_PC,1558,2,7,1,1,1558:or:3#4#5#6:::;,1,6,0,0,,Periodic Charge is not active-1;,State,0,0
+_pc_BCP2NatTopUp4_PC,1558,2,7,1,1,1558:or:7#8#9:::;,0,0,0,0,,Periodic Charge is not active-1;,State,0,0
+VGYDStatus,1284,963,3,963,3,1284:::::;,963,3,963,3,,Balance_Type Ignored-963;,Units,0,0
+_pc_NFCNOL_PC,1243,51,166,51,166,1243:or:3#4#5#6:::;,23,138,23,138,,Periodic Charge is not active-28;Balance_Type match condition failed-23;,State,0,0
+_pc_RoamDataWeekly_PC,1202,158,555,95,177,1202:or:7#8#9:::;,0,0,0,0,,Periodic Charge is not active-95;,State,0,0
+_pc_RoamDataWeekly_PC,1202,158,555,95,177,1202:or:3#4#5#6:::;,63,378,0,0,,Periodic Charge is not active-95;,State,0,0
+_pc_BCP2NatTopUp5_PC,1559,824,2209,547,547,1559:or:7#8#9:::;,0,0,0,0,,Periodic Charge is not active-547;,State,0,0
+_pc_BCP2NatTopUp5_PC,1559,824,2209,547,547,1559:or:3#4#5#6:::;,277,1662,0,0,,Periodic Charge is not active-547;,State,0,0
+VGYDCTBlock,1285,379,0,379,0,1285:::::;,379,0,379,0,,Balance_Type Ignored-379;,Units,0,0
+BCP2Flavour,1244,4517,4517,0,0,1244:>=:1:::;,4517,4517,0,0,,,Units,0,0
+_pc_RoamDataMonthly_PC,1203,64,348,9,18,1203:or:3#4#5#6:::;,55,330,0,0,,Periodic Charge is not active-9;,State,0,0
+_pc_RoamDataMonthly_PC,1203,64,348,9,18,1203:or:7#8#9:::;,0,0,0,0,,Periodic Charge is not active-9;,State,0,0
+_pc_VGYD_PC,1286,30261,30261,30261,30261,1286:::::;,0,0,0,0,,Balance_Type lookup failed-30261;,State,0,0
+DVBVoice,1204,1056801,235149600,1039940,5620700,1204:>=:-99999999:::;,1056801,216894353,1039940,-12634547,;3001-110;,Service class Ignored-62;Lifecycle lookup mismatch-3;Balance_Type match condition failed-1039073;Balance_Type expired-796;Subscriber relation missing-6;,Time,0,0
+CVMDATA,1287,8,0,8,0,1287:::::;,8,0,8,0,,Balance_Type Ignored-8;,Cash,0,0
+DVBSMS,1205,1056792,84321,1039800,3676,1205:>=:-99999999:::;,1056792,16055327,1039800,3673,;3001-241;,Service class Ignored-62;Lifecycle lookup mismatch-3;Balance_Type match condition failed-1038934;Balance_Type expired-795;Subscriber relation missing-6;,Units,0,0
+CVMUSAGE,1288,103,2268553720,4,0,1288:>=:1:::;,99,2268553720,0,0,,Balance_Type match condition failed-4;,Cash,0,0
+_pc_BCP50FLVR_PC,1247,1882,6087,1882,6087,1247:::::;,0,0,0,0,,Balance_Type lookup failed-1882;,State,0,0
+DVBdata,1206,1052316,6024635488,1035353,254679496,1206:>=:-99999999:::;,1052316,-2946039585,1035353,-8715995577,;3001-212;,Service class Ignored-62;Lifecycle lookup mismatch-3;Balance_Type match condition failed-1034328;Balance_Type expired-954;Subscriber relation missing-6;,Cash,-770156,0
+CVMUD,1289,8,0,8,0,1289:::::;,8,0,8,0,,Balance_Type Ignored-8;,Units,0,0
+_pc_BCP100FLVR_PC,1248,84,239,84,239,1248:::::;,0,0,0,0,,Balance_Type lookup failed-84;,State,0,0
+_pc_DailyValueBndl_PC,1207,14269,85055,130,221,1207:or:3#4#5#6:::;,14158,84948,19,114,,Periodic Charge is not active-53;Service class Ignored-6;Balance_Type expired-71;,State,0,0
+_pc_DailyValueBndl_PC,1207,14269,85055,130,221,1207:or:7#8#9:::;,0,0,0,0,,Periodic Charge is not active-53;Service class Ignored-6;Balance_Type expired-71;,State,0,0
+DVBGrace,1249,677961,29004,677961,29004,1249:::::;,677961,16716,677961,16716,,Balance_Type Ignored-677912;Service class Ignored-42;Lifecycle lookup mismatch-3;Subscriber relation missing-4;,Units,0,0
+_pc_DVBReset_PC,1208,5884,22163,3262,6431,1208:or:7#8#9:::;,0,0,0,0,,Periodic Charge is not active-3202;Balance_Type match condition failed-1;Balance_Type expired-59;,State,0,0
+_pc_DVBReset_PC,1208,5884,22163,3262,6431,1208:or:3#4#5#6:::;,2626,15756,4,24,,Periodic Charge is not active-3202;Balance_Type match condition failed-1;Balance_Type expired-59;,State,0,0
+RLHActive,1209,47774,2102690,45084,2100000,1209:=:1:::;,2690,2690,0,0,,Service class Ignored-16;Balance_Type match condition failed-45068;,Units,0,0
+_pc_C_HardCapMinsNat100_PC,2550,3752,22512,1,6,2550:or:3#4#5#6:::;,3752,22512,1,6,,Subscriber relation missing-1;,State,0,0
+_pc_C_HardCapMinsNat100_PC,2550,3752,22512,1,6,2550:or:7#8#9:::;,0,0,0,0,,Subscriber relation missing-1;,State,0,0
+Poke SMS Active,2592,19,0,19,0,2592:=:1:::;,0,0,0,0,,Balance_Type match condition failed-19;,Units,0,0
+_pc_C_HardCapMinsNat200_PC,2551,1837,11022,0,0,2551:or:3#4#5#6:::;,1837,11022,0,0,,,State,0,0
+_pc_C_HardCapMinsNat200_PC,2551,1837,11022,0,0,2551:or:7#8#9:::;,0,0,0,0,,,State,0,0
+_pc_C_HardCapMinsNat420_PC,2552,1642,9852,0,0,2552:or:7#8#9:::;,0,0,0,0,,,State,0,0
+_pc_C_HardCapMinsNat420_PC,2552,1642,9852,0,0,2552:or:3#4#5#6:::;,1642,9852,0,0,,,State,0,0
+_pc_C_HardCapMinsNat750_PC,2553,615,3690,0,0,2553:or:7#8#9:::;,0,0,0,0,,,State,0,0
+_pc_C_HardCapMinsNat750_PC,2553,615,3690,0,0,2553:or:3#4#5#6:::;,615,3690,0,0,,,State,0,0
+duduo RedeemedAmt,2512,33,150,33,150,2512:::::;,33,150,33,150,,Balance_Type Ignored-33;,Units,0,0
+_pc_C_HardCapMinsNat900_PC,2554,104,624,0,0,2554:or:3#4#5#6:::;,104,624,0,0,,,State,0,0
+_pc_C_HardCapMinsNat900_PC,2554,104,624,0,0,2554:or:7#8#9:::;,0,0,0,0,,,State,0,0
+duduo FailCount,2513,32,0,32,0,2513:::::;,32,0,32,0,,Balance_Type Ignored-32;,Units,0,0
+_pc_C_HardCapBIntPlus50_PC,2555,5,30,0,0,2555:or:7#8#9:::;,0,0,0,0,,,State,0,0
+_pc_C_HardCapBIntPlus50_PC,2555,5,30,0,0,2555:or:3#4#5#6:::;,5,30,0,0,,,State,0,0
+duduo NTelcoRdmd,2514,516,49700,516,49700,2514:::::;,516,49700,516,49700,,Balance_Type Ignored-516;,Units,0,0
+_pc_C_HardCapBIntPlus100_PC,2556,2,12,0,0,2556:or:3#4#5#6:::;,2,12,0,0,,,State,0,0
+_pc_C_HardCapBIntPlus100_PC,2556,2,12,0,0,2556:or:7#8#9:::;,0,0,0,0,,,State,0,0
+_pc_C_HardCapInt25Bespoke_PC,2559,119,714,0,0,2559:or:3#4#5#6:::;,119,714,0,0,,,State,0,0
+_pc_C_HardCapInt25Bespoke_PC,2559,119,714,0,0,2559:or:7#8#9:::;,0,0,0,0,,,State,0,0
+Mar2Data1,3590,3684,1717534912,3684,1717534912,3590:::::;,0,0,0,0,,Balance_Type expired-93;Balance_Type lookup failed-3591;,Data,0,0
+_pc_BusHybridInt2 _PC,3551,3,18,3,18,3551:::::;,0,0,0,0,,Balance_Type lookup failed-3;,State,0,0
+_pc_BusHybridInt3 _PC,3552,4,19,4,19,3552:::::;,0,0,0,0,,Balance_Type lookup failed-4;,State,0,0
+Mar2Flexi1,3593,3709,207077600,3709,207077600,3593:::::;,0,0,0,0,,Balance_Type expired-10;Balance_Type lookup failed-3699;,Time,0,0
+_pc_BusHybridDataPromo1_PC,3554,3,3,3,3,3554:::::;,0,0,0,0,,Balance_Type lookup failed-3;,State,0,0
+TPlus,3280,5000,5000,58,58,3280:>=:1:::;Plan-=-TouristPlus,4942,4942,0,0,,Lifecycle lookup mismatch-8;Subscriber relation missing-50;,Units,0,0
+_pc_BusHybridDataPromo2_PC,3555,1,1,1,1,3555:::::;,0,0,0,0,,Balance_Type lookup failed-1;,State,0,0
+Mar2FnFdu1,3596,3779,10962173700,3779,10962173700,3596:::::;,0,0,0,0,,Balance_Type expired-11;Balance_Type lookup failed-3768;,Time,0,0
+BusHybrid Active,3514,14,14,14,14,3514:::::;,0,0,0,0,,Balance_Type lookup failed-14;,Units,0,0
+FirstCallInd,3240,2576,2601,2235,2251,3240:>=:1:::;,2543,2601,2202,2251,,Lifecycle lookup mismatch-2;Balance_Type match condition failed-33;Balance_Type expired-2197;Subscriber relation missing-3;,Units,0,0
+DlySocBndl2,3282,7560,986522304,3024,235774112,3282:>=:-99999999:::;,7560,932064352,3024,181419776,;5002-505;,Balance_Type match condition failed-738;Balance_Type expired-2286;,Data,-103616,0
+BusHybrid CUG,3515,25,505302000,25,505302000,3515:::::;,0,0,0,0,,Balance_Type lookup failed-25;,Time,0,0
+DlySocBndl3,3283,7881,1510625600,3225,352038368,3283:>=:-99999999:::;,7881,1453096032,3225,294508800,;5003-550;,Balance_Type match condition failed-983;Balance_Type expired-2242;,Data,0,0
+BusHybrid NatMins,3516,12,21750000,12,21750000,3516:::::;,0,0,0,0,,Balance_Type lookup failed-12;,Time,0,0
+DlySocType,3284,40202,69570,23129,40102,3284:=:2:::;,9959,19918,5892,11784,,Balance_Type match condition failed-22128;Balance_Type expired-1001;,Units,0,0
+DlySocType,3284,40202,69570,23129,40102,3284:=:1:::;,18302,18302,9460,9460,,Balance_Type match condition failed-22128;Balance_Type expired-1001;,Units,0,0
+DlySocType,3284,40202,69570,23129,40102,3284:=:3:::;,10450,31350,6286,18858,,Balance_Type match condition failed-22128;Balance_Type expired-1001;,Units,0,0
+BusHybrid FlexiMins,3517,7,8484000,7,8484000,3517:::::;,0,0,0,0,,Balance_Type lookup failed-7;,Time,0,0
+DlySocGrace,3285,29465,100881,29465,100881,3285:::::;,29465,100881,29465,100881,,Balance_Type Ignored-29465;,Units,0,0
+BusHybrid Data,3518,12,5512998,12,5512998,3518:::::;,0,0,0,0,,Balance_Type lookup failed-12;,Data,0,0
+BusHybrid DataPromo,3519,1,0,1,0,3519:::::;,0,0,0,0,,Balance_Type lookup failed-1;,Data,0,0
+DlySocCount,3286,1857,1857,1229,1229,3286:>=:1:::;,1857,1857,1229,1229,,Balance_Type expired-1229;,Units,0,0
+DlySocBndl1,3287,15725,1314539712,5824,322273856,3287:>=:-99999999:::;,15725,1209338752,5824,217072896,;5001-1206;,Balance_Type match condition failed-744;Balance_Type expired-5079;Subscriber relation missing-1;,Data,0,0
+ICN Voice,3288,709611,495138,66369,158,3288:>=:-99999999:::;,709611,495138,66369,158,,Lifecycle lookup mismatch-1;Balance_Type expired-66364;Subscriber relation missing-4;,Units,0,0
+ICN SMS,3289,505838,98208,82957,16,3289:>=:-99999999:::;,505838,98208,82957,16,,Lifecycle lookup mismatch-1;Balance_Type expired-82953;Subscriber relation missing-3;,Units,0,0
+RechargeCardValue,761,124000,3047620,123996,0,761:>=:1:::;,4,3047620,0,0,,Service class Ignored-50;Balance_Type match condition failed-123493;Balance_Type expired-450;Subscriber relation missing-3;,Cash,0,0
+General Cash,21,14488609,466441724962,83706,2018299422,21:<:0:!=:334:;,517961,-7853391480,110,-9624172,,SNA subs balance record ignored-16092;Service class Ignored-22387;Lifecycle lookup mismatch-44927;Balance_Type expired-78;Subscriber relation missing-222;,Cash,0,0
+General Cash,21,14488609,466441724962,83706,2018299422,21:<=:1200240:=:334:;,10586,7005005,0,0,,SNA subs balance record ignored-16092;Service class Ignored-22387;Lifecycle lookup mismatch-44927;Balance_Type expired-78;Subscriber relation missing-222;,Cash,0,0
+General Cash,21,14488609,466441724962,83706,2018299422,21:>=:0:!=:334:;,13943945,473073436467,67491,2027923592,,SNA subs balance record ignored-16092;Service class Ignored-22387;Lifecycle lookup mismatch-44927;Balance_Type expired-78;Subscriber relation missing-222;,Cash,0,0
+General Cash,21,14488609,466441724962,83706,2018299422,21:>:1200240:=:334:;,12,1214674968,0,0,,SNA subs balance record ignored-16092;Service class Ignored-22387;Lifecycle lookup mismatch-44927;Balance_Type expired-78;Subscriber relation missing-222;,Cash,0,0
+Zero Credit Calls,62,14554182,197845450,6150251,9949,62:>=:1:::;,8409067,197845450,5136,9949,,Service class Ignored-21995;Lifecycle lookup mismatch-44400;Balance_Type match condition failed-6083634;Subscriber relation missing-222;,Units,0,0
+Zero Credit SMS,63,822117,979463,295028,1100,63:>=:1:::;,527624,979463,535,1100,,Service class Ignored-525;Lifecycle lookup mismatch-11;Balance_Type match condition failed-294491;Subscriber relation missing-1;,Units,0,0
+Promotional Cash,22,223908,111658057,223793,0,22:>=:-99999999:::;,207804,110851269,207689,-806788,;1172-115;,SNA subs balance record ignored-16091;Service class Ignored-17;Lifecycle lookup mismatch-2310;Balance_Type match condition failed-205275;Balance_Type expired-100;,Cash,0,0
+Bad Pin,23,12303669,87775540,12303669,87775540,23:::::;,12287564,87720692,12287564,87720692,,SNA subs balance record ignored-16092;Balance_Type Ignored-12225550;Service class Ignored-17441;Lifecycle lookup mismatch-44373;Subscriber relation missing-213;,Bad Pin,0,0
+PSRPMR Free swaps remaining,64,172802,219144,172802,219144,64:::::;,172802,219144,172802,219144,,Balance_Type Ignored-172655;Service class Ignored-87;Lifecycle lookup mismatch-60;,Units,0,0
+_pc_Youth,410,49,49,49,49,410:::::;,49,49,49,49,,Service class Ignored-1;Balance_Type Ignored-48;,State,0,0
+Monthly Exp,24,591355,75230275666,584291,35309035,24:>=:1:::;,7081,75230242898,17,35276267,,SNA subs balance record ignored-16092;Service class Ignored-214;Lifecycle lookup mismatch-2570;Balance_Type match condition failed-465690;Balance_Type expired-99724;Subscriber relation missing-1;,Cash,0,0
+Free SMS,25,14471676,13028,14471592,49,25:>=:1:::;SmsBndlType-=-1#SmsBndl1Recur-=-T,2,60,0,0,;1170-77;,SNA subs balance record ignored-16091;Service class Ignored-21956;Lifecycle lookup mismatch-44391;Balance_Type match condition failed-14388932;Subscriber relation missing-222;,SMSs,0,0
+Free SMS,25,14471676,13028,14471592,49,25:>=:1:::;SmsBndlType-=-2#SmsBndl2Recur-=-T,1,1,0,0,;1170-77;,SNA subs balance record ignored-16091;Service class Ignored-21956;Lifecycle lookup mismatch-44391;Balance_Type match condition failed-14388932;Subscriber relation missing-222;,SMSs,0,0
+Free SMS,25,14471676,13028,14471592,49,25:>:0:::;,85,192821211,1,49,;1170-77;,SNA subs balance record ignored-16091;Service class Ignored-21956;Lifecycle lookup mismatch-44391;Balance_Type match condition failed-14388932;Subscriber relation missing-222;,SMSs,0,0
+Free SMS,25,14471676,13028,14471592,49,25:>=:1:::;SmsBndlType-=-2#SmsBndl2Recur-!=-T,2,60,0,0,;1170-77;,SNA subs balance record ignored-16091;Service class Ignored-21956;Lifecycle lookup mismatch-44391;Balance_Type match condition failed-14388932;Subscriber relation missing-222;,SMSs,0,0
+Free SMS,25,14471676,13028,14471592,49,25:>=:1:::;SmsBndlType-=-1#SmsBndl1Recur-!=-T,2,59,0,0,;1170-77;,SNA subs balance record ignored-16091;Service class Ignored-21956;Lifecycle lookup mismatch-44391;Balance_Type match condition failed-14388932;Subscriber relation missing-222;,SMSs,0,0
+MBBDiscount,499,21,0,21,0,499:::::;,21,0,21,0,,Balance_Type Ignored-21;,Cash,0,0
+Global Zone,1672,2274282,4662547,36391,13,1672:>=:1:::;,2237904,4662547,13,13,,Lifecycle lookup mismatch-9;Balance_Type match condition failed-36357;Balance_Type expired-21;Subscriber relation missing-4;,Units,0,0
+One Off Data,1633,29375,65866135450,17327,38398756294,1633:=:2306867:::;,2558,5900965786,802,1850107334,,Service class Ignored-4;Balance_Type match condition failed-17100;Balance_Type expired-223;,Units,0,0
+One Off Data,1633,29375,65866135450,17327,38398756294,1633:=:409600:::;,16339,6692454400,10700,4382720000,,Service class Ignored-4;Balance_Type match condition failed-17100;Balance_Type expired-223;,Units,0,0
+One Off Data,1633,29375,65866135450,17327,38398756294,1633:=:1048576:::;,5539,5808062464,3215,3371171840,,Service class Ignored-4;Balance_Type match condition failed-17100;Balance_Type expired-223;,Units,0,0
+One Off Data,1633,29375,65866135450,17327,38398756294,1633:=:26214400:::;,1130,29622272000,822,21548236800,,Service class Ignored-4;Balance_Type match condition failed-17100;Balance_Type expired-223;,Units,0,0
+One Off Data,1633,29375,65866135450,17327,38398756294,1633:=:5242880:::;,3330,17458790400,1309,6862929920,,Service class Ignored-4;Balance_Type match condition failed-17100;Balance_Type expired-223;,Units,0,0
+NPP Promotional Data,1634,241,449105920,0,0,1634:>=:-99999999:::;,241,449105920,0,0,;5064-71;,,Units,0,0
+RoamingDataMonthlyB,1360,20,0,0,0,1360:>=:-99999999:::;,20,0,0,0,;5051-20;,,Cash,0,0
+_pc_RoamDataWeeklyB_PC,1361,1,2,1,2,1361:or:7#8#9:::;,0,0,0,0,,Periodic Charge is not active-1;,State,0,0
+PAYG Promotional Data,1635,5324,6449080640,635,552065423,1635:=:5242880:::;,518,2715811840,22,115343360,,Balance_Type match condition failed-592;Balance_Type expired-43;,Units,0,0
+PAYG Promotional Data,1635,5324,6449080640,635,552065423,1635:=:409600:::;,2159,884326400,370,151552000,,Balance_Type match condition failed-592;Balance_Type expired-43;,Units,0,0
+PAYG Promotional Data,1635,5324,6449080640,635,552065423,1635:=:122880:::;,428,52592640,4,491520,,Balance_Type match condition failed-592;Balance_Type expired-43;,Units,0,0
+PAYG Promotional Data,1635,5324,6449080640,635,552065423,1635:=:1048576:::;,1644,1723858944,142,148897792,,Balance_Type match condition failed-592;Balance_Type expired-43;,Units,0,0
+PAYG Promotional Data,1635,5324,6449080640,635,552065423,1635:=:2306867:::;,448,1033476416,53,122263951,,Balance_Type match condition failed-592;Balance_Type expired-43;,Units,0,0
+PAYG Promotional Data,1635,5324,6449080640,635,552065423,1635:=:15728640:::;,0,0,0,0,,Balance_Type match condition failed-592;Balance_Type expired-43;,Units,0,0
+PAYG Promotional Data,1635,5324,6449080640,635,552065423,1635:=:307200:::;,127,39014400,44,13516800,,Balance_Type match condition failed-592;Balance_Type expired-43;,Units,0,0
+SocialBundleData,1320,1277128,26847338240,1211141,21350368,1320:>=:-99999999:::;,1277128,21612397376,1211141,-5213321664,;6000-74;,Lifecycle lookup mismatch-1;Balance_Type match condition failed-1072466;Balance_Type expired-138671;Subscriber relation missing-3;,Units,-269312,0
+_pc_SocialBundleActive,1321,81652,411931,15737,16441,1321:or:7#8#9:::;,0,0,0,0,,Periodic Charge is not active-15550;Balance_Type match condition failed-82;Balance_Type expired-105;,State,0,0
+_pc_SocialBundleActive,1321,81652,411931,15737,16441,1321:or:3#4#5#6:::;,66062,396372,147,882,,Periodic Charge is not active-15550;Balance_Type match condition failed-82;Balance_Type expired-105;,State,0,0
+SMS Bundle Count,1636,8,390,8,390,1636:::::;,8,390,8,390,,Balance_Type Ignored-8;,Units,0,0
+_pc_SocialBundleGrace,1322,46165,120084,21334,21399,1322:or:3#4#5#6#7#8#9:::;,24866,98841,35,156,;91-24831;,Periodic Charge is not active-21219;Balance_Type match condition failed-24;Balance_Type expired-91;,State,0,0
+MdataExpiryExtWhiteList,1323,23011,33640,1,2,1323:>=:0:::;,23011,33640,1,2,,Service class Ignored-1;,Units,0,0
+PostCall,1324,7851833,11494471,609664,393,1324:>=:1:::;,7242562,11494471,393,393,,Service class Ignored-379;Lifecycle lookup mismatch-22;Balance_Type match condition failed-608912;Balance_Type expired-326;Subscriber relation missing-25;,Units,0,0
+WelcomeMin,1325,57045,69459164,51800,12074700,1325:>=:1:::;,6409,69459164,1164,12074700,,Lifecycle lookup mismatch-2;Balance_Type match condition failed-49889;Balance_Type expired-1909;,Time,0,0
+CreditAdjustBlock,1326,76,0,76,0,1326:>=:1:::;,0,0,0,0,,Balance_Type match condition failed-76;,Units,0,0
+IDDBundle,1328,145,0,145,0,1328:::::;,145,0,145,0,,Balance_Type Ignored-145;,Time,0,0
+IDDBundleWhiteList,1329,34926,0,34926,0,1329:::::;,34926,0,34926,0,,Balance_Type Ignored-34926;,Units,0,0
+StartStopState,2672,1515803,9551732,1508566,9530752,2672:or:1#2#3:::;,7237,20980,0,0,,Lifecycle lookup mismatch-1;Balance_Type match condition failed-1508563;Subscriber relation missing-2;,Units,0,0
+FUT,2632,5,4,5,4,2632:::::;,5,4,5,4,,Balance_Type Ignored-5;,Units,0,0
+StartStopCount,2673,40980,82612,27850,54631,2673:or:1#2#3#4#5:::;,40979,82606,27849,54625,;5068-8737;,Balance_Type match condition failed-1;Balance_Type expired-27849;,Units,0,0
+StartStopTime,2674,84737,390268886,67696,28146000,2674:>=:-99999999:::;,84737,360730886,67696,-1272000,;5068-7530;,Balance_Type match condition failed-48132;Balance_Type expired-19564;,Time,-120000,0
+_pc_GCCWeeklyBundle,2320,42,154,24,46,2320:or:3#4#5#6:::;,18,108,0,0,,Periodic Charge is not active-24;,State,0,0
+_pc_GCCWeeklyBundle,2320,42,154,24,46,2320:or:7#8#9:::;,0,0,0,0,,Periodic Charge is not active-24;,State,0,0
+_pc_StartStopAutoStop_PC,2677,33022,108338,22453,44924,2677:or:3#4#5#6:::;,10627,63742,58,328,,Periodic Charge is not active-20821;Balance_Type match condition failed-1009;Balance_Type expired-623;,State,0,0
+_pc_BCPNatCUG106_PC,2050,2,7,1,1,2050:or:7#8#9:::;,0,0,0,0,,Periodic Charge is not active-1;,State,0,0
+_pc_BCPNatCUG106_PC,2050,2,7,1,1,2050:or:3#4#5#6:::;,1,6,0,0,,Periodic Charge is not active-1;,State,0,0
+MonthOneOffAll,2010,804,3468800,802,0,2010:>=:-99999999:::;,804,3468800,802,0,;3028-1;,Balance_Type match condition failed-67;Balance_Type expired-735;,Data,0,0
+_pc_PCZingerGrace,2092,1460,3149,1456,3125,2092:or:3#4#5#6:::;,338,2028,334,2004,;91-4;,Periodic Charge is not active-1121;Balance_Type match condition failed-334;Balance_Type expired-1;,State,0,0
+_pc_PCZingerGrace,2092,1460,3149,1456,3125,2092:or:3#4#5#6#7#8#9:::;,338,2028,334,2004,;91-4;,Periodic Charge is not active-1121;Balance_Type match condition failed-334;Balance_Type expired-1;,State,0,0
+_pc_BCPNatCUG108_PC,2052,3,8,2,2,2052:or:3#4#5#6:::;,1,6,0,0,,Periodic Charge is not active-2;,State,0,0
+_pc_BCPNatCUG108_PC,2052,3,8,2,2,2052:or:7#8#9:::;,0,0,0,0,,Periodic Charge is not active-2;,State,0,0
+WeeklyOneOffAll,2011,81,0,81,0,2011:>=:-99999999:::;,81,-48544,81,-48544,,Balance_Type match condition failed-9;Balance_Type expired-72;,Data,0,0
+ZingerGrace,2012,1085763,11916,1085763,11916,2012:::::;,1085763,11916,1085763,11916,,Balance_Type Ignored-1085761;Lifecycle lookup mismatch-1;Subscriber relation missing-1;,Units,0,0
+_pc_BCPNatCUG109_PC,2053,52968,310182,1529,1548,2053:or:7#8#9:::;,0,0,0,0,,Periodic Charge is not active-1524;Balance_Type expired-2;Subscriber relation missing-3;,State,0,0
+_pc_BCPNatCUG109_PC,2053,52968,310182,1529,1548,2053:or:3#4#5#6:::;,51443,308658,4,24,,Periodic Charge is not active-1524;Balance_Type expired-2;Subscriber relation missing-3;,State,0,0
+RecurrentService,2014,7023,84715,335,3138,2014:=:15:::;,114,1710,8,120,,Balance_Type match condition failed-330;Balance_Type expired-5;,Units,0,0
+RecurrentService,2014,7023,84715,335,3138,2014:=:14:::;,770,10780,25,350,,Balance_Type match condition failed-330;Balance_Type expired-5;,Units,0,0
+RecurrentService,2014,7023,84715,335,3138,2014:=:26:::;,34,884,2,52,,Balance_Type match condition failed-330;Balance_Type expired-5;,Units,0,0
+RecurrentService,2014,7023,84715,335,3138,2014:=:24:::;,26,624,3,72,,Balance_Type match condition failed-330;Balance_Type expired-5;,Units,0,0
+RecurrentService,2014,7023,84715,335,3138,2014:=:2:::;,319,638,49,98,,Balance_Type match condition failed-330;Balance_Type expired-5;,Units,0,0
+RecurrentService,2014,7023,84715,335,3138,2014:=:28:::;,7,196,1,28,,Balance_Type match condition failed-330;Balance_Type expired-5;,Units,0,0
+RecurrentService,2014,7023,84715,335,3138,2014:=:4:::;,75,300,16,64,,Balance_Type match condition failed-330;Balance_Type expired-5;,Units,0,0
+RecurrentService,2014,7023,84715,335,3138,2014:=:13:::;,5266,68458,168,2184,,Balance_Type match condition failed-330;Balance_Type expired-5;,Units,0,0
+RecurrentService,2014,7023,84715,335,3138,2014:=:3:::;,357,1071,54,162,,Balance_Type match condition failed-330;Balance_Type expired-5;,Units,0,0
+RecurrentService,2014,7023,84715,335,3138,2014:=:1:::;,54,54,8,8,,Balance_Type match condition failed-330;Balance_Type expired-5;,Units,0,0
+OneOffService,2015,14,208,3,43,2015:=:10:::;,0,0,0,0,,Balance_Type match condition failed-3;,Units,0,0
+OneOffService,2015,14,208,3,43,2015:=:9:::;,1,9,0,0,,Balance_Type match condition failed-3;,Units,0,0
+OneOffService,2015,14,208,3,43,2015:=:21:::;,0,0,0,0,,Balance_Type match condition failed-3;,Units,0,0
+OneOffService,2015,14,208,3,43,2015:=:18:::;,1,18,1,18,,Balance_Type match condition failed-3;,Units,0,0
+OneOffService,2015,14,208,3,43,2015:=:8:::;,2,16,1,8,,Balance_Type match condition failed-3;,Units,0,0
+OneOffService,2015,14,208,3,43,2015:=:16:::;,5,80,0,0,,Balance_Type match condition failed-3;,Units,0,0
+OneOffService,2015,14,208,3,43,2015:=:27:::;,1,27,0,0,,Balance_Type match condition failed-3;,Units,0,0
+OneOffService,2015,14,208,3,43,2015:=:19:::;,0,0,0,0,,Balance_Type match condition failed-3;,Units,0,0
+OneOffService,2015,14,208,3,43,2015:=:25:::;,0,0,0,0,,Balance_Type match condition failed-3;,Units,0,0
+OneOffService,2015,14,208,3,43,2015:=:20:::;,0,0,0,0,,Balance_Type match condition failed-3;,Units,0,0
+OneOffService,2015,14,208,3,43,2015:=:17:::;,3,51,1,17,,Balance_Type match condition failed-3;,Units,0,0
+OneOffService,2015,14,208,3,43,2015:=:7:::;,1,7,0,0,,Balance_Type match condition failed-3;,Units,0,0
+OneOffService,2015,14,208,3,43,2015:=:29:::;,0,0,0,0,,Balance_Type match condition failed-3;,Units,0,0
+OneOffPurchCap,2016,67,67,1,1,2016:>=:1:::;,67,67,1,1,,Balance_Type expired-1;,Units,0,0
+_pc_BCP50FLVRNew_PC,2058,516,2101,199,199,2058:or:3#4#5#6:::;,317,1902,0,0,,Periodic Charge is not active-199;,State,0,0
+_pc_BCP50FLVRNew_PC,2058,516,2101,199,199,2058:or:7#8#9:::;,0,0,0,0,,Periodic Charge is not active-199;,State,0,0
+SerMovementCount,2017,14,14,0,0,2017:>=:1:::;,14,14,0,0,,,Units,0,0
+_pc_BCP100FLVRNew_PC,2059,16,81,3,3,2059:or:7#8#9:::;,0,0,0,0,,Periodic Charge is not active-3;,State,0,0
+_pc_BCP100FLVRNew_PC,2059,16,81,3,3,2059:or:3#4#5#6:::;,13,78,0,0,,Periodic Charge is not active-3;,State,0,0
+NetServiceZChat,2018,5695,320715,5695,320715,2018:::::;,5695,320715,5695,320715,,Balance_Type Ignored-5695;,Units,0,0
+NetServiceZSocial,2019,1330,282096,1330,282096,2019:::::;,1330,282096,1330,282096,,Balance_Type Ignored-1330;,Units,0,0
+NewCustodyDays,3320,2581136,1539589,67,20,3320:>=:0:::;,2581136,1539589,67,20,,Lifecycle lookup mismatch-40;Subscriber relation missing-27;,Units,0,0
+_pc_NewWalletRGECheck_PC,3361,2580953,14299633,2580953,14299633,3361:::::;,2580953,14299633,2580953,14299633,,Balance_Type Ignored-2580916;Lifecycle lookup mismatch-10;Subscriber relation missing-27;,State,0,0
+BronzeDBundle,3321,123811,28722048736,100086,6089559776,3321:>=:-99999999:::;,123811,26741757792,100086,4109268832,;5007-828;,Balance_Type match condition failed-23842;Balance_Type expired-76244;,Data,0,0
+_pc_NewForfeitReminder_PC,3362,386107,1237242,386107,1237242,3362:::::;,386107,1237242,386107,1237242,,Balance_Type Ignored-386104;Lifecycle lookup mismatch-2;Subscriber relation missing-1;,State,0,0
+BronzeMonthlyActive,3322,896983,630453,896983,630453,3322:or:2#3:::;,188,416,188,416,,NetworkBundle specific BT ignored-188;Lifecycle lookup mismatch-2;Balance_Type match condition failed-896792;Subscriber relation missing-1;,Units,0,0
+BronzeMonthlyActive,3322,896983,630453,896983,630453,3322:=:1:::;,630037,630037,630037,630037,,NetworkBundle specific BT ignored-188;Lifecycle lookup mismatch-2;Balance_Type match condition failed-896792;Subscriber relation missing-1;,Units,0,0
+_pc_NewCustody_PC,3363,246838,395747,246838,395747,3363:::::;,246838,395747,246838,395747,,Balance_Type Ignored-246835;Lifecycle lookup mismatch-2;Subscriber relation missing-1;,State,0,0
+BronzeMBundle,3323,631507,7896054782656,68303,209492043488,3323:>=:-99999999:::;,631507,7895531108576,68303,208968369408,;5008-1980;,Lifecycle lookup mismatch-2;Balance_Type match condition failed-26828;Balance_Type expired-41473;,Data,0,0
+NewDailyBundle,3090,48324,0,48324,0,3090:::::;,48324,-70302816,48324,-70302816,,Balance_Type Ignored-48324;,Data,0,0
+_pc_NewQuarantine_PC,3364,206,1236,206,1236,3364:::::;,0,0,0,0,,Balance_Type lookup failed-206;,State,0,0
+BronzeCount,3324,39916,44177,10065,10489,3324:>=:1:::;,39916,44177,10065,10489,,Balance_Type expired-10065;,Units,0,0
+NewDailyPCCounter,3091,1146456,631538,1146456,631538,3091:::::;,1146456,631538,1146456,631538,,Balance_Type Ignored-1146453;Lifecycle lookup mismatch-2;Subscriber relation missing-1;,Units,0,0
+_pc_BronzeMonthly_PC,3366,884448,3690763,323223,323413,3366:or:3#4#5#6:::;,561263,3367578,38,228,,Periodic Charge is not active-323184;Lifecycle lookup mismatch-2;Balance_Type match condition failed-1;Balance_Type expired-35;Subscriber relation missing-1;,State,0,0
+MercuryState,3011,45000,60748,45000,60748,3011:=:1:::;,24050,24050,24050,24050,;92-712;,Service class Ignored-6;NetworkBundle specific BT ignored-4563;Balance_Type match condition failed-40339;Balance_Type expired-92;,Units,0,0
+MercuryState,3011,45000,60748,45000,60748,3011:=:5:::;,729,3645,729,3645,;92-712;,Service class Ignored-6;NetworkBundle specific BT ignored-4563;Balance_Type match condition failed-40339;Balance_Type expired-92;,Units,0,0
+MercuryState,3011,45000,60748,45000,60748,3011:or:2#3#6#7#8#9#10#11:::;,4603,29889,4603,29889,;92-712;,Service class Ignored-6;NetworkBundle specific BT ignored-4563;Balance_Type match condition failed-40339;Balance_Type expired-92;,Units,0,0
+MercuryState,3011,45000,60748,45000,60748,3011:=:4:::;,791,3164,791,3164,;92-712;,Service class Ignored-6;NetworkBundle specific BT ignored-4563;Balance_Type match condition failed-40339;Balance_Type expired-92;,Units,0,0
+_pc_PC_PAYG_ALO_ActNotif,3052,37060,289631,2315,81161,3052:or:3#4#5#6:=:255:;,4347,26082,25,150,,Periodic Charge is not active-1996;Lifecycle lookup mismatch-2;Balance_Type expired-300;Subscriber relation missing-17;,State,0,0
+_pc_PC_PAYG_ALO_ActNotif,3052,37060,289631,2315,81161,3052:or:3#4#5#6:=:214:;,30621,183726,198,1188,,Periodic Charge is not active-1996;Lifecycle lookup mismatch-2;Balance_Type expired-300;Subscriber relation missing-17;,State,0,0
+_pc_BronzeMonPromo_PC,3326,1695847,1729095,1689193,1689173,3326:or:3#4#5#6:::;,6657,39933,3,11,,Periodic Charge is not active-1689182;Lifecycle lookup mismatch-2;Balance_Type match condition failed-4;Balance_Type expired-2;Subscriber relation missing-3;,State,0,0
+_pc_BronzeMonthlyGrace_PC,3367,689486,1017081,623991,624114,3367:or:3#4#5#6#7#8#9:::;,65520,393117,25,150,;91-65495;,Periodic Charge is not active-623962;Lifecycle lookup mismatch-2;Balance_Type expired-26;Subscriber relation missing-1;,State,0,0
+_pc_Mercury_PC,3012,139423,182986,121525,123403,3012:or:3#4#5#6:::;,18647,62246,749,2663,,Periodic Charge is not active-120753;Service class Ignored-22;Lifecycle lookup mismatch-1;Balance_Type match condition failed-742;Balance_Type expired-7;,State,0,0
+_pc_Mercury_PC,3012,139423,182986,121525,123403,3012:or:7#8#9:::;,0,0,0,0,,Periodic Charge is not active-120753;Service class Ignored-22;Lifecycle lookup mismatch-1;Balance_Type match condition failed-742;Balance_Type expired-7;,State,0,0
+NPPTracker,3368,18325,26045,18325,26045,3368:::::;,0,0,0,0,,Balance_Type expired-188;Balance_Type lookup failed-18137;,Units,0,0
+_pc_PC_Tourist_ActNotif,3053,1485,8826,1485,8826,3053:::::;,1485,8826,1485,8826,,Balance_Type Ignored-1448;Lifecycle lookup mismatch-5;Subscriber relation missing-32;,State,0,0
+NPPLifeCount,3369,18325,26189,18325,26189,3369:::::;,0,0,0,0,,Balance_Type expired-188;Balance_Type lookup failed-18137;,Units,0,0
+_pc_EntBISSocial_PC,840,69,359,11,11,840:or:7#8#9:::;,0,0,0,0,,Periodic Charge is not active-11;,State,0,0
+_pc_EntBISSocial_PC,840,69,359,11,11,840:or:3#4#5#6:::;,58,348,0,0,,Periodic Charge is not active-11;,State,0,0
+CCFreeActivation,579,58542,99057,58542,99057,579:::::;,0,0,0,0,,Balance_Type lookup failed-58542;,Units,0,0
+OOC Credit,1792,2344528,6672724209,1913131,21520,1792:>=:1:::;,431399,6672724209,2,21520,,Lifecycle lookup mismatch-4;Balance_Type match condition failed-1913123;Subscriber relation missing-4;,Cash,0,0
+_pc_DataBundle4GB,539,1,6,1,6,539:::::;,0,0,0,0,,Service class Ignored-1;,State,0,0
+ChatnCall Voice,1752,597490,75251072,594145,2560000,1752:>=:-99999999:::;,597490,70064948,594145,-4187216,;3034-110;,Lifecycle lookup mismatch-2;Balance_Type match condition failed-594031;Balance_Type expired-112;,Time,0,0
+OOC Tracker,1793,1010599,53173025950,582282,61258500,1793:>=:1:::;,428632,53173025950,315,61258500,,Lifecycle lookup mismatch-4;Balance_Type match condition failed-581295;Balance_Type expired-983;,Cash,0,0
+ChatnCall CUG Voice,1753,598134,634829100,594741,31162300,1753:>=:-99999999:::;,598134,635402968,594741,29733800,;3034-157;,Lifecycle lookup mismatch-2;Balance_Type match condition failed-594564;Balance_Type expired-175;,Time,0,0
+_pc_PAYGMetDataBenefit_RecoPC,1712,37,37,37,37,1712:or:7#8#9:::;,0,0,0,0,,Periodic Charge is not active-37;,State,0,0
+_pc_PAYGMetDataBenefit_RecoPC,1712,37,37,37,37,1712:or:3#4#5#6:::;PAYGMet-=-1,0,0,0,0,,Periodic Charge is not active-37;,State,0,0
+ChatnCall SMS,1754,106800,17499,100682,871,1754:>=:-99999999:::;,106800,17497,100682,869,;3034-2888;,Lifecycle lookup mismatch-1;Balance_Type match condition failed-100289;Balance_Type expired-392;,Units,0,0
+NPP Initial Flexi,1440,21684,59600,21683,0,1440:>=:1:::;,1,59600,0,0,,Balance_Type match condition failed-21683;,Time,0,0
+ChatnCall CUG SMS,1755,106817,106960,100682,5395,1755:>=:-99999999:::;,106817,106960,100682,5395,;3034-2905;,Lifecycle lookup mismatch-1;Balance_Type match condition failed-100289;Balance_Type expired-392;,Units,0,0
+NPP VP Flexi,1441,2009,176595700,1612,64900,1441:>=:-99999999:::;,2009,176595700,1612,64900,;3017-5;,Balance_Type match condition failed-1609;Balance_Type expired-3;,Time,0,0
+ChatnCall Data,1756,598848,1638444544,595440,117582528,1756:>=:-99999999:::;,598848,-7037376256,595440,-8585004832,;3034-172;,Lifecycle lookup mismatch-2;Balance_Type match condition failed-595130;Balance_Type expired-308;,Data,-82240,0
+NPP VP Data,1442,2021,95582160,1622,0,1442:>=:-99999999:::;,2021,95463288,1622,-118872,;3017-7;,Balance_Type match condition failed-1607;Balance_Type expired-15;,Data,0,0
+Life Style Data,1757,18794,100858784,18628,16893472,1757:>=:-99999999:::;,18794,55382400,18628,-28582912,;5071-27;,Balance_Type match condition failed-18592;Balance_Type expired-36;,Data,0,0
+NPP Social Data,1443,11988,7743014528,1688,231156976,1443:>=:-99999999:::;,11988,132241084237,1688,223696264,;3014-9908;,Balance_Type match condition failed-272;Balance_Type expired-1416;,Data,0,0
+ChatnCall Status,1758,184016,95960,184016,95960,1758:=:1:::;,91528,91528,91528,91528,,NetworkBundle specific BT ignored-680;Lifecycle lookup mismatch-1;Balance_Type match condition failed-183139;Balance_Type expired-196;,Units,0,0
+ChatnCall Status,1758,184016,95960,184016,95960,1758:or:2#3#4:::;,680,2332,680,2332,,NetworkBundle specific BT ignored-680;Lifecycle lookup mismatch-1;Balance_Type match condition failed-183139;Balance_Type expired-196;,Units,0,0
+Life Style Status,1759,112142,111358,112142,111358,1759:or:2#3#4:::;,9,34,9,34,,NetworkBundle specific BT ignored-9;Balance_Type match condition failed-112133;,Units,0,0
+Life Style Status,1759,112142,111358,112142,111358,1759:=:1:::;,111324,111324,111324,111324,,NetworkBundle specific BT ignored-9;Balance_Type match condition failed-112133;,Units,0,0
+NPP Voice Daily Bundle,1444,235,400300,225,0,1444:>=:-99999999:::;,235,400300,225,0,;1131-2;,Balance_Type match condition failed-222;Balance_Type expired-3;,Time,0,0
+NPP Voice Monthly Bundle,1445,70,1159500,52,0,1445:>=:-99999999:::;,70,1159500,52,0,;1132-1;,Balance_Type match condition failed-52;,Time,0,0
+_pc_PAYGMetDataBenfit_PC,1487,355,365,353,353,1487:or:7#8#9:::;,0,0,0,0,,Periodic Charge is not active-353;,State,0,0
+_pc_PAYGMetDataBenfit_PC,1487,355,365,353,353,1487:or:3#4#5#6:::;PAYGMet-=-1,2,12,0,0,,Periodic Charge is not active-353;,State,0,0
+NPP Data Daily Bundle,1446,1161,8769520,1102,1380576,1446:>=:-99999999:::;,1161,7331280,1102,-57664,;5060-14;,Balance_Type match condition failed-1026;Balance_Type expired-76;,Data,0,0
+Tourist Flexi,1488,2086,19338000,925,1278000,1488:>=:1:::;,1247,19338000,86,1278000,,Lifecycle lookup mismatch-5;Balance_Type match condition failed-739;Balance_Type expired-135;Subscriber relation missing-46;,Time,0,0
+NPP Data Monthly Bundle,1447,995,324132496,795,1791776,1447:>=:-99999999:::;,995,323859512,795,805864,;5066-33;,Balance_Type match condition failed-764;Balance_Type expired-31;,Data,0,0
+NPP RGE Tracker,1448,108065,39187,0,0,1448:::::;,108065,39187,0,0,,,Units,0,0
+Tourist Flexi SMS,1489,8373,0,8373,0,1489:>=:1:::;,0,0,0,0,,Balance_Type match condition failed-8372;Subscriber relation missing-1;,Units,0,0
+NPP NoRGE Months,1449,107852,399533,0,0,1449:::::;,107852,399533,0,0,,,Units,0,0
+OOC Limited,2792,4,0,4,0,2792:>=:1:::;,0,0,0,0,,Balance_Type match condition failed-4;,Cash,0,0
+PGW Fraud Tracker New,2752,26622,17528611300,3129,1696785300,2752:>=:1:::;,26622,17528611300,3129,1696785300,,Service class Ignored-9;Lifecycle lookup mismatch-1;Balance_Type expired-3115;Subscriber relation missing-4;,Cash,0,0
+NepalOfferActive,2712,119475,116113,3367,5,2712:>=:1:::;,116113,116113,5,5,,Lifecycle lookup mismatch-3;Balance_Type match condition failed-3338;Balance_Type expired-24;Subscriber relation missing-2;,Units,0,0
+_pc_HardCapBMP100_PC,2440,342,2052,0,0,2440:or:3#4#5#6:::;,342,2052,0,0,,,State,0,0
+_pc_HardCapBMP100_PC,2440,342,2052,0,0,2440:or:7#8#9:::;,0,0,0,0,,,State,0,0
+_pc_HardCapBMP200_PC,2441,141,846,0,0,2441:or:3#4#5#6:::;,141,846,0,0,,,State,0,0
+_pc_HardCapBMP200_PC,2441,141,846,0,0,2441:or:7#8#9:::;,0,0,0,0,,,State,0,0
+_pc_HardCapBMP300_PC,2442,86,516,0,0,2442:or:7#8#9:::;,0,0,0,0,,,State,0,0
+_pc_HardCapBMP300_PC,2442,86,516,0,0,2442:or:3#4#5#6:::;,86,516,0,0,,,State,0,0
+_pc_HardCapBMP400_PC,2443,12,72,0,0,2443:or:3#4#5#6:::;,12,72,0,0,,,State,0,0
+_pc_HardCapBMP400_PC,2443,12,72,0,0,2443:or:7#8#9:::;,0,0,0,0,,,State,0,0
+_pc_HardCapCash_0_PC,2444,8153,48918,1,6,2444:or:3#4#5#6#7#8#9:::;,8153,48918,1,6,,Subscriber relation missing-1;,State,0,0
+_pc_HardCapCash_50_PC,2445,28,168,0,0,2445:or:3#4#5#6#7#8#9:::;,28,168,0,0,,,State,0,0
+_pc_HardCapCash_100_PC,2446,85,510,0,0,2446:or:3#4#5#6#7#8#9:::;,85,510,0,0,,,State,0,0
+_pc_HardCapCash_150_PC,2447,12,72,0,0,2447:or:3#4#5#6#7#8#9:::;,12,72,0,0,,,State,0,0
+_pc_HardCapCash_200_PC,2448,92,552,0,0,2448:or:3#4#5#6#7#8#9:::;,92,552,0,0,,,State,0,0
+RoamDataDailyA_Purch_Rec,2175,662,66,596,0,2175:>:0:::;,66,66,0,0,,Balance_Type match condition failed-595;Balance_Type expired-1;,Units,0,0
+InitialCreditTracker,1099,3999016,120264141,3998950,0,1099:>=:1:::;,66,120264141,0,0,,Service class Ignored-470;Lifecycle lookup mismatch-41784;Balance_Type match condition failed-3956499;Subscriber relation missing-197;,Units,0,0
+RoamDataDailyA_Grace,2176,1941,3518,1779,3345,2176:=:1:::;,151,151,0,0,,Balance_Type match condition failed-1771;Balance_Type expired-8;,Units,0,0
+RoamDataDailyA_Grace,2176,1941,3518,1779,3345,2176:=:2:::;,11,22,0,0,,Balance_Type match condition failed-1771;Balance_Type expired-8;,Units,0,0
+InternationalMin2,1019,14862,37865977,14055,704800,1019:>=:1:::;,845,37865977,38,704800,,Balance_Type match condition failed-13899;Balance_Type expired-156;,Time,0,0
+OneWayFnFCount,3440,619,619,437,437,3440:>=:1:::;,619,619,437,437,,Balance_Type expired-437;,Units,0,0
+_pc_MercuryDaily_PC,3400,1271,4940,672,1346,3400:or:3#4#5#6:::;,601,3606,2,12,,Periodic Charge is not active-667;Balance_Type expired-3;Subscriber relation missing-2;,State,0,0
+_pc_MercuryDaily_PC,3400,1271,4940,672,1346,3400:or:7#8#9:::;,0,0,0,0,,Periodic Charge is not active-667;Balance_Type expired-3;Subscriber relation missing-2;,State,0,0
+_pc_BndlDailyCtrl,3401,2226,2204,2226,2204,3401:::::;,0,0,0,0,,Balance_Type expired-22;Balance_Type lookup failed-2204;,State,0,0
+StandaloneDataOptOut,3442,50,50,50,50,3442:::::;,0,0,0,0,,Balance_Type expired-38;Balance_Type lookup failed-12;,Units,0,0
+MoviePassState,3402,107252,629055,106880,628144,3402:or:1#2#3:::;,372,911,0,0,,Balance_Type match condition failed-106879;Subscriber relation missing-1;,Units,0,0
+MoviePassCount,3403,1214,1774,1090,1600,3403:or:1#2#3#4#5:::;,1214,1774,1090,1600,,Balance_Type match condition failed-375;Balance_Type expired-715;,Units,0,0
+MoviePassTime,3404,2304,67614000,2183,43740000,3404:>=:0:::;,2119,67614000,1998,43740000,,Balance_Type match condition failed-1326;Balance_Type expired-857;,Time,0,0
+MonthlyRecNew,3172,553878,560528,553878,560528,3172:::::;,553878,460304,553878,460304,,Balance_Type Ignored-553873;Lifecycle lookup mismatch-2;Subscriber relation missing-3;,Units,0,0
+RoamMonthlyAPlusPurch,3132,5,1,4,0,3132:>:0:::;,1,1,0,0,,Balance_Type match condition failed-4;,Units,0,0
+MoviePass2State,3406,66161,387611,65667,386340,3406:or:1#2#3:::;,494,1271,0,0,,Balance_Type match condition failed-65667;,Units,0,0
+MoviePass2Count,3407,915,1581,762,1288,3407:or:1#2#3#4#5:::;,915,1581,762,1288,,Balance_Type match condition failed-203;Balance_Type expired-559;,Units,0,0
+RoamDataMonthlyPlusA,3133,24,41943040,0,0,3133:>=:-99999999:::;,24,385801695,0,0,;5048-22;,,Cash,0,0
+_pc_RoamDataMonthlyPlus_PC,3134,4,16,2,4,3134:or:7#8#9:::;,0,0,0,0,,Periodic Charge is not active-2;,State,0,0
+_pc_RoamDataMonthlyPlus_PC,3134,4,16,2,4,3134:or:3#4#5#6:::;,2,12,0,0,,Periodic Charge is not active-2;,State,0,0
+MoviePass2Time,3408,1691,127992000,1455,40326000,3408:>=:0:::;,1572,127992000,1336,40326000,,Balance_Type match condition failed-859;Balance_Type expired-596;,Time,0,0
+Daily Roaming Data GCC Plus,960,107,1487,106,0,960:>=:1:::;,1,1487,0,0,,Balance_Type match condition failed-106;,Cash,0,0
+Daily Roaming Data ROW,961,36,0,36,0,961:::::;,36,-5567,36,-5567,,Balance_Type Ignored-36;,Cash,0,0
+_pc_PPU_AB_PC,964,14440,14543,14422,14436,964:or:7#8#9:::;,0,0,0,0,,Periodic Charge is not active-14416;Service class Ignored-6;,State,0,0
+_pc_PPU_AB_PC,964,14440,14543,14422,14436,964:or:3#4#5#6:::;,18,107,0,0,,Periodic Charge is not active-14416;Service class Ignored-6;,State,0,0
+_pc_PPU_C_PC,965,417,417,417,417,965:or:7#8#9:::;,0,0,0,0,,Periodic Charge is not active-417;,State,0,0
+_pc_PPU_C_PC,965,417,417,417,417,965:or:3#4#5#6:::;,0,0,0,0,,Periodic Charge is not active-417;,State,0,0
+_pc_DataBndl40MBRec,966,425,1351,1,1,966:or:3#4#5#6:::;,421,1323,0,0,;91-3;,Periodic Charge is not active-1;,State,0,0
+_pc_DataBndl40MBRec,966,425,1351,1,1,966:or:7#8#9:::;,3,27,0,0,;91-3;,Periodic Charge is not active-1;,State,0,0
+_pc_DataBndl100MBRec,967,54,171,0,0,967:or:3#4#5#6:::;,54,171,0,0,,,State,0,0
+_pc_DataBndl100MBRec,967,54,171,0,0,967:or:7#8#9:::;,0,0,0,0,,,State,0,0
+_pc_DataBndl25GBRec,968,237,751,3,3,968:or:7#8#9:::;,5,45,0,0,;91-5;,Periodic Charge is not active-3;,State,0,0
+_pc_DataBndl25GBRec,968,237,751,3,3,968:or:3#4#5#6:::;,229,703,0,0,;91-5;,Periodic Charge is not active-3;,State,0,0
+FaceValue,969,1082757,398450195300,16909,2662800000,969:>=:1:::;,1073333,398450195300,7485,2662800000,,Service class Ignored-108;Lifecycle lookup mismatch-5;Balance_Type match condition failed-9423;Balance_Type expired-7370;Subscriber relation missing-3;,Cash,0,0
+Iphone4 Active,659,1,1,1,1,659:::::;,1,1,1,1,,Balance_Type Ignored-1;,Units,0,0
+Grace,1872,3,0,3,0,1872:::::;,3,0,3,0,,Balance_Type Ignored-3;,Units,0,0
+RGE Tracker,1873,18,18,18,18,1873:::::;,0,0,0,0,,Service class Ignored-7;Balance_Type lookup failed-11;,Units,0,0
+RRMCState,1832,1060626,795040,25638,50815,1832:=:1:::;,496055,496055,4479,4479,,Service class Ignored-5;Lifecycle lookup mismatch-8;Balance_Type expired-25608;Subscriber relation missing-17;,Units,0,0
+RRMCState,1832,1060626,795040,25638,50815,1832:=:5:::;,612,3060,0,0,,Service class Ignored-5;Lifecycle lookup mismatch-8;Balance_Type expired-25608;Subscriber relation missing-17;,Units,0,0
+RRMCState,1832,1060626,795040,25638,50815,1832:=:0:::;,476457,0,4257,0,,Service class Ignored-5;Lifecycle lookup mismatch-8;Balance_Type expired-25608;Subscriber relation missing-17;,Units,0,0
+RRMCState,1832,1060626,795040,25638,50815,1832:=:4:::;,45471,181884,6196,24784,,Service class Ignored-5;Lifecycle lookup mismatch-8;Balance_Type expired-25608;Subscriber relation missing-17;,Units,0,0
+RRMCState,1832,1060626,795040,25638,50815,1832:=:2:::;,31528,63056,10578,21156,,Service class Ignored-5;Lifecycle lookup mismatch-8;Balance_Type expired-25608;Subscriber relation missing-17;,Units,0,0
+RRMCState,1832,1060626,795040,25638,50815,1832:=:6:::;,6492,38952,4,24,,Service class Ignored-5;Lifecycle lookup mismatch-8;Balance_Type expired-25608;Subscriber relation missing-17;,Units,0,0
+RRMCState,1832,1060626,795040,25638,50815,1832:=:3:::;,4011,12033,124,372,,Service class Ignored-5;Lifecycle lookup mismatch-8;Balance_Type expired-25608;Subscriber relation missing-17;,Units,0,0
+InternationalMin,619,415,60100,414,0,619:>=:1:::;,1,60100,0,0,,Balance_Type match condition failed-414;,Time,0,0
+RRMCMessageCont,1833,1188531,11736628,1188531,11736628,1833:::::;,1188531,11736628,1188531,11736628,,Service class Ignored-5;Balance_Type Ignored-1188524;Lifecycle lookup mismatch-2;,Units,0,0
+Titanium Data,1875,945,0,945,0,1875:::::;,945,-230624,945,-230624,,Balance_Type Ignored-945;,Data,0,0
+_pc_BCP2NatTopUp6_PC,1560,581,3301,37,37,1560:or:3#4#5#6:::;,544,3264,0,0,,Periodic Charge is not active-37;,State,0,0
+_pc_BCP2NatTopUp6_PC,1560,581,3301,37,37,1560:or:7#8#9:::;,0,0,0,0,,Periodic Charge is not active-37;,State,0,0
+_pc_RRMCContReset_PC,1835,1175109,7048845,1175109,7048845,1835:or:3#4#5#6#7#8#9:::;,1174747,7048482,1174747,7048482,,Service class Ignored-1;Balance_Type Ignored-1175106;Lifecycle lookup mismatch-2;,State,0,0
+_pc_BCP2NatTopUp7_PC,1561,12,62,2,2,1561:or:7#8#9:::;,0,0,0,0,,Periodic Charge is not active-2;,State,0,0
+_pc_BCP2NatTopUp7_PC,1561,12,62,2,2,1561:or:3#4#5#6:::;,10,60,0,0,,Periodic Charge is not active-2;,State,0,0
+NPP VP1,1877,47,0,47,0,1877:::::;,47,0,47,0,,Balance_Type Ignored-47;,Units,0,0
+NPP VP2,1878,22,0,22,0,1878:::::;,22,0,22,0,,Balance_Type Ignored-22;,Units,0,0
+_pc_BCP2IDDTopUp1_PC,1563,17,52,10,10,1563:or:3#4#5#6:::;,7,42,0,0,,Periodic Charge is not active-10;,State,0,0
+_pc_BCP2IDDTopUp1_PC,1563,17,52,10,10,1563:or:7#8#9:::;,0,0,0,0,,Periodic Charge is not active-10;,State,0,0
+_pc_BCP2IDDTopUp2_PC,1564,2,2,2,2,1564:or:3#4#5#6:::;,0,0,0,0,,Periodic Charge is not active-2;,State,0,0
+_pc_BCP2IDDTopUp2_PC,1564,2,2,2,2,1564:or:7#8#9:::;,0,0,0,0,,Periodic Charge is not active-2;,State,0,0
+CVMPP,1290,59,0,59,0,1290:::::;,59,0,59,0,,Balance_Type Ignored-59;,Units,0,0
+NPP VP3,1879,7,0,7,0,1879:::::;,7,0,7,0,,Balance_Type Ignored-7;,Units,0,0
+_pc_BCP2IDDTopUp3_PC,1565,4,19,1,1,1565:or:7#8#9:::;,0,0,0,0,,Periodic Charge is not active-1;,State,0,0
+_pc_BCP2IDDTopUp3_PC,1565,4,19,1,1,1565:or:3#4#5#6:::;,3,18,0,0,,Periodic Charge is not active-1;,State,0,0
+CVMCREDIT,1291,8,0,8,0,1291:::::;,8,0,8,0,,Balance_Type Ignored-8;,Units,0,0
+GitexPromoData,1250,4744,0,4744,0,1250:::::;,4744,-22524553,4744,-22524553,,Balance_Type Ignored-4744;,Cash,0,0
+_pc_RLHActive_PC,1210,2354,6035,2354,6035,1210:::::;,2354,6035,2354,6035,,Service class Ignored-1;Balance_Type Ignored-2353;,State,0,0
+_pc_BCP2IDDTopUp5_PC,1567,1,1,1,1,1567:or:3#4#5#6:::;,0,0,0,0,,Periodic Charge is not active-1;,State,0,0
+_pc_BCP2IDDTopUp5_PC,1567,1,1,1,1,1567:or:7#8#9:::;,0,0,0,0,,Periodic Charge is not active-1;,State,0,0
+_pc_RLHDeactivate_PC,1211,2354,9518,2354,9518,1211:::::;,2354,9518,2354,9518,,Service class Ignored-1;Balance_Type Ignored-2353;,State,0,0
+_pc_CVMRENEWAL_PC,1293,156,156,156,156,1293:::::;,0,0,0,0,,Balance_Type lookup failed-156;,State,0,0
+_pc_BCP2IDDTopUp6_PC,1568,2,2,2,2,1568:or:3#4#5#6:::;,0,0,0,0,,Periodic Charge is not active-2;,State,0,0
+_pc_BCP2IDDTopUp6_PC,1568,2,2,2,2,1568:or:7#8#9:::;,0,0,0,0,,Periodic Charge is not active-2;,State,0,0
+_pc_PepsiMinRst_PC,1294,143607,143607,143607,143607,1294:::::;,0,0,0,0,,Subscriber relation missing-1;Balance_Type lookup failed-143606;,State,0,0
+Pepsi Minutes,1299,143857,0,143857,0,1299:::::;,143857,-4746900,143857,-4746900,,Balance_Type Ignored-143856;Subscriber relation missing-1;,Time,0,0
+_pc_BCP200FLVR_PC,1259,12,37,12,37,1259:::::;,0,0,0,0,,Balance_Type lookup failed-12;,State,0,0
+PriceShout,1219,1053755,1239315,214627,400187,1219:=:1:::;,839132,839132,4,4,,Lifecycle lookup mismatch-3;Balance_Type match condition failed-214564;Balance_Type expired-58;Subscriber relation missing-2;,Units,0,0
+_pc_IDDRateCutters_PC,2872,61061,71577,57449,59916,2872:or:7#8#9:::;,0,0,0,0,,Periodic Charge is not active-57290;Balance_Type match condition failed-159;,State,0,0
+_pc_IDDRateCutters_PC,2872,61061,71577,57449,59916,2872:or:3#4#5#6:::;,3770,12195,158,534,,Periodic Charge is not active-57290;Balance_Type match condition failed-159;,State,0,0
+OOC Fee,2832,874995,2852374,6403,6,2832:>=:0:::;,874994,2852374,6402,6,,Lifecycle lookup mismatch-1;Balance_Type match condition failed-1;Balance_Type expired-6398;Subscriber relation missing-3;,Units,0,0
+_pc_IDDRateCuttersGrace_PC,2873,52451,53239,52293,52292,2873:or:3#4#5#6#7#8#9:::;,158,947,0,0,;91-158;,Periodic Charge is not active-52293;,State,0,0
+_pc_C_HardCapInt50Bespoke_PC,2560,249,1494,0,0,2560:or:3#4#5#6:::;,249,1494,0,0,,,State,0,0
+_pc_C_HardCapInt50Bespoke_PC,2560,249,1494,0,0,2560:or:7#8#9:::;,0,0,0,0,,,State,0,0
+_pc_C_HardCapIDD50Plan_PC,2561,471,2826,0,0,2561:or:7#8#9:::;,0,0,0,0,,,State,0,0
+_pc_C_HardCapIDD50Plan_PC,2561,471,2826,0,0,2561:or:3#4#5#6:::;,471,2826,0,0,,,State,0,0
+_pc_C_HardCapIDD100Plan_PC,2562,109,654,0,0,2562:or:3#4#5#6:::;,109,654,0,0,,,State,0,0
+_pc_C_HardCapIDD100Plan_PC,2562,109,654,0,0,2562:or:7#8#9:::;,0,0,0,0,,,State,0,0
+_pc_C_HardCapIDD200Plan_PC,2563,1,6,0,0,2563:or:7#8#9:::;,0,0,0,0,,,State,0,0
+_pc_C_HardCapIDD200Plan_PC,2563,1,6,0,0,2563:or:3#4#5#6:::;,1,6,0,0,,,State,0,0
+_pc_C_HardCapIDD300Plan_PC,2564,1,6,0,0,2564:or:7#8#9:::;,0,0,0,0,,,State,0,0
+_pc_C_HardCapIDD300Plan_PC,2564,1,6,0,0,2564:or:3#4#5#6:::;,1,6,0,0,,,State,0,0
+CAMP2_P2P_Block,2292,23372,23372,915,915,2292:>=:1:::;,23372,23372,915,915,,Balance_Type expired-915;,Units,0,0
+_pc_SF Tier-1,2252,15,24,11,12,2252:or:7#8#9:::;,0,0,0,0,,Periodic Charge is not active-11;,State,0,0
+_pc_SF Tier-1,2252,15,24,11,12,2252:or:3#4#5#6:::;,4,12,0,0,,Periodic Charge is not active-11;,State,0,0
+Eagle Active,2212,124572,112627,124572,112627,2212:::::;,124572,112627,124572,112627,,Balance_Type Ignored-124572;,Units,0,0
+_pc_SF Tier-2,2253,556,1048,376,433,2253:or:3#4#5#6:::;,180,615,0,0,,Periodic Charge is not active-376;,State,0,0
+_pc_SF Tier-2,2253,556,1048,376,433,2253:or:7#8#9:::;,0,0,0,0,,Periodic Charge is not active-376;,State,0,0
+_pc_SF Tier-3,2254,170,487,59,88,2254:or:7#8#9:::;,0,0,0,0,,Periodic Charge is not active-58;Balance_Type expired-1;,State,0,0
+_pc_SF Tier-3,2254,170,487,59,88,2254:or:3#4#5#6:::;,111,399,0,0,,Periodic Charge is not active-58;Balance_Type expired-1;,State,0,0
+_pc_BusHybridNat2_PC,3561,1,6,1,6,3561:::::;,0,0,0,0,,Balance_Type lookup failed-1;,State,0,0
+BusHybrid NatSMS,3520,5,300,5,300,3520:::::;,0,0,0,0,,Balance_Type lookup failed-5;,Units,0,0
+BusHybrid FlexiSMS,3521,7,1429,7,1429,3521:::::;,0,0,0,0,,Balance_Type lookup failed-7;,Units,0,0
+_pc_DailyRecNewData1,3522,1,0,1,0,3522:::::;,0,0,0,0,,Balance_Type expired-1;,State,0,0
+_pc_DailyGrcNewData1,3523,5,12,5,12,3523:::::;,0,0,0,0,,Balance_Type expired-5;,State,0,0
+_pc_ICN_PC,3290,885737,2691012,885737,2691012,3290:::::;,885737,2690931,885737,2690931,,Balance_Type Ignored-885732;Lifecycle lookup mismatch-1;Subscriber relation missing-4;,State,0,0
+HappinessSIM,3252,60165,120329,3,5,3252:or:1#2:::;,60165,120329,3,5,,Lifecycle lookup mismatch-1;Balance_Type match condition failed-1;Subscriber relation missing-1;,Units,0,0
+_pc_DailyRecSocData1,3293,45037,130474,27964,28036,3293:or:3#4#5#6:::;,17092,102552,19,114,,Periodic Charge is not active-27916;Balance_Type match condition failed-4;Balance_Type expired-43;Subscriber relation missing-1;,State,0,0
+HappinessSIMData,3253,13704,2277150104,2102,24386880,3253:>=:1:::;,11726,2277150104,124,24386880,,Balance_Type match condition failed-1924;Balance_Type expired-178;,Data,0,0
+_pc_DailyGrcSocData1,3294,45101,152760,24496,29130,3294:or:3#4#5#6#7#8#9:::;,21536,129216,931,5586,;91-20605;,Periodic Charge is not active-23541;Balance_Type match condition failed-914;Balance_Type expired-41;,State,0,0
+RBT Flag,3568,328064,326626,1163,21,3568:>=:0:::;,328064,326626,1163,21,,Service class Ignored-21;Balance_Type expired-1142;,Units,0,0
+Offer ID,3212,4007123,51902920,16,63,3212:>=:1:::;,4007113,51902920,6,63,,Lifecycle lookup mismatch-1;Balance_Type match condition failed-10;Subscriber relation missing-5;,Units,0,0
+ICN Loan,3295,491721,32276,83411,5,3295:>=:-99999999:::;,491721,32276,83411,5,,Lifecycle lookup mismatch-1;Balance_Type expired-83407;Subscriber relation missing-3;,Units,0,0
+NewPPBundle,3213,19388,42553,19388,42553,3213:::::;,19388,42553,19388,42553,,Balance_Type Ignored-19385;Subscriber relation missing-3;,Units,0,0
+_pc_HappinessSIM_PC,3255,60165,360986,3,14,3255:or:3#4#5#6:::;,60164,360984,2,12,,Periodic Charge is not active-1;Lifecycle lookup mismatch-1;Subscriber relation missing-1;,State,0,0
+_pc_HappinessSIM_PC,3255,60165,360986,3,14,3255:or:7#8#9:::;,0,0,0,0,,Periodic Charge is not active-1;Lifecycle lookup mismatch-1;Subscriber relation missing-1;,State,0,0
+_pc_MercuryTNB15_PC,3296,126476,246968,126472,246956,3296:or:3#4#5#6:::;,4,12,0,0,,Periodic Charge is not active-126453;Service class Ignored-11;Balance_Type match condition failed-2;Balance_Type expired-6;,State,0,0
+_pc_MercuryTNB15_PC,3296,126476,246968,126472,246956,3296:or:7#8#9:::;,0,0,0,0,,Periodic Charge is not active-126453;Service class Ignored-11;Balance_Type match condition failed-2;Balance_Type expired-6;,State,0,0
+_pc_Mercury15D_PC,3297,2341,8063,289,431,3297:or:7#8#9:::;,0,0,0,0,,Periodic Charge is not active-236;Service class Ignored-1;Balance_Type match condition failed-49;Balance_Type expired-3;,State,0,0
+_pc_Mercury15D_PC,3297,2341,8063,289,431,3297:or:3#4#5#6:::;,2103,7827,51,195,,Periodic Charge is not active-236;Service class Ignored-1;Balance_Type match condition failed-49;Balance_Type expired-3;,State,0,0
+AloRechBonusFlag,3298,67009,67009,0,0,3298:>=:1:::;,67009,67009,0,0,,,Units,0,0
+_pc_NewPPBundlePrePurch,3216,693,906,661,714,3216:or:3#4#5#6:::;NewPPBundle-=-Monthly1,3,18,0,0,;92-32;,Periodic Charge is not active-655;Balance_Type match condition failed-1;Balance_Type expired-2;Subscriber relation missing-3;,State,0,0
+_pc_NewPPBundlePrePurch,3216,693,906,661,714,3216:or:3#4#5#6:::;NewPPBundle-=-Monthly2,8,48,0,0,;92-32;,Periodic Charge is not active-655;Balance_Type match condition failed-1;Balance_Type expired-2;Subscriber relation missing-3;,State,0,0
+_pc_NewPPBundlePrePurch,3216,693,906,661,714,3216:or:3#4#5#6:::;NewPPBundle-=-Monthly3,3,18,0,0,;92-32;,Periodic Charge is not active-655;Balance_Type match condition failed-1;Balance_Type expired-2;Subscriber relation missing-3;,State,0,0
+_pc_NewPPBundlePrePurch,3216,693,906,661,714,3216:or:3#4#5#6:::;NewPPBundle-=-Monthly4,8,48,0,0,;92-32;,Periodic Charge is not active-655;Balance_Type match condition failed-1;Balance_Type expired-2;Subscriber relation missing-3;,State,0,0
+_pc_NewPPBundlePrePurch,3216,693,906,661,714,3216:or:3#4#5#6:::;NewPPBundle-=-Monthly5,0,0,0,0,;92-32;,Periodic Charge is not active-655;Balance_Type match condition failed-1;Balance_Type expired-2;Subscriber relation missing-3;,State,0,0
+_pc_NewPPBundlePrePurch,3216,693,906,661,714,3216:or:3#4#5#6:::;NewPPBundle-=-Monthly10,3,18,0,0,;92-32;,Periodic Charge is not active-655;Balance_Type match condition failed-1;Balance_Type expired-2;Subscriber relation missing-3;,State,0,0
+_pc_NewPPBundlePrePurch,3216,693,906,661,714,3216:or:3#4#5#6:::;NewPPBundle-=-Monthly6,2,12,0,0,;92-32;,Periodic Charge is not active-655;Balance_Type match condition failed-1;Balance_Type expired-2;Subscriber relation missing-3;,State,0,0
+_pc_NewPPBundlePrePurch,3216,693,906,661,714,3216:or:3#4#5#6:::;NewPPBundle-=-Daily1,0,0,0,0,;92-32;,Periodic Charge is not active-655;Balance_Type match condition failed-1;Balance_Type expired-2;Subscriber relation missing-3;,State,0,0
+_pc_NewPPBundlePrePurch,3216,693,906,661,714,3216:or:3#4#5#6:::;NewPPBundle-=-Monthly7,0,0,0,0,;92-32;,Periodic Charge is not active-655;Balance_Type match condition failed-1;Balance_Type expired-2;Subscriber relation missing-3;,State,0,0
+_pc_NewPPBundlePrePurch,3216,693,906,661,714,3216:or:3#4#5#6:::;NewPPBundle-=-Monthly8,0,0,0,0,;92-32;,Periodic Charge is not active-655;Balance_Type match condition failed-1;Balance_Type expired-2;Subscriber relation missing-3;,State,0,0
+_pc_NewPPBundlePrePurch,3216,693,906,661,714,3216:or:3#4#5#6:::;NewPPBundle-=-Monthly9,5,30,0,0,;92-32;,Periodic Charge is not active-655;Balance_Type match condition failed-1;Balance_Type expired-2;Subscriber relation missing-3;,State,0,0
+AloRechBonus,3299,12729,382795572,8021,2523697,3299:>=:1:::;,4746,382795572,38,2523697,,Balance_Type match condition failed-7754;Balance_Type expired-267;,Cash,0,0
+_pc_DataBndl400MBRec,3217,2044,6637,166,166,3217:or:3#4#5#6:::;,1789,5670,0,0,;91-89;,Periodic Charge is not active-166;,State,0,0
+_pc_DataBndl400MBRec,3217,2044,6637,166,166,3217:or:7#8#9:::;,89,801,0,0,;91-89;,Periodic Charge is not active-166;,State,0,0
+_pc_DataBndl1024MBRec,3218,1017,3229,71,68,3218:or:7#8#9:::;,39,351,0,0,;91-39;,Periodic Charge is not active-69;Balance_Type expired-2;,State,0,0
+_pc_DataBndl1024MBRec,3218,1017,3229,71,68,3218:or:3#4#5#6:::;,907,2810,0,0,;91-39;,Periodic Charge is not active-69;Balance_Type expired-2;,State,0,0
+_pc_DataBndl2560MBRec,3219,434,1351,28,28,3219:or:3#4#5#6:::;,395,1224,0,0,;91-11;,Periodic Charge is not active-28;,State,0,0
+_pc_DataBndl2560MBRec,3219,434,1351,28,28,3219:or:7#8#9:::;,11,99,0,0,;91-11;,Periodic Charge is not active-28;,State,0,0
+Push Email KB,73,7,0,7,0,73:::::;,7,0,7,0,,Balance_Type Ignored-7;,Units,0,0
+Blackberry KB,74,271539,35830647820,266208,22458016,74:>=:-99999999:::;,271539,35579861435,266208,-228303785,;6014-1440;,Service class Ignored-18;Balance_Type match condition failed-266163;Balance_Type expired-27;,Data,-24584,0
+more data,779,161117,787927016404,13399,3682795332,779:>=:1:::;,148636,787927016404,918,3682795332,,Service class Ignored-63;Balance_Type match condition failed-7561;Balance_Type expired-5764;Subscriber relation missing-11;,Cash,0,0
+DailyRecNatVoice,1992,75,729300,29,0,1992:>=:-99999999:::;,75,497600,29,-231700,,Balance_Type match condition failed-1;Balance_Type expired-28;,Time,0,0
+DailyRecFlexiVoice,1993,1134,9391100,502,8500,1993:>=:-99999999:::;,1134,3844000,502,-5538600,,Balance_Type match condition failed-4;Balance_Type expired-498;,Time,0,0
+ThunderBolt dummy1,1952,1000,1000,1000,1000,1952:::::;,1000,1000,1000,1000,,Balance_Type Ignored-1000;,Units,0,0
+MBB2GBDiscount,739,14,0,14,0,739:::::;,14,0,14,0,,Balance_Type Ignored-14;,Cash,0,0
+DailyRecChat,1994,89426,98980288,89156,0,1994:>=:-99999999:::;,89426,-2296237472,89156,-2395217760,,Balance_Type match condition failed-123;Balance_Type expired-89033;,Data,0,0
+RoamDailyAPurch,1912,273,55,218,0,1912:>:0:::;,55,55,0,0,,Balance_Type match condition failed-216;Balance_Type expired-2;,Units,0,0
+DailyRecSocial,1995,66328,129755104,65966,362560,1995:>=:-99999999:::;,66328,-1399039264,65966,-1528431808,,Balance_Type match condition failed-3398;Balance_Type expired-62568;,Data,0,0
+RoamDailyBPurch,1913,16,16,1,1,1913:>:0:::;,16,16,1,1,,Service class Ignored-1;,Units,0,0
+RoamWeeklyPurch,1914,343,40,303,0,1914:>:0:::;,40,40,0,0,,Balance_Type match condition failed-299;Balance_Type expired-4;,Units,0,0
+Last Expiry Offset,112,113903,882268,113903,882268,112:::::;,97799,-3786587078,97799,-3786587078,,Balance_Type Ignored-97703;SNA subs balance record ignored-16091;Service class Ignored-106;Lifecycle lookup mismatch-3;,Days to wallet expiry,-390315,0
+Rech_Face_Val,1956,1148011,43504245,8125,305310,1956:>=:1:::;,1148011,43504245,8125,305310,,Service class Ignored-120;Lifecycle lookup mismatch-7;Balance_Type expired-7980;Subscriber relation missing-18;,Units,0,0
+DailyRecAll,1997,8811,2368256,8752,0,1997:>=:-99999999:::;,8811,-63760512,8752,-66128768,,Balance_Type match condition failed-6;Balance_Type expired-8746;,Data,0,0
+CallMeBack,195,62,116,62,116,195:::::;,62,116,62,116,,Balance_Type Ignored-46;Service class Ignored-16;,Units,0,0
+RoamWeeklyBPurch,1915,4,2,4,2,1915:::::;,0,0,0,0,,Balance_Type expired-1;Balance_Type lookup failed-3;,Units,0,0
+Promotional,114,30356,99673342,29114,110000,114:>=:1:::;,1243,99673342,1,110000,,Service class Ignored-1;Balance_Type match condition failed-27846;Balance_Type expired-1267;,Cash,0,0
+DailyOneOffNatVoice,1998,53526,0,53525,0,1998:>=:-99999999:::;,53526,0,53525,0,,Balance_Type match condition failed-8396;Balance_Type expired-45129;,Time,0,0
+Blackberry GB,155,149,42991616,108,0,155:>=:1:::;,41,42991616,0,0,,Service class Ignored-1;Balance_Type match condition failed-107;,Data,0,0
+RoamMonthlyAPurch,1916,66,5,61,0,1916:>:0:::;,5,5,0,0,,Balance_Type match condition failed-61;,Units,0,0
+RoamMonthlyBPurch,1917,1,1,0,0,1917:>:0:::;,1,1,0,0,,,Units,0,0
+DailyOneOffFlexiVoice,1999,53528,45600,53525,0,1999:>=:-99999999:::;,53528,45600,53525,0,,Balance_Type match condition failed-8396;Balance_Type expired-45129;,Time,0,0
+Renewal Charge,115,6147,210000028,5872,2500000,115:>=:1:::;,278,210000028,3,2500000,,Service class Ignored-8;Balance_Type match condition failed-5864;,Cash,0,0
+FreeTime,116,127,2321177,1,75,116:>=:1:::;,127,2321177,1,75,,Service class Ignored-1;,Cash,0,0
+_pc_WUDU_Alert,1959,5,10,5,10,1959:::::;,5,10,5,10,,Balance_Type Ignored-5;,State,0,0
+IDDCountryFlag,1330,145,0,145,0,1330:::::;,145,0,145,0,,Balance_Type Ignored-145;,Units,0,0
+MonthlyDataExp,1332,11,0,11,0,1332:>=:1:::;,0,0,0,0,,Balance_Type match condition failed-10;Balance_Type expired-1;,Data,0,0
+MonthlyDataRoamExp,1333,16,0,16,0,1333:>=:1:::;,0,0,0,0,,Balance_Type match condition failed-14;Balance_Type expired-2;,Data,0,0
+MonthlyPPUExp,1334,15,0,15,0,1334:>=:1:::;,0,0,0,0,,Balance_Type match condition failed-13;Balance_Type expired-2;,Cash,0,0
+MonthlyPPURoamExp,1335,19,0,19,0,1335:>=:1:::;,0,0,0,0,,Balance_Type match condition failed-17;Balance_Type expired-2;,Cash,0,0
+BCP National SMS,2992,36,5460,0,0,2992:>=:-99999999:::;,36,5460,0,0,;1108-2;,,Units,0,0
+_pc_BCP2NatTopUp11_PC,2993,10,60,0,0,2993:or:3#4#5#6:::;,10,60,0,0,,,State,0,0
+_pc_BCP2NatTopUp11_PC,2993,10,60,0,0,2993:or:7#8#9:::;,0,0,0,0,,,State,0,0
+Hybrid_Flexi_Min_1,2952,575,421154650,0,0,2952:>=:-99999999:::;,575,421154650,0,0,,,Time,0,0
+_pc_BCP2NatTopUp12_PC,2994,2,7,1,1,2994:or:3#4#5#6:::;,1,6,0,0,,Periodic Charge is not active-1;,State,0,0
+_pc_BCP2NatTopUp12_PC,2994,2,7,1,1,2994:or:7#8#9:::;,0,0,0,0,,Periodic Charge is not active-1;,State,0,0
+DailyRecFlexi,2912,717,4497700,215,517600,2912:>=:-99999999:::;,717,4297800,215,317700,;3002-63;,Balance_Type match condition failed-49;Balance_Type expired-166;,Time,0,0
+Hybrid_Flexi_Data_1,2953,575,2742579856,0,0,2953:>=:-99999999:::;,575,2742579856,0,0,,,Data,0,0
+DailyRecFullData,2913,8219,14284480,7694,2016288,2913:>=:-99999999:::;,8219,-33831264,7694,-46099456,;3002-55;,Balance_Type match condition failed-56;Balance_Type expired-7638;,Data,0,0
+_pc_BCP2NatTopUp13_PC,2995,293,1508,50,50,2995:or:7#8#9:::;,0,0,0,0,,Periodic Charge is not active-50;,State,0,0
+_pc_BCP2NatTopUp13_PC,2995,293,1508,50,50,2995:or:3#4#5#6:::;,243,1458,0,0,,Periodic Charge is not active-50;,State,0,0
+Hybrid_Nat_Min_1,2954,224,266214003,0,0,2954:>=:-99999999:::;,224,266214003,0,0,,,Time,0,0
+_pc_BCP2IDDTopUp11_PC,2996,1,6,0,0,2996:or:7#8#9:::;,0,0,0,0,,,State,0,0
+_pc_BCP2IDDTopUp11_PC,2996,1,6,0,0,2996:or:3#4#5#6:::;,1,6,0,0,,,State,0,0
+WeeklyRecFlexi,2914,302,19116600,39,392800,2914:>=:-99999999:::;,302,19116600,39,392800,;3003-27;,Lifecycle lookup mismatch-1;Balance_Type match condition failed-34;Balance_Type expired-4;,Time,0,0
+Hybrid_Nat_Data_1,2955,224,1071250624,0,0,2955:>=:-99999999:::;,224,1071250624,0,0,,,Data,0,0
+HybridFlavour,2956,3130,6269248,0,0,2956:=:2002:::;,224,448448,0,0,,,Units,0,0
+HybridFlavour,2956,3130,6269248,0,0,2956:=:2004:::;,1232,2468928,0,0,,,Units,0,0
+HybridFlavour,2956,3130,6269248,0,0,2956:=:2001:::;,575,1150575,0,0,,,Units,0,0
+HybridFlavour,2956,3130,6269248,0,0,2956:=:2003:::;,1099,2201297,0,0,,,Units,0,0
+WeeklyRecFullData,2915,341,39282400,79,1299616,2915:>=:-99999999:::;,341,34309280,79,-3673504,;3003-23;,Lifecycle lookup mismatch-1;Balance_Type match condition failed-47;Balance_Type expired-31;,Data,0,0
+_pc_BCP2IDDTopUp12_PC,2997,12,47,5,5,2997:or:3#4#5#6:::;,7,42,0,0,,Periodic Charge is not active-5;,State,0,0
+_pc_BCP2IDDTopUp12_PC,2997,12,47,5,5,2997:or:7#8#9:::;,0,0,0,0,,Periodic Charge is not active-5;,State,0,0
+_pc_BCP2IDDTopUp13_PC,2998,1,6,0,0,2998:or:3#4#5#6:::;,1,6,0,0,,,State,0,0
+_pc_BCP2IDDTopUp13_PC,2998,1,6,0,0,2998:or:7#8#9:::;,0,0,0,0,,,State,0,0
+Monthly1RecFlexi,2916,7629,249216500,826,1243700,2916:>=:-99999999:::;,7629,249216500,826,1243700,;3004-413;,Balance_Type match condition failed-773;Balance_Type expired-53;,Time,0,0
+HybridNewFlavour,2957,3130,0,3130,0,2957:=:2002:::;,0,0,0,0,,Balance_Type match condition failed-3130;,Units,0,0
+HybridNewFlavour,2957,3130,0,3130,0,2957:=:2004:::;,0,0,0,0,,Balance_Type match condition failed-3130;,Units,0,0
+HybridNewFlavour,2957,3130,0,3130,0,2957:=:2001:::;,0,0,0,0,,Balance_Type match condition failed-3130;,Units,0,0
+HybridNewFlavour,2957,3130,0,3130,0,2957:=:2003:::;,0,0,0,0,,Balance_Type match condition failed-3130;,Units,0,0
+_pc_BCP2IDDTopUp14_PC,2999,2,7,1,1,2999:or:3#4#5#6:::;,1,6,0,0,,Periodic Charge is not active-1;,State,0,0
+_pc_BCP2IDDTopUp14_PC,2999,2,7,1,1,2999:or:7#8#9:::;,0,0,0,0,,Periodic Charge is not active-1;,State,0,0
+Monthly2RecFlexi,2917,20992,1669670200,1375,5820100,2917:>=:-99999999:::;,20992,1669631784,1375,5781684,;3005-1036;,Balance_Type match condition failed-1227;Balance_Type expired-144;Subscriber relation missing-4;,Time,0,0
+Monthly3RecFlexi,2918,11814,3881602200,603,12879400,2918:>=:-99999999:::;,11814,3881599700,603,12876900,;3006-508;,Balance_Type match condition failed-510;Balance_Type expired-92;Subscriber relation missing-1;,Time,0,0
+_pc_PC_Monthly_Hybrid1,2959,3137,18792,7,12,2959:or:3#4#5#6:::;,3131,18786,1,6,,Periodic Charge is not active-6;Balance_Type match condition failed-1;,State,0,0
+_pc_PC_Monthly_Hybrid1,2959,3137,18792,7,12,2959:or:7#8#9:::;,0,0,0,0,,Periodic Charge is not active-6;Balance_Type match condition failed-1;,State,0,0
+Monthly4RecFlexi,2919,7898,4016553200,301,16174100,2919:>=:-99999999:::;,7898,4016553200,301,16174100,;3007-368;,Balance_Type match condition failed-248;Balance_Type expired-53;,Time,0,0
+Zinger_new_act,2332,1397930,1397930,2,2,2332:=:1:::;,1397930,1397930,2,2,,Lifecycle lookup mismatch-1;Subscriber relation missing-1;,Units,0,0
+_pc_BCP200FLVRNew_PC,2060,21,106,4,4,2060:or:3#4#5#6:::;,17,102,0,0,,Periodic Charge is not active-4;,State,0,0
+_pc_BCP200FLVRNew_PC,2060,21,106,4,4,2060:or:7#8#9:::;,0,0,0,0,,Periodic Charge is not active-4;,State,0,0
+_pc_PCDailyRecurrent,2020,840,4404,162,336,2020:or:3#4#5#6:::;,713,4278,35,210,,Periodic Charge is not active-126;Balance_Type match condition failed-34;Balance_Type expired-2;,State,0,0
+_pc_BCP150FLVRNew_PC,2061,2,12,0,0,2061:or:7#8#9:::;,0,0,0,0,,,State,0,0
+_pc_BCP150FLVRNew_PC,2061,2,12,0,0,2061:or:3#4#5#6:::;,2,12,0,0,,,State,0,0
+_pc_PCMonthlyRecurrent,2021,6577,20176,603,1336,2021:or:3#4#5#6:::;,6340,19983,366,1143,,Periodic Charge is not active-217;Balance_Type match condition failed-366;Balance_Type expired-20;,State,0,0
+_pc_BCP10FLVRNew_PC,2062,940,4760,176,176,2062:or:7#8#9:::;,0,0,0,0,,Periodic Charge is not active-176;,State,0,0
+_pc_BCP10FLVRNew_PC,2062,940,4760,176,176,2062:or:3#4#5#6:::;,764,4584,0,0,,Periodic Charge is not active-176;,State,0,0
+_pc_PCOneOffDailyReset,2022,166917,1001081,166913,1001057,2022:or:3#4#5#6:::;,166833,1000998,166829,1000974,,Periodic Charge is not active-81;Balance_Type match condition failed-166724;Balance_Type expired-108;,State,0,0
+_pc_BCP20FLVRNew_PC,2063,81,291,39,39,2063:or:3#4#5#6:::;,42,252,0,0,,Periodic Charge is not active-39;,State,0,0
+_pc_BCP20FLVRNew_PC,2063,81,291,39,39,2063:or:7#8#9:::;,0,0,0,0,,Periodic Charge is not active-39;,State,0,0
+_pc_PCOneOffMnthReset,2023,78741,472300,78733,472252,2023:or:3#4#5#6:::;,78712,472272,78704,472224,,Periodic Charge is not active-26;Balance_Type match condition failed-78701;Balance_Type expired-6;,State,0,0
+_pc_BCP30FLVRNew_PC,2064,10,40,4,4,2064:or:3#4#5#6:::;,6,36,0,0,,Periodic Charge is not active-4;,State,0,0
+_pc_BCP30FLVRNew_PC,2064,10,40,4,4,2064:or:7#8#9:::;,0,0,0,0,,Periodic Charge is not active-4;,State,0,0
+_pc_BCP40FLVRNew_PC,2065,2,12,0,0,2065:or:7#8#9:::;,0,0,0,0,,,State,0,0
+_pc_BCP40FLVRNew_PC,2065,2,12,0,0,2065:or:3#4#5#6:::;,2,12,0,0,,,State,0,0
+_pc_PCOneOffWeekReset,2024,1833,10998,1833,10998,2024:or:3#4#5#6:::;,1833,10998,1833,10998,,Balance_Type match condition failed-1833;,State,0,0
+_pc_Mar2B1Active_PC,3600,3710,21440,3710,21440,3600:::::;,0,0,0,0,,Balance_Type expired-1;Balance_Type lookup failed-3709;,State,0,0
+_pc_Mar2Grace_PC,3603,261,1406,261,1406,3603:::::;,0,0,0,0,,Balance_Type lookup failed-261;,State,0,0
+AloBndlAct,3645,11447,11439,11447,11439,3645:::::;,0,0,0,0,,Balance_Type expired-6;Balance_Type lookup failed-11441;,Units,0,0
+Monthly2RecSocData,3372,1,1956672,1,1956672,3372:::::;,0,0,0,0,,Balance_Type lookup failed-1;,Data,0,0
+BonusP2PBlock,3605,6159,6159,6159,6159,3605:::::;,6159,6159,6159,6159,,Balance_Type Ignored-6159;,Units,0,0
+AloBndlType,3646,11447,11439,11447,11439,3646:::::;,0,0,0,0,,Balance_Type expired-6;Balance_Type lookup failed-11441;,Units,0,0
+AloBndlGrace,3647,4581,0,4581,0,3647:::::;,0,0,0,0,,Balance_Type expired-3940;Balance_Type lookup failed-641;,Units,0,0
+AloBndlData1,3648,11473,7749404800,11473,7749404800,3648:::::;,0,0,0,0,,Balance_Type expired-61;Balance_Type lookup failed-11412;,Data,0,0
+_pc_AloBndl1Active_PC,3649,11503,68698,11503,68698,3649:::::;,0,0,0,0,,Balance_Type lookup failed-11503;,State,0,0
+_pc_DataOffer1Prim,581,2,2,2,2,581:::::;,0,0,0,0,,Balance_Type lookup failed-2;,State,0,0
+MBBUnlimDiscount,500,24447,0,24447,0,500:::::;,24447,0,24447,0,,Balance_Type Ignored-24243;Service class Ignored-202;Lifecycle lookup mismatch-2;,Cash,0,0
+SMS Int Bundle,899,20082,332,20080,0,899:>=:-99999999:::;,20082,332,20080,0,;2543-2;,Balance_Type match condition failed-20080;,Units,0,0
+MnpLoyaltyTracker,859,3280,95206488576,73,0,859:>=:1:::;,3207,95206488576,0,0,,Balance_Type match condition failed-73;,Cash,0,0
+_pc_DataBndl1GBRec,819,582,1767,0,0,819:or:7#8#9:::;,0,0,0,0,,,State,0,0
+_pc_DataBndl1GBRec,819,582,1767,0,0,819:or:3#4#5#6:::;,582,1767,0,0,,,State,0,0
+ChatnCall Count,1760,639008,65676,636328,62922,1760:>=:1:::;,2691,65676,11,62922,,Lifecycle lookup mismatch-2;Balance_Type match condition failed-636323;Balance_Type expired-3;,Units,0,0
+_pc_ChatNCallRec_PC,1761,584,3504,58,348,1761:or:3#4#5#6:::;,584,3504,58,348,,Balance_Type match condition failed-58;,State,0,0
+More International,275,40675,5992966813,12145,30498941,275:>=:1:::;,28661,5992966813,131,30498941,,Service class Ignored-5;Balance_Type match condition failed-11882;Balance_Type expired-258;,Cash,0,0
+_pc_ChatNCallGrace_PC,1762,466,1405,290,349,1762:or:3#4#5#6#7#8#9:::;,176,1056,0,0,;91-176;,Periodic Charge is not active-272;Balance_Type expired-18;,State,0,0
+_pc_ChatNCallRst_PC,1763,5,24,2,6,1763:or:3#4#5#6:::;,4,24,1,6,,Balance_Type match condition failed-1;Balance_Type expired-1;,State,0,0
+General Cash,235,14488609,466441724962,83706,2018299422,235:<:0:!=:334:;,0,0,0,0,,SNA subs balance record ignored-16092;Service class Ignored-22387;Lifecycle lookup mismatch-44927;Balance_Type expired-78;Subscriber relation missing-222;,Cash,0,0
+General Cash,235,14488609,466441724962,83706,2018299422,235:>=:0:!=:334:;,16105,2,16105,2,,SNA subs balance record ignored-16092;Service class Ignored-22387;Lifecycle lookup mismatch-44927;Balance_Type expired-78;Subscriber relation missing-222;,Cash,0,0
+Promotional Cash,236,223908,111658057,223793,0,236:>=:-99999999:::;,16104,0,16104,0,;1172-115;,SNA subs balance record ignored-16091;Service class Ignored-17;Lifecycle lookup mismatch-2310;Balance_Type match condition failed-205275;Balance_Type expired-100;,Cash,0,0
+Tourist Promo Data,1490,10261,23831096,8727,1635520,1490:>=:1:::;,1648,23831096,114,1635520,,Lifecycle lookup mismatch-5;Balance_Type match condition failed-8586;Balance_Type expired-89;Subscriber relation missing-47;,Data,0,0
+_pc_ChatNCallOneOff_PC,1764,4595,18029,1888,1787,1764:or:3#4#5#6:::;,2709,16254,2,12,,Periodic Charge is not active-1773;Balance_Type expired-115;,State,0,0
+Bad Pin,237,12303669,87775540,12303669,87775540,237:::::;,0,0,0,0,,SNA subs balance record ignored-16092;Balance_Type Ignored-12225550;Service class Ignored-17441;Lifecycle lookup mismatch-44373;Subscriber relation missing-213;,Bad Pin,0,0
+NPP DataGL,1450,50939,2205170000,33575,13460000,1450:>=:-99999999:::;,50939,2205170000,33575,13460000,;3017-16972;,Balance_Type match condition failed-33308;Balance_Type expired-267;,Cash,0,0
+_pc_ChatNCallCount_PC,1765,5303,22748,2623,6668,1765:or:3#4#5#6:::;,3494,20964,814,4884,,Periodic Charge is not active-1782;Balance_Type match condition failed-811;Balance_Type expired-30;,State,0,0
+Tourist Promo Social,1491,802,0,802,0,1491:::::;,802,0,802,0,,Balance_Type Ignored-802;,Data,0,0
+Monthly Exp,238,591355,75230275666,584291,35309035,238:>=:1:::;,1,32768,1,32768,,SNA subs balance record ignored-16092;Service class Ignored-214;Lifecycle lookup mismatch-2570;Balance_Type match condition failed-465690;Balance_Type expired-99724;Subscriber relation missing-1;,Cash,0,0
+NPP PPU Active,1451,97524,35409,62132,0,1451:>=:1:::;,35392,35409,0,0,,Balance_Type match condition failed-62132;,Units,0,0
+Tourist CUG,1492,802,0,802,0,1492:::::;,802,0,802,0,,Balance_Type Ignored-802;,Time,0,0
+_pc_LifeStyleRec_PC,1766,80,480,3,18,1766:or:3#4#5#6:::;,80,480,3,18,,Balance_Type match condition failed-3;,State,0,0
+Yearly Expenditure,239,14573000,14565424947842,7486642,20317571826,239:>=:1:::;,0,0,0,0,,SNA subs balance record ignored-16091;Service class Ignored-21996;Lifecycle lookup mismatch-44395;Balance_Type match condition failed-7396817;Balance_Type expired-7121;Subscriber relation missing-222;,Cash,0,0
+Product Swaps,1452,227173,656174,0,0,1452:>=:0:::;,227173,656174,0,0,,,Units,0,0
+Tourist CUG SMS,1493,802,0,802,0,1493:::::;,802,0,802,0,,Balance_Type Ignored-802;,Units,0,0
+_pc_LifeStyleGrace_PC,1767,56,219,26,39,1767:or:3#4#5#6#7#8#9:::;,30,180,0,0,;91-30;,Periodic Charge is not active-26;,State,0,0
+NPP VoiceBndlDailyLimit,1453,1847,170,1843,166,1453:>=:1:::;,55,170,51,166,,Balance_Type match condition failed-1843;,Units,0,0
+Tourist Renewed,1494,371,371,1,1,1494:=:1:::;,371,371,1,1,,Subscriber relation missing-1;,Units,0,0
+_pc_LifeStyleRst_PC,1768,10,26,8,14,1768:or:3#4#5#6:::;,2,12,0,0,,Periodic Charge is not active-7;Balance_Type expired-1;,State,0,0
+_pc_LifeStyleOneOff_PC,1769,184,530,124,170,1769:or:3#4#5#6:::;,60,360,0,0,,Periodic Charge is not active-115;Balance_Type expired-9;,State,0,0
+NPP BB Service Active,1454,346,189,158,0,1454:=:2:::;,1,2,0,0,;4525-1;,Balance_Type match condition failed-158;,Units,0,0
+NPP BB Service Active,1454,346,189,158,0,1454:=:1:::;,187,187,0,0,;4525-1;,Balance_Type match condition failed-158;,Units,0,0
+NPP Data Social Active,1455,99130,82734,16396,0,1455:=:1:::;,82734,82734,0,0,,Balance_Type match condition failed-16396;,Units,0,0
+_pc_TouristSIMExtra_Social_Expiry,1496,2129,8552,930,1358,1496:or:3#4#5#6:=:561:;,1230,7380,31,186,,Periodic Charge is not active-843;Lifecycle lookup mismatch-6;Balance_Type expired-53;Subscriber relation missing-28;,State,0,0
+_pc_SmartPhone_4GBInstal12_PC,1100,2403,2403,2403,2403,1100:::::;,0,0,0,0,,Balance_Type lookup failed-2403;,State,0,0
+NPP GraceActive,1456,55660,11771,0,0,1456:::::;,55660,11771,0,0,,,Units,0,0
+PrjBlueWhiteList,1497,977,977,0,0,1497:>=:1:::;,977,977,0,0,,,Units,0,0
+NPP CTDailyAmt,1457,11789,110815000,11342,0,1457:>=:1:::;,447,110815000,0,0,,Balance_Type match condition failed-11342;,Cash,0,0
+PrjBlueCounter,1498,714,996,0,0,1498:>=:0:::;,714,996,0,0,,,Units,0,0
+_pc_SmartPhone_4GBInstal24_PC,1101,233,233,233,233,1101:::::;,0,0,0,0,,Balance_Type lookup failed-233;,State,0,0
+_pc_0020 AED Auto Topup,1102,62404,335459,7805,7865,1102:or:7#8#9:::;,0,0,0,0,,Periodic Charge is not active-7793;Balance_Type expired-11;Subscriber relation missing-1;,State,0,0
+_pc_0020 AED Auto Topup,1102,62404,335459,7805,7865,1102:or:3#4#5#6:::;,54611,327666,12,72,,Periodic Charge is not active-7793;Balance_Type expired-11;Subscriber relation missing-1;,State,0,0
+_pc_NPP VP-1,1458,238,745,23,21,1458:or:7#8#9:::;,10,76,0,0,;91-10;,Periodic Charge is not active-22;Balance_Type expired-1;,State,0,0
+_pc_NPP VP-1,1458,238,745,23,21,1458:or:3#4#5#6:::;,205,648,0,0,;91-10;,Periodic Charge is not active-22;Balance_Type expired-1;,State,0,0
+_pc_0040 AED Auto Topup,1103,865,4510,136,136,1103:or:3#4#5#6:::;,729,4374,0,0,,Periodic Charge is not active-136;,State,0,0
+_pc_0040 AED Auto Topup,1103,865,4510,136,136,1103:or:7#8#9:::;,0,0,0,0,,Periodic Charge is not active-136;,State,0,0
+_pc_NPP VP-2,1459,120,376,9,8,1459:or:7#8#9:::;,4,32,0,0,;91-4;,Periodic Charge is not active-8;Balance_Type expired-1;,State,0,0
+_pc_NPP VP-2,1459,120,376,9,8,1459:or:3#4#5#6:::;,107,336,0,0,;91-4;,Periodic Charge is not active-8;Balance_Type expired-1;,State,0,0
+WoW 100 Intl promo,1419,9,0,9,0,1419:::::;,9,0,9,0,,Balance_Type Ignored-9;,Cash,0,0
+_pc_0060 AED Auto Topup,1104,276,1531,25,25,1104:or:7#8#9:::;,0,0,0,0,,Periodic Charge is not active-25;,State,0,0
+_pc_0060 AED Auto Topup,1104,276,1531,25,25,1104:or:3#4#5#6:::;,251,1506,0,0,,Periodic Charge is not active-25;,State,0,0
+_pc_0080 AED Auto Topup,1105,74,279,33,33,1105:or:7#8#9:::;,0,0,0,0,,Periodic Charge is not active-33;,State,0,0
+_pc_0080 AED Auto Topup,1105,74,279,33,33,1105:or:3#4#5#6:::;,41,246,0,0,,Periodic Charge is not active-33;,State,0,0
+_pc_0100 AED Auto Topup,1106,821,2481,489,489,1106:or:7#8#9:::;,0,0,0,0,,Periodic Charge is not active-489;,State,0,0
+_pc_0100 AED Auto Topup,1106,821,2481,489,489,1106:or:3#4#5#6:::;,332,1992,0,0,,Periodic Charge is not active-489;,State,0,0
+_pc_BB10MegaPack,1189,61,61,61,61,1189:::::;,0,0,0,0,,Balance_Type lookup failed-61;,State,0,0
+_pc_0160 AED Auto Topup,1109,2,12,0,0,1109:or:3#4#5#6:::;,2,12,0,0,,,State,0,0
+_pc_0160 AED Auto Topup,1109,2,12,0,0,1109:or:7#8#9:::;,0,0,0,0,,,State,0,0
+_pc_HardCapCash_300_PC,2450,254,1524,0,0,2450:or:3#4#5#6#7#8#9:::;,254,1524,0,0,,,State,0,0
+DisabilityFlag,2492,87,87,0,0,2492:>=:1:::;,87,87,0,0,,,Units,0,0
+_pc_HardCapCash_350_PC,2451,28,168,0,0,2451:or:3#4#5#6#7#8#9:::;,28,168,0,0,,,State,0,0
+_pc_HardCapCash_400_PC,2452,1,6,0,0,2452:or:3#4#5#6#7#8#9:::;,1,6,0,0,,,State,0,0
+_WLC_Service,1060,6944976,89370720,6944976,89370720,1060:::::;,6944976,81808003,6944976,81808003,,Balance_Type Ignored-6944346;Service class Ignored-456;Lifecycle lookup mismatch-106;Subscriber relation missing-68;,State,-267,0
+SmartPhoneActive,1020,391,763,391,763,1020:::::;,391,763,391,763,,Balance_Type Ignored-390;Lifecycle lookup mismatch-1;,Units,0,0
+Azure_sim_act,2412,27,24,3,0,2412:=:1:::;,24,24,0,0,,Balance_Type expired-3;,Units,0,0
+EarlyBirdActive,1021,1,2,1,2,1021:::::;,1,2,1,2,,Balance_Type Ignored-1;,Units,0,0
+MegaPackActive,1022,9,0,9,0,1022:::::;,9,0,9,0,,Balance_Type Ignored-9;,Units,0,0
+Azure_Rech_Tracker,2414,23942,0,23942,0,2414:>=:1:::;,0,0,0,0,,Balance_Type match condition failed-23942;,Cash,0,0
+Azure_bonus_grant,2415,2,0,2,0,2415:>=:1:::;,0,0,0,0,,Balance_Type match condition failed-1;Balance_Type expired-1;,Data,0,0
+Data Promotion,1023,1236,0,1236,0,1023:::::;,1236,-115924403,1236,-115924403,,Balance_Type Ignored-1236;,Cash,0,0
+MegaPack Eligibility Tracker,1025,46470,297120,46470,297120,1025:::::;,46470,297120,46470,297120,,Balance_Type Ignored-46470;,Units,0,0
+_pc_SmartPhone_SamplerPack_PC,1026,2197,2197,2197,2197,1026:::::;,0,0,0,0,,Balance_Type lookup failed-2197;,State,0,0
+_pc_SamplerPackNotification_B4Exp_PC,1027,3321,3321,3321,3321,1027:::::;,0,0,0,0,,Balance_Type expired-1;Balance_Type lookup failed-3320;,State,0,0
+_pc_MegaPackNotification_B4Exp_PC,1028,36703,36703,36703,36703,1028:::::;,0,0,0,0,,Balance_Type lookup failed-36703;,State,0,0
+IDDBundleOffer,3450,6649,2238481700,2129,4285600,3450:>=:1:::;,4544,2238481700,24,4285600,,Balance_Type match condition failed-2049;Balance_Type expired-80;,Time,0,0
+IDDBundleOfferCount,3451,7775,7775,112,112,3451:>=:1:::;,7775,7775,112,112,,Balance_Type expired-112;,Units,0,0
+Mercury2StateD,3411,2,7,2,7,3411:=:5:::;,0,0,0,0,,NetworkBundle specific BT ignored-1;Balance_Type match condition failed-1;,Units,0,0
+Mercury2StateD,3411,2,7,2,7,3411:=:4:::;,0,0,0,0,,NetworkBundle specific BT ignored-1;Balance_Type match condition failed-1;,Units,0,0
+Mercury2StateD,3411,2,7,2,7,3411:or:2#3#6#7#8#9#10#11:::;,1,6,1,6,,NetworkBundle specific BT ignored-1;Balance_Type match condition failed-1;,Units,0,0
+Mercury2StateD,3411,2,7,2,7,3411:=:1:::;,1,1,1,1,,NetworkBundle specific BT ignored-1;Balance_Type match condition failed-1;,Units,0,0
+_pc_OneWayFnFWeekly_PC,3452,4827,28962,0,0,3452:or:7#8#9:::;,0,0,0,0,,,State,0,0
+_pc_OneWayFnFWeekly_PC,3452,4827,28962,0,0,3452:or:3#4#5#6:::;,4827,28962,0,0,,,State,0,0
+_pc_OneWayFnFMonthly_PC,3453,39001,234001,2,7,3453:or:7#8#9:::;,0,0,0,0,,Periodic Charge is not active-1;Balance_Type expired-1;,State,0,0
+_pc_OneWayFnFMonthly_PC,3453,39001,234001,2,7,3453:or:3#4#5#6:::;,39000,234000,1,6,,Periodic Charge is not active-1;Balance_Type expired-1;,State,0,0
+_pc_Mercury2Daily_PC,3413,1,6,0,0,3413:or:7#8#9:::;,0,0,0,0,,,State,0,0
+_pc_Mercury2Daily_PC,3413,1,6,0,0,3413:or:3#4#5#6:::;,1,6,0,0,,,State,0,0
+_pc_OneWayFnFWGrace_PC,3454,4608,20520,4,8,3454:or:3#4#5#6#7#8#9:::;,4605,20517,1,5,;91-4604;,Periodic Charge is not active-3;Balance_Type expired-1;,State,0,0
+_pc_OneWayFnFMGrace_PC,3455,6560,29698,3,3,3455:or:3#4#5#6#7#8#9:::;,6557,29695,0,0,;91-6557;,Periodic Charge is not active-3;,State,0,0
+_pc_KhaleejiReset,3497,255,281,250,251,3497:or:3#4#5#6:::;,5,30,0,0,,Periodic Charge is not active-250;,State,0,0
+_pc_BusHybridCUG1_PC,3498,1,1,1,1,3498:::::;,0,0,0,0,,Balance_Type lookup failed-1;,State,0,0
+WiFiBundleData,3419,25967,70289959478,161,453768832,3419:>=:1:::;,25966,70289959478,160,453768832,,Balance_Type match condition failed-1;Balance_Type expired-159;Subscriber relation missing-1;,Data,0,0
+_pc_StRechIntMin10WL,975,1,0,1,0,975:::::;,0,0,0,0,,Balance_Type expired-1;,State,0,0
+_pc_StRechIntMin30WL,976,1,0,1,0,976:::::;,0,0,0,0,,Balance_Type expired-1;,State,0,0
+more credit promo,620,10002,0,10002,0,620:>=:1:::;,0,0,0,0,,Balance_Type match condition failed-10002;,Cash,0,0
+PeerCounter,661,3120259,397345,2979573,191188,661:or:1#2#3#4#5#6#7#8#9#10#11#12#13#14#15#16#17#18#19#20#21#22#23#24#25:::;,140718,206245,32,88,;4612-98314;,Service class Ignored-89;Lifecycle lookup mismatch-5;Balance_Type match condition failed-2979443;Balance_Type expired-27;Subscriber relation missing-9;,Units,0,0
+_pc_StRechIntMin60WL,977,1,0,1,0,977:::::;,0,0,0,0,,Balance_Type expired-1;,State,0,0
+WOWPromoActive,621,14507,31482,6020,0,621:>=:1:::;,8487,31482,0,0,,Balance_Type match condition failed-6020;,Units,0,0
+_pc_PAYGD_RenewalNotification_PC,939,18103,48677,18103,48677,939:::::;,18103,48677,18103,48677,,Balance_Type Ignored-18103;,State,0,0
+Smart SMS Nat Bundle,395,33318,44009,20491,0,395:>=:-99999999:::;,33318,43995,20491,-14,;2543-16;,Balance_Type match condition failed-20450;Balance_Type expired-39;Subscriber relation missing-2;,Units,0,0
+SMS Bonus,355,4167,0,4167,0,355:::::;,4167,0,4167,0,,Balance_Type Ignored-4167;,SMSs,0,0
+Smart Nat Bundle,396,55464,39160517794,19013,61770600,396:>=:-99999999:::;,55464,39599094894,19013,61759000,;1088-2634;,Balance_Type match condition failed-18932;Balance_Type expired-78;Subscriber relation missing-3;,Time,0,0
+Smart Int Bundle,397,21192,377470700,19236,14200,397:>=:-99999999:::;,21192,377957300,19236,-9200,;1070-784;,Balance_Type match condition failed-19230;Balance_Type expired-6;,Time,0,0
+Smart Monthly Usage,398,8742741,1059950011409,6881974,25995977528,398:>=:1:::;,1950652,1059950011409,89885,25995977528,,Service class Ignored-408;Lifecycle lookup mismatch-32;Balance_Type match condition failed-6614451;Balance_Type expired-267054;Subscriber relation missing-29;,Cash,0,0
+_pc_DataBndl4GBRec,316,506,1597,18,18,316:or:7#8#9:::;,11,99,0,0,;91-11;,Periodic Charge is not active-18;,State,0,0
+_pc_DataBndl4GBRec,316,506,1597,18,18,316:or:3#4#5#6:::;,477,1480,0,0,;91-11;,Periodic Charge is not active-18;,State,0,0
+Smart Calls Tracker,399,389,413923,389,413923,399:::::;,389,413923,389,413923,,Balance_Type Ignored-389;,Units,0,0
+_pc_BCP2DataTopUp2_PC,1571,12846,74016,613,618,1571:or:7#8#9:::;,0,0,0,0,,Periodic Charge is not active-612;Subscriber relation missing-1;,State,0,0
+_pc_BCP2DataTopUp2_PC,1571,12846,74016,613,618,1571:or:3#4#5#6:::;,12234,73404,1,6,,Periodic Charge is not active-612;Subscriber relation missing-1;,State,0,0
+_pc_BCP2DataTopUp3_PC,1572,3205,18215,203,203,1572:or:7#8#9:::;,0,0,0,0,,Periodic Charge is not active-203;,State,0,0
+_pc_BCP2DataTopUp3_PC,1572,3205,18215,203,203,1572:or:3#4#5#6:::;,3002,18012,0,0,,Periodic Charge is not active-203;,State,0,0
+_pc_BCP2DataTopUp4_PC,1573,106,606,6,6,1573:or:3#4#5#6:::;,100,600,0,0,,Periodic Charge is not active-6;,State,0,0
+_pc_BCP2DataTopUp4_PC,1573,106,606,6,6,1573:or:7#8#9:::;,0,0,0,0,,Periodic Charge is not active-6;,State,0,0
+_pc_BCP2DataTopUp5_PC,1574,2433,8723,1175,1175,1574:or:7#8#9:::;,0,0,0,0,,Periodic Charge is not active-1175;,State,0,0
+_pc_BCP2DataTopUp5_PC,1574,2433,8723,1175,1175,1574:or:3#4#5#6:::;,1258,7548,0,0,,Periodic Charge is not active-1175;,State,0,0
+_pc_BCP150FLVR_PC,1260,4,14,4,14,1260:::::;,0,0,0,0,,Balance_Type lookup failed-4;,State,0,0
+_pc_BCP2DataTopUp6_PC,1575,12,67,1,1,1575:or:3#4#5#6:::;,11,66,0,0,,Periodic Charge is not active-1;,State,0,0
+_pc_BCP2DataTopUp6_PC,1575,12,67,1,1,1575:or:7#8#9:::;,0,0,0,0,,Periodic Charge is not active-1;,State,0,0
+BBSamoa,1220,1,0,1,0,1220:>=:1:::;,0,0,0,0,,Balance_Type match condition failed-1;,Cash,0,0
+MoreDataRechargePromo,1261,2286,0,2286,0,1261:::::;,2286,-155300,2286,-155300,,Balance_Type Ignored-2286;,Time,0,0
+_pc_BCP2DataTopUp8_PC,1577,2,2,2,2,1577:or:7#8#9:::;,0,0,0,0,,Periodic Charge is not active-2;,State,0,0
+_pc_BCP2DataTopUp8_PC,1577,2,2,2,2,1577:or:3#4#5#6:::;,0,0,0,0,,Periodic Charge is not active-2;,State,0,0
+NewIndiaPromo,1263,4668,0,4668,0,1263:>=:1:::;,0,0,0,0,,Balance_Type match condition failed-4668;,Units,0,0
+_pc_BCP30FLVR_PC,1578,1,1,1,1,1578:::::;,0,0,0,0,,Balance_Type lookup failed-1;,State,0,0
+NewIndiaPromoSubUnsub,1264,1,1,0,0,1264:>=:1:::;,1,1,0,0,,,Units,0,0
+_pc_BCP2DataTopUp1_PC,1579,18776,100450,2443,2452,1579:or:3#4#5#6:::;,16335,98010,2,12,,Periodic Charge is not active-2440;Balance_Type expired-1;Subscriber relation missing-2;,State,0,0
+_pc_BCP2DataTopUp1_PC,1579,18776,100450,2443,2452,1579:or:7#8#9:::;,0,0,0,0,,Periodic Charge is not active-2440;Balance_Type expired-1;Subscriber relation missing-2;,State,0,0
+WOWPromoBalance,1265,439,0,439,0,1265:::::;,439,0,439,0,,Balance_Type Ignored-439;,Cash,0,0
+P2PAllowed,1266,6966239,9233761,525,525,1266:>:0:::;,6966233,9233761,525,525,,Service class Ignored-421;Lifecycle lookup mismatch-90;Subscriber relation missing-14;,Units,0,0
+P2PAllowed,1266,6966239,9233761,525,525,1266:=:0:::;,5,0,0,0,,Service class Ignored-421;Lifecycle lookup mismatch-90;Subscriber relation missing-14;,Units,0,0
+LTE,1267,103042,16726520318924,103042,16726520318924,1267:::::;,103042,16459525281680,103042,16459525281680,,Service class Ignored-12;Balance_Type Ignored-103018;Lifecycle lookup mismatch-7;Subscriber relation missing-5;,Units,0,0
+Alpha Offer,1268,2641,4,2637,0,1268:=:1:::;,4,4,0,0,,Balance_Type match condition failed-2637;,Units,0,0
+Corporate Plan,1269,62716,61088,1646,18,1269:=:1:::;,61088,61088,18,18,,Lifecycle lookup mismatch-18;Balance_Type match condition failed-1628;,Units,0,0
+_pc_C_HardCapBCC100Mins_PC,2570,3,18,0,0,2570:or:7#8#9:::;,0,0,0,0,,,State,0,0
+_pc_C_HardCapBCC100Mins_PC,2570,3,18,0,0,2570:or:3#4#5#6:::;,3,18,0,0,,,State,0,0
+_pc_C_HardCapBCC300Mins_PC,2571,1,6,0,0,2571:or:3#4#5#6:::;,1,6,0,0,,,State,0,0
+_pc_C_HardCapBCC300Mins_PC,2571,1,6,0,0,2571:or:7#8#9:::;,0,0,0,0,,,State,0,0
+HardCap NatMin AddOn1,2532,4651,4261135500,8,1218000,2532:>=:-99999999:::;,4651,4261135500,8,1218000,;1048-54;,Balance_Type match condition failed-7;Subscriber relation missing-1;,Time,0,0
+_pc_C_HardCapBCC1000Mins_PC,2573,35,210,0,0,2573:or:7#8#9:::;,0,0,0,0,,,State,0,0
+_pc_C_HardCapBCC1000Mins_PC,2573,35,210,0,0,2573:or:3#4#5#6:::;,35,210,0,0,,,State,0,0
+HardCap NatMin AddOn2,2533,137,371104300,0,0,2533:>=:-99999999:::;,137,371104300,0,0,,,Time,0,0
+_pc_C_HardCapNatSMS100_PC,2574,3,18,0,0,2574:or:3#4#5#6:::;,3,18,0,0,,,State,0,0
+_pc_C_HardCapNatSMS100_PC,2574,3,18,0,0,2574:or:7#8#9:::;,0,0,0,0,,,State,0,0
+_pc_C_HardCapNatSMS300_PC,2575,1,6,0,0,2575:or:7#8#9:::;,0,0,0,0,,,State,0,0
+_pc_C_HardCapNatSMS300_PC,2575,1,6,0,0,2575:or:3#4#5#6:::;,1,6,0,0,,,State,0,0
+HardCap NatMin AddOn3,2534,3590,5078786500,5,0,2534:>=:-99999999:::;,3590,5078786500,5,0,;1056-2;,Balance_Type match condition failed-5;,Time,0,0
+HardCap NatMin AddOn4,2535,4367,4379228000,1,600000,2535:>=:-99999999:::;,4367,4379228000,1,600000,,Subscriber relation missing-1;,Time,0,0
+HardCap IntMin AddOn1,2536,7,5307500,0,0,2536:>=:-99999999:::;,7,5307500,0,0,,,Time,0,0
+HardCap IntMin AddOn2,2537,368,50806400,0,0,2537:>=:-99999999:::;,368,50806400,0,0,,,Time,0,0
+HardCap IntMin AddOn3,2538,583,189878400,1,0,2538:>=:-99999999:::;,583,189878400,1,0,,Balance_Type match condition failed-1;,Time,0,0

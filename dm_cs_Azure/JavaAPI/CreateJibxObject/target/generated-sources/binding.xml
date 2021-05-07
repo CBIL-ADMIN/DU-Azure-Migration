@@ -1,0 +1,843 @@
+<binding name="binding" package="com.ericsson.jibx.beans" trim-whitespace="true">
+  <mapping class="com.ericsson.jibx.beans.AccountList" name="account_list">
+    <collection get-method="getAccountInfoList" set-method="setAccountInfoList" usage="optional" create-type="java.util.ArrayList">
+      <structure type="com.ericsson.jibx.beans.AccountList$AccountInfo" name="account_info">
+        <structure ordered="false">
+          <value style="element" name="id" get-method="getId" set-method="setId"/>
+          <value style="element" name="account_class" get-method="getAccountClass" set-method="setAccountClass"/>
+          <value style="element" name="orig_account_class" get-method="getOrigAccountClass" set-method="setOrigAccountClass"/>
+          <value style="element" name="account_class_expiry" get-method="getAccountClassExpiry" set-method="setAccountClassExpiry"/>
+          <value style="element" name="units" get-method="getUnits" set-method="setUnits"/>
+          <value style="element" name="activated" get-method="getActivated" set-method="setActivated"/>
+          <value style="element" name="sfee_expiry_date" get-method="getSfeeExpiryDate" set-method="setSfeeExpiryDate"/>
+          <value style="element" name="sup_expiry_date" get-method="getSupExpiryDate" set-method="setSupExpiryDate"/>
+          <value style="element" name="sfee_done_date" get-method="getSfeeDoneDate" set-method="setSfeeDoneDate"/>
+          <value style="element" name="previous_sfee_done_date" get-method="getPreviousSfeeDoneDate" set-method="setPreviousSfeeDoneDate"/>
+          <value style="element" name="sfee_status" get-method="getSfeeStatus" set-method="setSfeeStatus"/>
+          <value style="element" name="sup_status" get-method="getSupStatus" set-method="setSupStatus"/>
+          <value style="element" name="neg_balance_start" get-method="getNegBalanceStart" set-method="setNegBalanceStart"/>
+          <value style="element" name="neg_balance_barred" get-method="getNegBalanceBarred" set-method="setNegBalanceBarred"/>
+          <value style="element" name="account_disconnect" get-method="getAccountDisconnect" set-method="setAccountDisconnect"/>
+          <value style="element" name="account_status" get-method="getAccountStatus" set-method="setAccountStatus"/>
+          <value style="element" name="prom_notification" get-method="getPromNotification" set-method="setPromNotification"/>
+          <value style="element" name="service_offerings" get-method="getServiceOfferings" set-method="setServiceOfferings"/>
+          <value style="element" name="account_group_id" get-method="getAccountGroupId" set-method="setAccountGroupId"/>
+          <value style="element" name="community_id1" get-method="getCommunityId1" set-method="setCommunityId1"/>
+          <value style="element" name="community_id2" get-method="getCommunityId2" set-method="setCommunityId2"/>
+          <value style="element" name="community_id3" get-method="getCommunityId3" set-method="setCommunityId3"/>
+          <value style="element" name="account_home_region" get-method="getAccountHomeRegion" set-method="setAccountHomeRegion"/>
+          <value style="element" name="product_id_counter" get-method="getProductIdCounter" set-method="setProductIdCounter"/>
+          <value style="element" name="account_lock" get-method="getAccountLock" set-method="setAccountLock"/>
+          <value style="element" name="account_prepaid_empty_limit" get-method="getAccountPrepaidEmptyLimit" set-method="setAccountPrepaidEmptyLimit"/>
+        </structure>
+      </structure>
+    </collection>
+  </mapping>
+  <mapping class="com.ericsson.jibx.beans.BALANCEMAPPINGLIST" name="BALANCE_MAPPING_LIST">
+    <collection get-method="getBALANCEMAPPINGINFOList" set-method="setBALANCEMAPPINGINFOList" create-type="java.util.ArrayList">
+      <structure type="com.ericsson.jibx.beans.BALANCEMAPPINGLIST$BALANCEMAPPINGINFO" name="BALANCE_MAPPING_INFO">
+        <structure ordered="false">
+          <value style="element" name="Balance_Type_Name" get-method="getBalanceTypeName" set-method="setBalanceTypeName"/>
+          <value style="element" name="BT_ID" get-method="getBTID" set-method="setBTID"/>
+          <value style="element" name="BT_TYPE" get-method="getBTTYPE" set-method="setBTTYPE"/>
+          <value style="element" name="Symbols" get-method="getSymbols" set-method="setSymbols"/>
+          <value style="element" name="BT_Value" get-method="getBTValue" set-method="setBTValue"/>
+          <value style="element" name="SubState" get-method="getSubState" set-method="setSubState"/>
+          <value style="element" name="SC_Identifier" get-method="getSCIdentifier" set-method="setSCIdentifier"/>
+          <value style="element" name="RP_ID" get-method="getRPID" set-method="setRPID"/>
+          <value style="element" name="PT_Name" get-method="getPTName" set-method="setPTName"/>
+          <value style="element" name="BT_Group_Identifier" get-method="getBTGroupIdentifier" set-method="setBTGroupIdentifier"/>
+          <value style="element" name="Resource" get-method="getResource" set-method="setResource"/>
+          <value style="element" name="Ignore_Flag" get-method="getIgnoreFlag" set-method="setIgnoreFlag"/>
+          <value style="element" name="Product_Private" get-method="getProductPrivate" set-method="setProductPrivate"/>
+          <value style="element" name="Offer_Type" get-method="getOfferType" set-method="setOfferType"/>
+          <value style="element" name="Offer_ID" get-method="getOfferID" set-method="setOfferID"/>
+          <value style="element" name="Offer_Flag" get-method="getOfferFlag" set-method="setOfferFlag"/>
+          <value style="element" name="Offer_Start_Date" get-method="getOfferStartDate" set-method="setOfferStartDate"/>
+          <value style="element" name="Offer_Expiry_Date" get-method="getOfferExpiryDate" set-method="setOfferExpiryDate"/>
+          <value style="element" name="PAM_CLASS_ID" get-method="getPAMCLASSID" set-method="setPAMCLASSID"/>
+          <value style="element" name="PAM_SERV_ID" get-method="getPAMSERVID" set-method="setPAMSERVID"/>
+          <value style="element" name="Attr_Offer_Id" get-method="getAttrOfferId" set-method="setAttrOfferId"/>
+          <value style="element" name="Attr_Name" get-method="getAttrName" set-method="setAttrName"/>
+          <value style="element" name="Attr_Type" get-method="getAttrType" set-method="setAttrType"/>
+          <value style="element" name="Attr_Value" get-method="getAttrValue" set-method="setAttrValue"/>
+          <value style="element" name="DA_Type" get-method="getDAType" set-method="setDAType"/>
+          <value style="element" name="DA_ID" get-method="getDAID" set-method="setDAID"/>
+          <value style="element" name="DA_Start_Date" get-method="getDAStartDate" set-method="setDAStartDate"/>
+          <value style="element" name="DA_Expiry_Date" get-method="getDAExpiryDate" set-method="setDAExpiryDate"/>
+          <value style="element" name="UC_Type" get-method="getUCType" set-method="setUCType"/>
+          <value style="element" name="UC_ID" get-method="getUCID" set-method="setUCID"/>
+          <value style="element" name="UT_ID" get-method="getUTID" set-method="setUTID"/>
+          <value style="element" name="UT_Value" get-method="getUTValue" set-method="setUTValue"/>
+          <value style="element" name="UA_Type" get-method="getUAType" set-method="setUAType"/>
+          <value style="element" name="UA_ID" get-method="getUAID" set-method="setUAID"/>
+          <value style="element" name="UA_Value" get-method="getUAValue" set-method="setUAValue"/>
+          <value style="element" name="CIS_Reference" get-method="getCISReference" set-method="setCISReference"/>
+          <value style="element" name="Add_Offer" get-method="getAddOffer" set-method="setAddOffer"/>
+          <value style="element" name="Add_UA" get-method="getAddUA" set-method="setAddUA"/>
+          <value style="element" name="Add_DA" get-method="getAddDA" set-method="setAddDA"/>
+          <value style="element" name="Add_UC" get-method="getAddUC" set-method="setAddUC"/>
+          <value style="element" name="Add_PAM" get-method="getAddPAM" set-method="setAddPAM"/>
+          <value style="element" name="Comment" get-method="getComment" set-method="setComment"/>
+        </structure>
+      </structure>
+    </collection>
+  </mapping>
+  <mapping class="com.ericsson.jibx.beans.CISNWPCLIST" name="CIS_NWPC_LIST">
+    <collection get-method="getCISNWPCINFOList" set-method="setCISNWPCINFOList" create-type="java.util.ArrayList">
+      <structure type="com.ericsson.jibx.beans.CISNWPCLIST$CISNWPCINFO" name="CIS_NWPC_INFO">
+        <structure ordered="false">
+          <value style="element" name="BT_Name" get-method="getBTName" set-method="setBTName"/>
+          <value style="element" name="BT_ID" get-method="getBTID" set-method="setBTID"/>
+          <value style="element" name="BT_Value" get-method="getBTValue" set-method="setBTValue"/>
+          <value style="element" name="status" get-method="getStatus" set-method="setStatus"/>
+          <value style="element" name="networkStatus" get-method="getNetworkStatus" set-method="setNetworkStatus"/>
+          <value style="element" name="OffSet_Days" get-method="getOffSetDays" set-method="setOffSetDays"/>
+          <value style="element" name="renewal_count" get-method="getRenewalCount" set-method="setRenewalCount"/>
+          <value style="element" name="Period" get-method="getPeriod" set-method="setPeriod"/>
+        </structure>
+      </structure>
+    </collection>
+  </mapping>
+  <mapping class="com.ericsson.jibx.beans.CISONCEOFFLIST" name="CIS_ONCEOFF_LIST">
+    <collection get-method="getCISONCEOFFINFOList" set-method="setCISONCEOFFINFOList" create-type="java.util.ArrayList">
+      <structure type="com.ericsson.jibx.beans.CISONCEOFFLIST$CISONCEOFFINFO" name="CIS_ONCEOFF_INFO">
+        <structure ordered="false">
+          <value style="element" name="Product_Name" get-method="getProductName" set-method="setProductName"/>
+          <value style="element" name="BT_Name" get-method="getBTName" set-method="setBTName"/>
+          <value style="element" name="BT_ID" get-method="getBTID" set-method="setBTID"/>
+          <value style="element" name="NWPC_State" get-method="getNWPCState" set-method="setNWPCState"/>
+          <value style="element" name="Offer_id" get-method="getOfferId" set-method="setOfferId"/>
+          <value style="element" name="Product_id" get-method="getProductId" set-method="setProductId"/>
+          <value style="element" name="status" get-method="getStatus" set-method="setStatus"/>
+          <value style="element" name="pre_notification_count" get-method="getPreNotificationCount" set-method="setPreNotificationCount"/>
+          <value style="element" name="post_notification_count" get-method="getPostNotificationCount" set-method="setPostNotificationCount"/>
+          <value style="element" name="expiry_date" get-method="getExpiryDate" set-method="setExpiryDate"/>
+          <value style="element" name="start_date" get-method="getStartDate" set-method="setStartDate"/>
+          <value style="element" name="product_type" get-method="getProductType" set-method="setProductType"/>
+          <value style="element" name="service_name" get-method="getServiceName" set-method="setServiceName"/>
+          <value style="element" name="last_action_date" get-method="getLastActionDate" set-method="setLastActionDate"/>
+          <value style="element" name="product_description" get-method="getProductDescription" set-method="setProductDescription"/>
+          <value style="element" name="is_pam_product" get-method="getIsPamProduct" set-method="setIsPamProduct"/>
+          <value style="element" name="pay_src" get-method="getPaySrc" set-method="setPaySrc"/>
+          <value style="element" name="ben_msisdn" get-method="getBenMsisdn" set-method="setBenMsisdn"/>
+          <value style="element" name="send_sms" get-method="getSendSms" set-method="setSendSms"/>
+          <value style="element" name="split_no" get-method="getSplitNo" set-method="setSplitNo"/>
+          <value style="element" name="product_cost" get-method="getProductCost" set-method="setProductCost"/>
+          <value style="element" name="pam_id" get-method="getPamId" set-method="setPamId"/>
+          <value style="element" name="enable_notification" get-method="getEnableNotification" set-method="setEnableNotification"/>
+          <value style="element" name="renewal_value" get-method="getRenewalValue" set-method="setRenewalValue"/>
+          <value style="element" name="srcchannel" get-method="getSrcchannel" set-method="setSrcchannel"/>
+          <value style="element" name="product_category" get-method="getProductCategory" set-method="setProductCategory"/>
+          <value style="element" name="bundle_name" get-method="getBundleName" set-method="setBundleName"/>
+          <value style="element" name="product_purchase_type" get-method="getProductPurchaseType" set-method="setProductPurchaseType"/>
+          <value style="element" name="language_id" get-method="getLanguageId" set-method="setLanguageId"/>
+          <value style="element" name="pre_notif_status" get-method="getPreNotifStatus" set-method="setPreNotifStatus"/>
+          <value style="element" name="post_notif_status" get-method="getPostNotifStatus" set-method="setPostNotifStatus"/>
+          <value style="element" name="segment_id" get-method="getSegmentId" set-method="setSegmentId"/>
+          <value style="element" name="deprov_status" get-method="getDeprovStatus" set-method="setDeprovStatus"/>
+          <value style="element" name="retry_limit" get-method="getRetryLimit" set-method="setRetryLimit"/>
+          <value style="element" name="gifted_by" get-method="getGiftedBy" set-method="setGiftedBy"/>
+          <value style="element" name="priority" get-method="getPriority" set-method="setPriority"/>
+          <value style="element" name="previous_status" get-method="getPreviousStatus" set-method="setPreviousStatus"/>
+          <value style="element" name="correlation_id" get-method="getCorrelationId" set-method="setCorrelationId"/>
+          <value style="element" name="network_status" get-method="getNetworkStatus" set-method="setNetworkStatus"/>
+          <value style="element" name="status_change_time" get-method="getStatusChangeTime" set-method="setStatusChangeTime"/>
+        </structure>
+      </structure>
+    </collection>
+  </mapping>
+  <mapping class="com.ericsson.jibx.beans.CISPARKINGLIST" name="CIS_PARKING_LIST">
+    <collection get-method="getCISPARKINGINFOList" set-method="setCISPARKINGINFOList" create-type="java.util.ArrayList">
+      <structure type="com.ericsson.jibx.beans.CISPARKINGLIST$CISPARKINGINFO" name="CIS_PARKING_INFO">
+        <structure ordered="false">
+          <value style="element" name="Product_name" get-method="getProductName" set-method="setProductName"/>
+          <value style="element" name="BT_Name" get-method="getBTName" set-method="setBTName"/>
+          <value style="element" name="BT_ID" get-method="getBTID" set-method="setBTID"/>
+          <value style="element" name="NWPC_State" get-method="getNWPCState" set-method="setNWPCState"/>
+          <value style="element" name="id" get-method="getId" set-method="setId"/>
+          <value style="element" name="msisdn" get-method="getMsisdn" set-method="setMsisdn"/>
+          <value style="element" name="product_id" get-method="getProductId" set-method="setProductId"/>
+          <value style="element" name="circle_id" get-method="getCircleId" set-method="setCircleId"/>
+          <value style="element" name="status" get-method="getStatus" set-method="setStatus"/>
+          <value style="element" name="expiry_date" get-method="getExpiryDate" set-method="setExpiryDate"/>
+          <value style="element" name="start_date" get-method="getStartDate" set-method="setStartDate"/>
+          <value style="element" name="product_type" get-method="getProductType" set-method="setProductType"/>
+          <value style="element" name="service_name" get-method="getServiceName" set-method="setServiceName"/>
+          <value style="element" name="last_action_date" get-method="getLastActionDate" set-method="setLastActionDate"/>
+          <value style="element" name="product_description" get-method="getProductDescription" set-method="setProductDescription"/>
+          <value style="element" name="pay_src" get-method="getPaySrc" set-method="setPaySrc"/>
+          <value style="element" name="ben_msisdn" get-method="getBenMsisdn" set-method="setBenMsisdn"/>
+          <value style="element" name="product_cost" get-method="getProductCost" set-method="setProductCost"/>
+          <value style="element" name="srcchannel" get-method="getSrcchannel" set-method="setSrcchannel"/>
+          <value style="element" name="offer_id" get-method="getOfferId" set-method="setOfferId"/>
+          <value style="element" name="product_category" get-method="getProductCategory" set-method="setProductCategory"/>
+          <value style="element" name="bundle_name" get-method="getBundleName" set-method="setBundleName"/>
+          <value style="element" name="base_bundle_name" get-method="getBaseBundleName" set-method="setBaseBundleName"/>
+          <value style="element" name="product_purchase_type" get-method="getProductPurchaseType" set-method="setProductPurchaseType"/>
+          <value style="element" name="language_id" get-method="getLanguageId" set-method="setLanguageId"/>
+          <value style="element" name="pre_notif_status" get-method="getPreNotifStatus" set-method="setPreNotifStatus"/>
+          <value style="element" name="post_notif_status" get-method="getPostNotifStatus" set-method="setPostNotifStatus"/>
+          <value style="element" name="retry_limit" get-method="getRetryLimit" set-method="setRetryLimit"/>
+          <value style="element" name="priority" get-method="getPriority" set-method="setPriority"/>
+          <value style="element" name="processing_state" get-method="getProcessingState" set-method="setProcessingState"/>
+          <value style="element" name="send_sms" get-method="getSendSms" set-method="setSendSms"/>
+          <value style="element" name="segment_id" get-method="getSegmentId" set-method="setSegmentId"/>
+          <value style="element" name="previous_status" get-method="getPreviousStatus" set-method="setPreviousStatus"/>
+          <value style="element" name="correlation_id" get-method="getCorrelationId" set-method="setCorrelationId"/>
+          <value style="element" name="pre_notification_count" get-method="getPreNotificationCount" set-method="setPreNotificationCount"/>
+          <value style="element" name="post_notification_count" get-method="getPostNotificationCount" set-method="setPostNotificationCount"/>
+          <value style="element" name="status_change_time" get-method="getStatusChangeTime" set-method="setStatusChangeTime"/>
+          <value style="element" name="subscription_mode" get-method="getSubscriptionMode" set-method="setSubscriptionMode"/>
+        </structure>
+      </structure>
+    </collection>
+  </mapping>
+  <mapping class="com.ericsson.jibx.beans.CISRENEWALLIST" name="CIS_RENEWAL_LIST">
+    <collection get-method="getCISRENEWALINFOList" set-method="setCISRENEWALINFOList" create-type="java.util.ArrayList">
+      <structure type="com.ericsson.jibx.beans.CISRENEWALLIST$CISRENEWALINFO" name="CIS_RENEWAL_INFO">
+        <structure ordered="false">
+          <value style="element" name="Product_name" get-method="getProductName" set-method="setProductName"/>
+          <value style="element" name="BT_Name" get-method="getBTName" set-method="setBTName"/>
+          <value style="element" name="BT_ID" get-method="getBTID" set-method="setBTID"/>
+          <value style="element" name="NWPC_State" get-method="getNWPCState" set-method="setNWPCState"/>
+          <value style="element" name="Offer_ID" get-method="getOfferID" set-method="setOfferID"/>
+          <value style="element" name="renewal_count" get-method="getRenewalCount" set-method="setRenewalCount"/>
+          <value style="element" name="grace_date" get-method="getGraceDate" set-method="setGraceDate"/>
+          <value style="element" name="last_action_date" get-method="getLastActionDate" set-method="setLastActionDate"/>
+          <value style="element" name="last_renewal_date" get-method="getLastRenewalDate" set-method="setLastRenewalDate"/>
+          <value style="element" name="renewal_date" get-method="getRenewalDate" set-method="setRenewalDate"/>
+          <value style="element" name="status" get-method="getStatus" set-method="setStatus"/>
+          <value style="element" name="processing_state" get-method="getProcessingState" set-method="setProcessingState"/>
+          <value style="element" name="process_timestamp" get-method="getProcessTimestamp" set-method="setProcessTimestamp"/>
+          <value style="element" name="activation_date" get-method="getActivationDate" set-method="setActivationDate"/>
+          <value style="element" name="circle_id" get-method="getCircleId" set-method="setCircleId"/>
+          <value style="element" name="product_id" get-method="getProductId" set-method="setProductId"/>
+          <value style="element" name="id" get-method="getId" set-method="setId"/>
+          <value style="element" name="product_description" get-method="getProductDescription" set-method="setProductDescription"/>
+          <value style="element" name="split_action" get-method="getSplitAction" set-method="setSplitAction"/>
+          <value style="element" name="renewal_value" get-method="getRenewalValue" set-method="setRenewalValue"/>
+          <value style="element" name="expiry_notification_flag" get-method="getExpiryNotificationFlag" set-method="setExpiryNotificationFlag"/>
+          <value style="element" name="product_type" get-method="getProductType" set-method="setProductType"/>
+          <value style="element" name="pre_notification_count" get-method="getPreNotificationCount" set-method="setPreNotificationCount"/>
+          <value style="element" name="post_notification_count" get-method="getPostNotificationCount" set-method="setPostNotificationCount"/>
+          <value style="element" name="marketing_text" get-method="getMarketingText" set-method="setMarketingText"/>
+          <value style="element" name="pre_marketing_text_enabled" get-method="getPreMarketingTextEnabled" set-method="setPreMarketingTextEnabled"/>
+          <value style="element" name="post_marketing_text_enabled" get-method="getPostMarketingTextEnabled" set-method="setPostMarketingTextEnabled"/>
+          <value style="element" name="retry_limit" get-method="getRetryLimit" set-method="setRetryLimit"/>
+          <value style="element" name="is_pam_product" get-method="getIsPamProduct" set-method="setIsPamProduct"/>
+          <value style="element" name="pay_src" get-method="getPaySrc" set-method="setPaySrc"/>
+          <value style="element" name="ben_msisdn" get-method="getBenMsisdn" set-method="setBenMsisdn"/>
+          <value style="element" name="send_sms" get-method="getSendSms" set-method="setSendSms"/>
+          <value style="element" name="split_no" get-method="getSplitNo" set-method="setSplitNo"/>
+          <value style="element" name="product_cost" get-method="getProductCost" set-method="setProductCost"/>
+          <value style="element" name="pam_id" get-method="getPamId" set-method="setPamId"/>
+          <value style="element" name="enable_notification" get-method="getEnableNotification" set-method="setEnableNotification"/>
+          <value style="element" name="recurringgraceperiod" get-method="getRecurringgraceperiod" set-method="setRecurringgraceperiod"/>
+          <value style="element" name="srcchannel" get-method="getSrcchannel" set-method="setSrcchannel"/>
+          <value style="element" name="product_category" get-method="getProductCategory" set-method="setProductCategory"/>
+          <value style="element" name="bundle_name" get-method="getBundleName" set-method="setBundleName"/>
+          <value style="element" name="product_purchase_type" get-method="getProductPurchaseType" set-method="setProductPurchaseType"/>
+          <value style="element" name="language_id" get-method="getLanguageId" set-method="setLanguageId"/>
+          <value style="element" name="renewal_status" get-method="getRenewalStatus" set-method="setRenewalStatus"/>
+          <value style="element" name="pre_notif_status" get-method="getPreNotifStatus" set-method="setPreNotifStatus"/>
+          <value style="element" name="post_notif_status" get-method="getPostNotifStatus" set-method="setPostNotifStatus"/>
+          <value style="element" name="segment_id" get-method="getSegmentId" set-method="setSegmentId"/>
+          <value style="element" name="deprov_retry_limit" get-method="getDeprovRetryLimit" set-method="setDeprovRetryLimit"/>
+          <value style="element" name="deprov_status" get-method="getDeprovStatus" set-method="setDeprovStatus"/>
+          <value style="element" name="base_bundle_name" get-method="getBaseBundleName" set-method="setBaseBundleName"/>
+          <value style="element" name="gifted_by" get-method="getGiftedBy" set-method="setGiftedBy"/>
+          <value style="element" name="priority" get-method="getPriority" set-method="setPriority"/>
+          <value style="element" name="pre_grace_exp_notif_status" get-method="getPreGraceExpNotifStatus" set-method="setPreGraceExpNotifStatus"/>
+          <value style="element" name="renewal_num" get-method="getRenewalNum" set-method="setRenewalNum"/>
+          <value style="element" name="previous_status" get-method="getPreviousStatus" set-method="setPreviousStatus"/>
+          <value style="element" name="correlation_id" get-method="getCorrelationId" set-method="setCorrelationId"/>
+          <value style="element" name="network_status" get-method="getNetworkStatus" set-method="setNetworkStatus"/>
+          <value style="element" name="is_grace_chargeable" get-method="getIsGraceChargeable" set-method="setIsGraceChargeable"/>
+          <value style="element" name="extra_param" get-method="getExtraParam" set-method="setExtraParam"/>
+          <value style="element" name="on_grace_network_deact_enabled" get-method="getOnGraceNetworkDeactEnabled" set-method="setOnGraceNetworkDeactEnabled"/>
+        </structure>
+      </structure>
+    </collection>
+  </mapping>
+  <mapping class="com.ericsson.jibx.beans.COMMUNITYMAPPINGLIST" name="COMMUNITY_MAPPING_LIST">
+    <collection get-method="getCOMMUNITYMAPPINGINFOList" set-method="setCOMMUNITYMAPPINGINFOList" create-type="java.util.ArrayList">
+      <structure type="com.ericsson.jibx.beans.COMMUNITYMAPPINGLIST$COMMUNITYMAPPINGINFO" name="COMMUNITY_MAPPING_INFO">
+        <structure ordered="false">
+          <value style="element" name="CUG_NAME" get-method="getCUGNAME" set-method="setCUGNAME"/>
+          <value style="element" name="Community_ID" get-method="getCommunityID" set-method="setCommunityID"/>
+        </structure>
+      </structure>
+    </collection>
+  </mapping>
+  <mapping class="com.ericsson.jibx.beans.DedicatedaccountList" name="dedicatedaccount_list">
+    <collection get-method="getDedicatedaccountInfoList" set-method="setDedicatedaccountInfoList" create-type="java.util.ArrayList">
+      <structure type="com.ericsson.jibx.beans.DedicatedaccountList$DedicatedaccountInfo" name="dedicatedaccount_info">
+        <structure ordered="false">
+          <value style="element" name="account_id" get-method="getAccountId" set-method="setAccountId"/>
+          <value style="element" name="sequence_id" get-method="getSequenceId" set-method="setSequenceId"/>
+          <value style="element" name="id_1" get-method="getId1" set-method="setId1"/>
+          <value style="element" name="balance_1" get-method="getBalance1" set-method="setBalance1"/>
+          <value style="element" name="expiry_date_1" get-method="getExpiryDate1" set-method="setExpiryDate1"/>
+          <value style="element" name="id_2" get-method="getId2" set-method="setId2"/>
+          <value style="element" name="balance_2" get-method="getBalance2" set-method="setBalance2"/>
+          <value style="element" name="expiry_date_2" get-method="getExpiryDate2" set-method="setExpiryDate2"/>
+          <value style="element" name="id_3" get-method="getId3" set-method="setId3"/>
+          <value style="element" name="balance_3" get-method="getBalance3" set-method="setBalance3"/>
+          <value style="element" name="expiry_date_3" get-method="getExpiryDate3" set-method="setExpiryDate3"/>
+          <value style="element" name="id_4" get-method="getId4" set-method="setId4"/>
+          <value style="element" name="balance_4" get-method="getBalance4" set-method="setBalance4"/>
+          <value style="element" name="expiry_date_4" get-method="getExpiryDate4" set-method="setExpiryDate4"/>
+          <value style="element" name="id_5" get-method="getId5" set-method="setId5"/>
+          <value style="element" name="balance_5" get-method="getBalance5" set-method="setBalance5"/>
+          <value style="element" name="expiry_date_5" get-method="getExpiryDate5" set-method="setExpiryDate5"/>
+          <value style="element" name="id_6" get-method="getId6" set-method="setId6"/>
+          <value style="element" name="balance_6" get-method="getBalance6" set-method="setBalance6"/>
+          <value style="element" name="expiry_date_6" get-method="getExpiryDate6" set-method="setExpiryDate6"/>
+          <value style="element" name="id_7" get-method="getId7" set-method="setId7"/>
+          <value style="element" name="balance_7" get-method="getBalance7" set-method="setBalance7"/>
+          <value style="element" name="expiry_date_7" get-method="getExpiryDate7" set-method="setExpiryDate7"/>
+          <value style="element" name="id_8" get-method="getId8" set-method="setId8"/>
+          <value style="element" name="balance_8" get-method="getBalance8" set-method="setBalance8"/>
+          <value style="element" name="expiry_date_8" get-method="getExpiryDate8" set-method="setExpiryDate8"/>
+          <value style="element" name="id_9" get-method="getId9" set-method="setId9"/>
+          <value style="element" name="balance_9" get-method="getBalance9" set-method="setBalance9"/>
+          <value style="element" name="expiry_date_9" get-method="getExpiryDate9" set-method="setExpiryDate9"/>
+          <value style="element" name="id_10" get-method="getId10" set-method="setId10"/>
+          <value style="element" name="balance_10" get-method="getBalance10" set-method="setBalance10"/>
+          <value style="element" name="expiry_date_10" get-method="getExpiryDate10" set-method="setExpiryDate10"/>
+          <value style="element" name="start_date_1" get-method="getStartDate1" set-method="setStartDate1"/>
+          <value style="element" name="start_date_2" get-method="getStartDate2" set-method="setStartDate2"/>
+          <value style="element" name="start_date_3" get-method="getStartDate3" set-method="setStartDate3"/>
+          <value style="element" name="start_date_4" get-method="getStartDate4" set-method="setStartDate4"/>
+          <value style="element" name="start_date_5" get-method="getStartDate5" set-method="setStartDate5"/>
+          <value style="element" name="start_date_6" get-method="getStartDate6" set-method="setStartDate6"/>
+          <value style="element" name="start_date_7" get-method="getStartDate7" set-method="setStartDate7"/>
+          <value style="element" name="start_date_8" get-method="getStartDate8" set-method="setStartDate8"/>
+          <value style="element" name="pam_service_id_10" get-method="getPamServiceId10" set-method="setPamServiceId10"/>
+          <value style="element" name="start_date_9" get-method="getStartDate9" set-method="setStartDate9"/>
+          <value style="element" name="product_id_10" get-method="getProductId10" set-method="setProductId10"/>
+          <value style="element" name="product_id_1" get-method="getProductId1" set-method="setProductId1"/>
+          <value style="element" name="product_id_2" get-method="getProductId2" set-method="setProductId2"/>
+          <value style="element" name="product_id_3" get-method="getProductId3" set-method="setProductId3"/>
+          <value style="element" name="product_id_4" get-method="getProductId4" set-method="setProductId4"/>
+          <value style="element" name="product_id_5" get-method="getProductId5" set-method="setProductId5"/>
+          <value style="element" name="product_id_6" get-method="getProductId6" set-method="setProductId6"/>
+          <value style="element" name="product_id_7" get-method="getProductId7" set-method="setProductId7"/>
+          <value style="element" name="product_id_8" get-method="getProductId8" set-method="setProductId8"/>
+          <value style="element" name="product_id_9" get-method="getProductId9" set-method="setProductId9"/>
+          <value style="element" name="pam_service_id_1" get-method="getPamServiceId1" set-method="setPamServiceId1"/>
+          <value style="element" name="pam_service_id_2" get-method="getPamServiceId2" set-method="setPamServiceId2"/>
+          <value style="element" name="pam_service_id_3" get-method="getPamServiceId3" set-method="setPamServiceId3"/>
+          <value style="element" name="pam_service_id_4" get-method="getPamServiceId4" set-method="setPamServiceId4"/>
+          <value style="element" name="pam_service_id_5" get-method="getPamServiceId5" set-method="setPamServiceId5"/>
+          <value style="element" name="pam_service_id_6" get-method="getPamServiceId6" set-method="setPamServiceId6"/>
+          <value style="element" name="pam_service_id_7" get-method="getPamServiceId7" set-method="setPamServiceId7"/>
+          <value style="element" name="pam_service_id_8" get-method="getPamServiceId8" set-method="setPamServiceId8"/>
+          <value style="element" name="pam_service_id_9" get-method="getPamServiceId9" set-method="setPamServiceId9"/>
+          <value style="element" name="start_date_10" get-method="getStartDate10" set-method="setStartDate10"/>
+        </structure>
+      </structure>
+    </collection>
+  </mapping>
+  <mapping class="com.ericsson.jibx.beans.DEFAULTSERVICESMAPPINGLIST" name="DEFAULTSERVICES_MAPPING_LIST">
+    <collection get-method="getDEFAULTSERVICESMAPPINGINFOList" set-method="setDEFAULTSERVICESMAPPINGINFOList" usage="optional" create-type="java.util.ArrayList">
+      <structure type="com.ericsson.jibx.beans.DEFAULTSERVICESMAPPINGLIST$DEFAULTSERVICESMAPPINGINFO" name="DEFAULTSERVICES_MAPPING_INFO">
+        <value style="element" name="Default_ID" get-method="getDefaultID" set-method="setDefaultID"/>
+        <value style="element" name="Ignore_Flag" get-method="getIgnoreFlag" set-method="setIgnoreFlag"/>
+        <value style="element" name="OFFER_Always_ON_Never_Expiry" get-method="getOFFERAlwaysONNeverExpiry" set-method="setOFFERAlwaysONNeverExpiry"/>
+        <value style="element" name="DA_Always_ON_Never_Expiry" get-method="getDAAlwaysONNeverExpiry" set-method="setDAAlwaysONNeverExpiry"/>
+        <value style="element" name="Is_DA_Default" get-method="getIsDADefault" set-method="setIsDADefault"/>
+        <value style="element" name="Is_Attr_Default" get-method="getIsAttrDefault" set-method="setIsAttrDefault"/>
+        <value style="element" name="Offer_Id" get-method="getOfferId" set-method="setOfferId" usage="optional"/>
+        <value style="element" name="Offer_Type" get-method="getOfferType" set-method="setOfferType" usage="optional"/>
+        <value style="element" name="Offer_Rule_Id" get-method="getOfferRuleId" set-method="setOfferRuleId" usage="optional"/>
+        <value style="element" name="Attr_Offer_Id" get-method="getAttrOfferId" set-method="setAttrOfferId" usage="optional"/>
+        <value style="element" name="Attr_Name" get-method="getAttrName" set-method="setAttrName" usage="optional"/>
+        <value style="element" name="Attr_Type" get-method="getAttrType" set-method="setAttrType" usage="optional"/>
+        <value style="element" name="Attr_Source" get-method="getAttrSource" set-method="setAttrSource" usage="optional"/>
+        <value style="element" name="PAM_Class_ID" get-method="getPAMClassID" set-method="setPAMClassID" usage="optional"/>
+        <value style="element" name="PAM_Service_ID" get-method="getPAMServiceID" set-method="setPAMServiceID" usage="optional"/>
+        <value style="element" name="Schedule_ID" get-method="getScheduleID" set-method="setScheduleID" usage="optional"/>
+        <value style="element" name="Current_PAM_Period" get-method="getCurrentPAMPeriod" set-method="setCurrentPAMPeriod" usage="optional"/>
+        <value style="element" name="Resource" get-method="getResource" set-method="setResource" usage="optional"/>
+        <value style="element" name="DA_ID" get-method="getDAID" set-method="setDAID" usage="optional"/>
+        <value style="element" name="DA_Type" get-method="getDAType" set-method="setDAType" usage="optional"/>
+        <value style="element" name="DA_Default_Value" get-method="getDADefaultValue" set-method="setDADefaultValue" usage="optional"/>
+        <value style="element" name="Offer_Start" get-method="getOfferStart" set-method="setOfferStart" usage="optional"/>
+        <value style="element" name="UA_ID" get-method="getUAID" set-method="setUAID" usage="optional"/>
+        <value style="element" name="UA_Value" get-method="getUAValue" set-method="setUAValue" usage="optional"/>
+      </structure>
+    </collection>
+  </mapping>
+  <mapping class="com.ericsson.jibx.beans.NPPLIFECYCLEMAPPINGLIST" name="NPPLIFECYCLE_MAPPING_LIST">
+    <collection get-method="getNPPLIFECYCLEMAPPINGINFOList" set-method="setNPPLIFECYCLEMAPPINGINFOList" usage="optional" create-type="java.util.ArrayList">
+      <structure type="com.ericsson.jibx.beans.NPPLIFECYCLEMAPPINGLIST$NPPLIFECYCLEMAPPINGINFO" name="NPPLIFECYCLE_MAPPING_INFO">
+        <value style="element" name="SerialNumber" get-method="getSerialNumber" set-method="setSerialNumber"/>
+        <value style="element" name="CCS_ACCT_TYPE_ID" get-method="getCCSACCTTYPEID" set-method="setCCSACCTTYPEID"/>
+        <value style="element" name="State" get-method="getState" set-method="setState"/>
+        <value style="element" name="Ignore_Flag" get-method="getIgnoreFlag" set-method="setIgnoreFlag"/>
+        <value style="element" name="SC_Target" get-method="getSCTarget" set-method="setSCTarget"/>
+        <value style="element" name="PBT_ID" get-method="getPBTID" set-method="setPBTID"/>
+        <value style="element" name="UA" get-method="getUA" set-method="setUA"/>
+        <value style="element" name="OFFER" get-method="getOFFER" set-method="setOFFER" usage="optional"/>
+        <value style="element" name="SUP_EXPIRY_Date" get-method="getSUPEXPIRYDate" set-method="setSUPEXPIRYDate" usage="optional"/>
+        <value style="element" name="SUF_DAYS" get-method="getSUFDAYS" set-method="setSUFDAYS" usage="optional"/>
+        <value style="element" name="SUP_STATUS" get-method="getSUPSTATUS" set-method="setSUPSTATUS" usage="optional"/>
+        <value style="element" name="SFEE_EXPIRY_Date" get-method="getSFEEEXPIRYDate" set-method="setSFEEEXPIRYDate" usage="optional"/>
+        <value style="element" name="SFEE_STATUS" get-method="getSFEESTATUS" set-method="setSFEESTATUS" usage="optional"/>
+        <value style="element" name="ACTIVATED" get-method="getACTIVATED" set-method="setACTIVATED" usage="optional"/>
+        <value style="element" name="FIRST_IVR_CALL_DONE" get-method="getFIRSTIVRCALLDONE" set-method="setFIRSTIVRCALLDONE" usage="optional"/>
+        <value style="element" name="FIRST_CALL_DONE" get-method="getFIRSTCALLDONE" set-method="setFIRSTCALLDONE" usage="optional"/>
+        <value style="element" name="SUBSCRIBER_STATUS" get-method="getSUBSCRIBERSTATUS" set-method="setSUBSCRIBERSTATUS" usage="optional"/>
+      </structure>
+    </collection>
+  </mapping>
+  <mapping class="com.ericsson.jibx.beans.OfferattributeList" name="offerattribute_list">
+    <collection get-method="getOfferattributeInfoList" set-method="setOfferattributeInfoList" usage="optional" create-type="java.util.ArrayList">
+      <structure type="com.ericsson.jibx.beans.OfferattributeList$OfferattributeInfo" name="offerattribute_info">
+        <structure ordered="false">
+          <value style="element" name="account_id" get-method="getAccountId" set-method="setAccountId"/>
+          <value style="element" name="offer_id" get-method="getOfferId" set-method="setOfferId"/>
+          <value style="element" name="attribute_def_id" get-method="getAttributeDefId" set-method="setAttributeDefId"/>
+          <value style="element" name="value" get-method="getValue" set-method="setValue"/>
+        </structure>
+      </structure>
+    </collection>
+  </mapping>
+  <mapping class="com.ericsson.jibx.beans.OfferList" name="offer_list">
+    <collection get-method="getOfferInfoList" set-method="setOfferInfoList" usage="optional" create-type="java.util.ArrayList">
+      <structure type="com.ericsson.jibx.beans.OfferList$OfferInfo" name="offer_info">
+        <structure ordered="false">
+          <value style="element" name="account_id" get-method="getAccountId" set-method="setAccountId"/>
+          <value style="element" name="offer_id" get-method="getOfferId" set-method="setOfferId"/>
+          <value style="element" name="start_date" get-method="getStartDate" set-method="setStartDate"/>
+          <value style="element" name="expiry_date" get-method="getExpiryDate" set-method="setExpiryDate"/>
+          <value style="element" name="start_seconds" get-method="getStartSeconds" set-method="setStartSeconds"/>
+          <value style="element" name="expiry_seconds" get-method="getExpirySeconds" set-method="setExpirySeconds"/>
+          <value style="element" name="flags" get-method="getFlags" set-method="setFlags"/>
+          <value style="element" name="pam_service_id" get-method="getPamServiceId" set-method="setPamServiceId"/>
+          <value style="element" name="product_id" get-method="getProductId" set-method="setProductId"/>
+        </structure>
+      </structure>
+    </collection>
+  </mapping>
+  <mapping class="com.ericsson.jibx.beans.PROFILETAGLIST" name="PROFILE_TAG_LIST">
+    <collection get-method="getPROFILETAGINFOList" set-method="setPROFILETAGINFOList" create-type="java.util.ArrayList">
+      <structure type="com.ericsson.jibx.beans.PROFILETAGLIST$PROFILETAGINFO" name="PROFILE_TAG_INFO">
+        <structure ordered="false">
+          <value style="element" name="Profile_Tag_Name" get-method="getProfileTagName" set-method="setProfileTagName"/>
+          <value style="element" name="Symbols" get-method="getSymbols" set-method="setSymbols"/>
+          <value style="element" name="Profile_Tag_Value" get-method="getProfileTagValue" set-method="setProfileTagValue"/>
+          <value style="element" name="PT_Group_Identifier" get-method="getPTGroupIdentifier" set-method="setPTGroupIdentifier"/>
+          <value style="element" name="Sub_State" get-method="getSubState" set-method="setSubState"/>
+          <value style="element" name="RatePlan_Operator" get-method="getRatePlanOperator" set-method="setRatePlanOperator"/>
+          <value style="element" name="RatePlan_ID" get-method="getRatePlanID" set-method="setRatePlanID"/>
+          <value style="element" name="Additional_PT_Check" get-method="getAdditionalPTCheck" set-method="setAdditionalPTCheck"/>
+          <value style="element" name="Resource" get-method="getResource" set-method="setResource"/>
+          <value style="element" name="Ignore_Flag" get-method="getIgnoreFlag" set-method="setIgnoreFlag"/>
+          <value style="element" name="Offer_Always_No_Never_Expiry" get-method="getOfferAlwaysNoNeverExpiry" set-method="setOfferAlwaysNoNeverExpiry"/>
+          <value style="element" name="Product_Private" get-method="getProductPrivate" set-method="setProductPrivate"/>
+          <value style="element" name="Offer_Id" get-method="getOfferId" set-method="setOfferId"/>
+          <value style="element" name="Offer_Type" get-method="getOfferType" set-method="setOfferType"/>
+          <value style="element" name="Offer_Start" get-method="getOfferStart" set-method="setOfferStart"/>
+          <value style="element" name="Offer_End" get-method="getOfferEnd" set-method="setOfferEnd"/>
+          <value style="element" name="Attr1_Offer_id" get-method="getAttr1OfferId" set-method="setAttr1OfferId"/>
+          <value style="element" name="Attr1_name" get-method="getAttr1Name" set-method="setAttr1Name"/>
+          <value style="element" name="Attr1_Type" get-method="getAttr1Type" set-method="setAttr1Type"/>
+          <value style="element" name="Attr1_Value" get-method="getAttr1Value" set-method="setAttr1Value"/>
+          <value style="element" name="UA_Type" get-method="getUAType" set-method="setUAType"/>
+          <value style="element" name="UA_ID" get-method="getUAID" set-method="setUAID"/>
+          <value style="element" name="UA_Value" get-method="getUAValue" set-method="setUAValue"/>
+          <value style="element" name="Faf_called_number" get-method="getFafCalledNumber" set-method="setFafCalledNumber"/>
+          <value style="element" name="Faf_Indicator" get-method="getFafIndicator" set-method="setFafIndicator"/>
+          <value style="element" name="CIS_Reference" get-method="getCISReference" set-method="setCISReference"/>
+          <value style="element" name="UC_Type" get-method="getUCType" set-method="setUCType"/>
+          <value style="element" name="UC_ID" get-method="getUCID" set-method="setUCID"/>
+          <value style="element" name="UT_ID" get-method="getUTID" set-method="setUTID"/>
+          <value style="element" name="UT_Value" get-method="getUTValue" set-method="setUTValue"/>
+          <value style="element" name="PAM_CLASS_ID" get-method="getPAMCLASSID" set-method="setPAMCLASSID"/>
+          <value style="element" name="PAM_SERV_ID" get-method="getPAMSERVID" set-method="setPAMSERVID"/>
+          <value style="element" name="Add_Offer" get-method="getAddOffer" set-method="setAddOffer"/>
+          <value style="element" name="Add_UA" get-method="getAddUA" set-method="setAddUA"/>
+          <value style="element" name="Add_DA" get-method="getAddDA" set-method="setAddDA"/>
+          <value style="element" name="Add_UC" get-method="getAddUC" set-method="setAddUC"/>
+        </structure>
+      </structure>
+    </collection>
+  </mapping>
+  <mapping class="com.ericsson.jibx.beans.SubscriberList" name="subscriber_list">
+    <collection get-method="getSubscriberInfoList" set-method="setSubscriberInfoList" usage="optional" create-type="java.util.ArrayList">
+      <structure type="com.ericsson.jibx.beans.SubscriberList$SubscriberInfo" name="subscriber_info">
+        <structure ordered="false">
+          <value style="element" name="msisdn" get-method="getMsisdn" set-method="setMsisdn"/>
+          <value style="element" name="account_id" get-method="getAccountId" set-method="setAccountId"/>
+          <value style="element" name="subscriber_status" get-method="getSubscriberStatus" set-method="setSubscriberStatus"/>
+          <value style="element" name="refill_failed" get-method="getRefillFailed" set-method="setRefillFailed"/>
+          <value style="element" name="refill_bar_end" get-method="getRefillBarEnd" set-method="setRefillBarEnd"/>
+          <value style="element" name="first_ivr_call_done" get-method="getFirstIvrCallDone" set-method="setFirstIvrCallDone"/>
+          <value style="element" name="first_call_done" get-method="getFirstCallDone" set-method="setFirstCallDone"/>
+          <value style="element" name="language" get-method="getLanguage" set-method="setLanguage"/>
+          <value style="element" name="special_announc_played" get-method="getSpecialAnnouncPlayed" set-method="setSpecialAnnouncPlayed"/>
+          <value style="element" name="sfee_warn_played" get-method="getSfeeWarnPlayed" set-method="setSfeeWarnPlayed"/>
+          <value style="element" name="sup_warn_played" get-method="getSupWarnPlayed" set-method="setSupWarnPlayed"/>
+          <value style="element" name="low_level_warn_played" get-method="getLowLevelWarnPlayed" set-method="setLowLevelWarnPlayed"/>
+          <value style="element" name="wanted_block_status" get-method="getWantedBlockStatus" set-method="setWantedBlockStatus"/>
+          <value style="element" name="actual_block_status" get-method="getActualBlockStatus" set-method="setActualBlockStatus"/>
+          <value style="element" name="eoc_selection_id" get-method="getEocSelectionId" set-method="setEocSelectionId"/>
+          <value style="element" name="pin_code" get-method="getPinCode" set-method="setPinCode"/>
+          <value style="element" name="usage_statistic_flags" get-method="getUsageStatisticFlags" set-method="setUsageStatisticFlags"/>
+        </structure>
+      </structure>
+    </collection>
+  </mapping>
+  <mapping class="com.ericsson.jibx.beans.SubscriberXml" name="subscriber_xml">
+    <structure name="subscriber_info">
+      <structure name="SUBSCRIBER" ordered="false">
+        <value style="element" name="MSISDN" get-method="getSubscriberInfoMSISDN" set-method="setSubscriberInfoMSISDN"/>
+        <value style="element" name="CCS_ACCT_TYPE_NAME" get-method="getSubscriberInfoCCSACCTTYPENAME" set-method="setSubscriberInfoCCSACCTTYPENAME"/>
+        <value style="element" name="CCS_ACCT_TYPE_ID" get-method="getSubscriberInfoCCSACCTTYPEID" set-method="setSubscriberInfoCCSACCTTYPEID"/>
+        <value style="element" name="SERVICE_STATE" get-method="getSubscriberInfoSERVICESTATE" set-method="setSubscriberInfoSERVICESTATE"/>
+        <value style="element" name="CREATION_DATE" get-method="getSubscriberInfoCREATIONDATE" set-method="setSubscriberInfoCREATIONDATE"/>
+        <value style="element" name="WALLET_EXPIRY" get-method="getSubscriberInfoWALLETEXPIRY" set-method="setSubscriberInfoWALLETEXPIRY"/>
+        <value style="element" name="WALLET_ID" get-method="getSubscriberInfoWALLETID" set-method="setSubscriberInfoWALLETID"/>
+        <value style="element" name="WALLET_TYPE" get-method="getSubscriberInfoWALLETTYPE" set-method="setSubscriberInfoWALLETTYPE"/>
+        <value style="element" name="BE_ACCT_ENGINE_ID" get-method="getSubscriberInfoBEACCTENGINEID" set-method="setSubscriberInfoBEACCTENGINEID"/>
+      </structure>
+    </structure>
+    <collection get-method="getBalancesdumpInfoList" set-method="setBalancesdumpInfoList" name="balancesdump_info" create-type="java.util.ArrayList">
+      <structure type="com.ericsson.jibx.beans.SubscriberXml$SchemasubscriberbalancesdumpInfo" name="schemasubscriberbalancesdump_info">
+        <structure ordered="false">
+          <value style="element" name="MSISDN" get-method="getMSISDN" set-method="setMSISDN"/>
+          <value style="element" name="WALLET_ID" get-method="getWALLETID" set-method="setWALLETID"/>
+          <value style="element" name="BALANCE_TYPE" get-method="getBALANCETYPE" set-method="setBALANCETYPE"/>
+          <value style="element" name="BE_BUCKET_ID" get-method="getBEBUCKETID" set-method="setBEBUCKETID"/>
+          <value style="element" name="BALANCE_TYPE_NAME" get-method="getBALANCETYPENAME" set-method="setBALANCETYPENAME"/>
+          <value style="element" name="BE_BUCKET_VALUE" get-method="getBEBUCKETVALUE" set-method="setBEBUCKETVALUE"/>
+          <value style="element" name="BE_BUCKET_START_DATE" get-method="getBEBUCKETSTARTDATE" set-method="setBEBUCKETSTARTDATE"/>
+          <value style="element" name="BE_NEVER_EXPIRES" get-method="getBENEVEREXPIRES" set-method="setBENEVEREXPIRES"/>
+          <value style="element" name="BE_EXPIRY" get-method="getBEEXPIRY" set-method="setBEEXPIRY"/>
+          <value style="element" name="BE_BUCKET_NEVER_USED" get-method="getBEBUCKETNEVERUSED" set-method="setBEBUCKETNEVERUSED"/>
+          <value style="element" name="BE_BUCKET_LAST_USE" get-method="getBEBUCKETLASTUSE" set-method="setBEBUCKETLASTUSE"/>
+          <value style="element" name="BE_BUCKET_REFERENCE" get-method="getBEBUCKETREFERENCE" set-method="setBEBUCKETREFERENCE"/>
+          <value style="element" name="WALLET_TYPE" get-method="getWALLETTYPE" set-method="setWALLETTYPE"/>
+          <value style="element" name="CCS_BALANCE_UNIT_ID" get-method="getCCSBALANCEUNITID" set-method="setCCSBALANCEUNITID"/>
+          <value style="element" name="CCS_BALANCE_UNIT_NAME" get-method="getCCSBALANCEUNITNAME" set-method="setCCSBALANCEUNITNAME"/>
+          <value style="element" name="BE_ACCT_ENGINE_ID" get-method="getBEACCTENGINEID" set-method="setBEACCTENGINEID"/>
+        </structure>
+      </structure>
+    </collection>
+    <collection get-method="getCugclidumpInfoList" set-method="setCugclidumpInfoList" name="cugclidump_info" create-type="java.util.ArrayList">
+      <structure type="com.ericsson.jibx.beans.SubscriberXml$SchemasubscribercugclidumpInfo" name="schemasubscribercugclidump_info">
+        <structure ordered="false">
+          <value style="element" name="MSISDN" get-method="getMSISDN" set-method="setMSISDN"/>
+          <value style="element" name="CUG_NAME" get-method="getCUGNAME" set-method="setCUGNAME"/>
+          <value style="element" name="CHANGE_DATE" get-method="getCHANGEDATE" set-method="setCHANGEDATE"/>
+          <value style="element" name="TARIFF_PLAN" get-method="getTARIFFPLAN" set-method="setTARIFFPLAN"/>
+          <value style="element" name="TARIFF_PLAN_NAME" get-method="getTARIFFPLANNAME" set-method="setTARIFFPLANNAME"/>
+        </structure>
+      </structure>
+    </collection>
+    <collection get-method="getUsmsdumpInfoList" set-method="setUsmsdumpInfoList" name="usmsdump_info" create-type="java.util.ArrayList">
+      <structure type="com.ericsson.jibx.beans.SubscriberXml$SchemasubscriberusmsdumpInfo" name="schemasubscriberusmsdump_info">
+        <structure ordered="false">
+          <value style="element" name="MSISDN" get-method="getMSISDN" set-method="setMSISDN"/>
+          <value style="element" name="INITIAL_ACTIVATION_DATE" get-method="getINITIALACTIVATIONDATE" set-method="setINITIALACTIVATIONDATE"/>
+          <value style="element" name="INITIAL_ACCOUNT_BALANCE" get-method="getINITIALACCOUNTBALANCE" set-method="setINITIALACCOUNTBALANCE"/>
+          <value style="element" name="LAST_ACCOUNT_EXPIRY_PERIOD" get-method="getLASTACCOUNTEXPIRYPERIOD" set-method="setLASTACCOUNTEXPIRYPERIOD"/>
+          <value style="element" name="LAST_BALANCE_BEFORE_RECHARGE" get-method="getLASTBALANCEBEFORERECHARGE" set-method="setLASTBALANCEBEFORERECHARGE"/>
+          <value style="element" name="LAST_BALANCE_EXPIRY_PERIOD" get-method="getLASTBALANCEEXPIRYPERIOD" set-method="setLASTBALANCEEXPIRYPERIOD"/>
+          <value style="element" name="LAST_EXPIRED_AMOUNT" get-method="getLASTEXPIREDAMOUNT" set-method="setLASTEXPIREDAMOUNT"/>
+          <value style="element" name="LAST_EXPIRY_DATE" get-method="getLASTEXPIRYDATE" set-method="setLASTEXPIRYDATE"/>
+          <value style="element" name="LAST_PRODUCT_TYPE_SWAP_DATE" get-method="getLASTPRODUCTTYPESWAPDATE" set-method="setLASTPRODUCTTYPESWAPDATE"/>
+          <value style="element" name="LAST_RECHARGE_AMOUNT" get-method="getLASTRECHARGEAMOUNT" set-method="setLASTRECHARGEAMOUNT"/>
+          <value style="element" name="FIRST_RECHARGE_DATE" get-method="getFIRSTRECHARGEDATE" set-method="setFIRSTRECHARGEDATE"/>
+          <value style="element" name="LAST_RECHARGE_DATE" get-method="getLASTRECHARGEDATE" set-method="setLASTRECHARGEDATE"/>
+          <value style="element" name="LAST_STATE_CHANGE_DATE" get-method="getLASTSTATECHANGEDATE" set-method="setLASTSTATECHANGEDATE"/>
+          <value style="element" name="TOTAL_EXPIRED_AMOUNT" get-method="getTOTALEXPIREDAMOUNT" set-method="setTOTALEXPIREDAMOUNT"/>
+          <value style="element" name="LAST_STATE_CHANGE_REASON" get-method="getLASTSTATECHANGEREASON" set-method="setLASTSTATECHANGEREASON"/>
+          <value style="element" name="WALLET_ID" get-method="getWALLETID" set-method="setWALLETID"/>
+          <value style="element" name="WALLET_TYPE" get-method="getWALLETTYPE" set-method="setWALLETTYPE"/>
+          <value style="element" name="BE_ACCT_ENGINE_ID" get-method="getBEACCTENGINEID" set-method="setBEACCTENGINEID"/>
+        </structure>
+      </structure>
+    </collection>
+    <collection get-method="getProfiledumpInfoList" set-method="setProfiledumpInfoList" name="profiledump_info" create-type="java.util.ArrayList">
+      <structure type="com.ericsson.jibx.beans.SubscriberXml$SchemasubscriberprofiledumpInfo" name="schemasubscriberprofiledump_info">
+        <structure ordered="false">
+          <value style="element" name="MSISDN" get-method="getMSISDN" set-method="setMSISDN"/>
+          <value style="element" name="Language_ID" get-method="getLanguageID" set-method="setLanguageID"/>
+          <value style="element" name="IMEI" get-method="getIMEI" set-method="setIMEI"/>
+          <value style="element" name="IMSI" get-method="getIMSI" set-method="setIMSI"/>
+          <value style="element" name="HLRAddress" get-method="getHLRAddress" set-method="setHLRAddress"/>
+          <value style="element" name="Wallet_Type" get-method="getWalletType" set-method="setWalletType"/>
+          <value style="element" name="BstrVceIntNumTree" get-method="getBstrVceIntNumTree" set-method="setBstrVceIntNumTree"/>
+          <value style="element" name="BstrVceNatNumTree" get-method="getBstrVceNatNumTree" set-method="setBstrVceNatNumTree"/>
+          <value style="element" name="PeriodicChargeStatus" get-method="getPeriodicChargeStatus" set-method="setPeriodicChargeStatus"/>
+          <value style="element" name="CSBAR" get-method="getCSBAR" set-method="setCSBAR"/>
+          <value style="element" name="crbtActReqDate" get-method="getCrbtActReqDate" set-method="setCrbtActReqDate"/>
+          <value style="element" name="crtCnfrmd" get-method="getCrtCnfrmd" set-method="setCrtCnfrmd"/>
+          <value style="element" name="crbtActConfirmDate" get-method="getCrbtActConfirmDate" set-method="setCrbtActConfirmDate"/>
+          <value style="element" name="crbtDeact" get-method="getCrbtDeact" set-method="setCrbtDeact"/>
+          <value style="element" name="crbtDeActReqDate" get-method="getCrbtDeActReqDate" set-method="setCrbtDeActReqDate"/>
+          <value style="element" name="crbtDeActConfirmDate" get-method="getCrbtDeActConfirmDate" set-method="setCrbtDeActConfirmDate"/>
+          <value style="element" name="cbActConfirmDate" get-method="getCbActConfirmDate" set-method="setCbActConfirmDate"/>
+          <value style="element" name="cbExpDate" get-method="getCbExpDate" set-method="setCbExpDate"/>
+          <value style="element" name="cbCnfdAct" get-method="getCbCnfdAct" set-method="setCbCnfdAct"/>
+          <value style="element" name="cbWarn1" get-method="getCbWarn1" set-method="setCbWarn1"/>
+          <value style="element" name="cbWarn2" get-method="getCbWarn2" set-method="setCbWarn2"/>
+          <value style="element" name="cbDeActReqDate" get-method="getCbDeActReqDate" set-method="setCbDeActReqDate"/>
+          <value style="element" name="cbDeActConfirmDate" get-method="getCbDeActConfirmDate" set-method="setCbDeActConfirmDate"/>
+          <value style="element" name="cfActConfirmDate" get-method="getCfActConfirmDate" set-method="setCfActConfirmDate"/>
+          <value style="element" name="cfConfActive" get-method="getCfConfActive" set-method="setCfConfActive"/>
+          <value style="element" name="cfDeActConfirmDate" get-method="getCfDeActConfirmDate" set-method="setCfDeActConfirmDate"/>
+          <value style="element" name="cfDeActReqDate" get-method="getCfDeActReqDate" set-method="setCfDeActReqDate"/>
+          <value style="element" name="cfLastFailedDate" get-method="getCfLastFailedDate" set-method="setCfLastFailedDate"/>
+          <value style="element" name="cfActReqDate" get-method="getCfActReqDate" set-method="setCfActReqDate"/>
+          <value style="element" name="avmActConfirmDate" get-method="getAvmActConfirmDate" set-method="setAvmActConfirmDate"/>
+          <value style="element" name="avmCnfrmd" get-method="getAvmCnfrmd" set-method="setAvmCnfrmd"/>
+          <value style="element" name="avmDeActReqDate" get-method="getAvmDeActReqDate" set-method="setAvmDeActReqDate"/>
+          <value style="element" name="avmDeActConfirmDate" get-method="getAvmDeActConfirmDate" set-method="setAvmDeActConfirmDate"/>
+          <value style="element" name="SprssNtfctn" get-method="getSprssNtfctn" set-method="setSprssNtfctn"/>
+          <value style="element" name="avm" get-method="getAvm" set-method="setAvm"/>
+          <value style="element" name="avmActReqDate" get-method="getAvmActReqDate" set-method="setAvmActReqDate"/>
+          <value style="element" name="MssdCallNot" get-method="getMssdCallNot" set-method="setMssdCallNot"/>
+          <value style="element" name="VMCIMEI" get-method="getVMCIMEI" set-method="setVMCIMEI"/>
+          <value style="element" name="VMCName" get-method="getVMCName" set-method="setVMCName"/>
+          <value style="element" name="AcctActiveMonth" get-method="getAcctActiveMonth" set-method="setAcctActiveMonth"/>
+          <value style="element" name="AcctActiveYear" get-method="getAcctActiveYear" set-method="setAcctActiveYear"/>
+          <value style="element" name="TopXCountr1" get-method="getTopXCountr1" set-method="setTopXCountr1"/>
+          <value style="element" name="TopXCountr2" get-method="getTopXCountr2" set-method="setTopXCountr2"/>
+          <value style="element" name="TopXCountr3" get-method="getTopXCountr3" set-method="setTopXCountr3"/>
+          <value style="element" name="TopXCountr4" get-method="getTopXCountr4" set-method="setTopXCountr4"/>
+          <value style="element" name="TopXCountr5" get-method="getTopXCountr5" set-method="setTopXCountr5"/>
+          <value style="element" name="Prepaid" get-method="getPrepaid" set-method="setPrepaid"/>
+          <value style="element" name="entBsnssCrclActv" get-method="getEntBsnssCrclActv" set-method="setEntBsnssCrclActv"/>
+          <value style="element" name="BusMobPayg50" get-method="getBusMobPayg50" set-method="setBusMobPayg50"/>
+          <value style="element" name="BusMobTopUp" get-method="getBusMobTopUp" set-method="setBusMobTopUp"/>
+          <value style="element" name="MercuryOptInOutDate" get-method="getMercuryOptInOutDate" set-method="setMercuryOptInOutDate"/>
+          <value style="element" name="HardCapLabel" get-method="getHardCapLabel" set-method="setHardCapLabel"/>
+          <value style="element" name="HardCapAddonLabel" get-method="getHardCapAddonLabel" set-method="setHardCapAddonLabel"/>
+          <value style="element" name="Active" get-method="getActive" set-method="setActive"/>
+          <value style="element" name="Absher" get-method="getAbsher" set-method="setAbsher"/>
+          <value style="element" name="avmInfSub" get-method="getAvmInfSub" set-method="setAvmInfSub"/>
+          <value style="element" name="avmPin" get-method="getAvmPin" set-method="setAvmPin"/>
+          <value style="element" name="avmProf" get-method="getAvmProf" set-method="setAvmProf"/>
+          <value style="element" name="BronzeMPromoActDate" get-method="getBronzeMPromoActDate" set-method="setBronzeMPromoActDate"/>
+          <value style="element" name="BronzeMPromoDeactDate" get-method="getBronzeMPromoDeactDate" set-method="setBronzeMPromoDeactDate"/>
+          <value style="element" name="BstrVceIntNumAct" get-method="getBstrVceIntNumAct" set-method="setBstrVceIntNumAct"/>
+          <value style="element" name="BstrVceNatNumAct" get-method="getBstrVceNatNumAct" set-method="setBstrVceNatNumAct"/>
+          <value style="element" name="BstrVINActReqDate" get-method="getBstrVINActReqDate" set-method="setBstrVINActReqDate"/>
+          <value style="element" name="BstrVINConfirmDate" get-method="getBstrVINConfirmDate" set-method="setBstrVINConfirmDate"/>
+          <value style="element" name="BstrVINDeActConfDate" get-method="getBstrVINDeActConfDate" set-method="setBstrVINDeActConfDate"/>
+          <value style="element" name="BstrVINDeActReqDate" get-method="getBstrVINDeActReqDate" set-method="setBstrVINDeActReqDate"/>
+          <value style="element" name="BstrVINRecur" get-method="getBstrVINRecur" set-method="setBstrVINRecur"/>
+          <value style="element" name="BstrVNNActReqDate" get-method="getBstrVNNActReqDate" set-method="setBstrVNNActReqDate"/>
+          <value style="element" name="BstrVNNConfirmDate" get-method="getBstrVNNConfirmDate" set-method="setBstrVNNConfirmDate"/>
+          <value style="element" name="BstrVNNDeActConfDate" get-method="getBstrVNNDeActConfDate" set-method="setBstrVNNDeActConfDate"/>
+          <value style="element" name="BstrVNNDeActReqDate" get-method="getBstrVNNDeActReqDate" set-method="setBstrVNNDeActReqDate"/>
+          <value style="element" name="BstrVNNRecur" get-method="getBstrVNNRecur" set-method="setBstrVNNRecur"/>
+          <value style="element" name="cbActReqDate" get-method="getCbActReqDate" set-method="setCbActReqDate"/>
+          <value style="element" name="cbAll" get-method="getCbAll" set-method="setCbAll"/>
+          <value style="element" name="cbIncom" get-method="getCbIncom" set-method="setCbIncom"/>
+          <value style="element" name="cbInt" get-method="getCbInt" set-method="setCbInt"/>
+          <value style="element" name="cbIntExc" get-method="getCbIntExc" set-method="setCbIntExc"/>
+          <value style="element" name="cbWR" get-method="getCbWR" set-method="setCbWR"/>
+          <value style="element" name="cfBusy" get-method="getCfBusy" set-method="setCfBusy"/>
+          <value style="element" name="cfData" get-method="getCfData" set-method="setCfData"/>
+          <value style="element" name="cfFax" get-method="getCfFax" set-method="setCfFax"/>
+          <value style="element" name="cfInt" get-method="getCfInt" set-method="setCfInt"/>
+          <value style="element" name="cfNoReply" get-method="getCfNoReply" set-method="setCfNoReply"/>
+          <value style="element" name="cfNotReach" get-method="getCfNotReach" set-method="setCfNotReach"/>
+          <value style="element" name="cfVoice" get-method="getCfVoice" set-method="setCfVoice"/>
+          <value style="element" name="clir" get-method="getClir" set-method="setClir"/>
+          <value style="element" name="cllrRngTne" get-method="getCllrRngTne" set-method="setCllrRngTne"/>
+          <value style="element" name="CVM" get-method="getCVM" set-method="setCVM"/>
+          <value style="element" name="CVMCounter" get-method="getCVMCounter" set-method="setCVMCounter"/>
+          <value style="element" name="dataGeneric" get-method="getDataGeneric" set-method="setDataGeneric"/>
+          <value style="element" name="Date1" get-method="getDate1" set-method="setDate1"/>
+          <value style="element" name="DisabilityActivationDate" get-method="getDisabilityActivationDate" set-method="setDisabilityActivationDate"/>
+          <value style="element" name="DisabilityDectivationDate" get-method="getDisabilityDectivationDate" set-method="setDisabilityDectivationDate"/>
+          <value style="element" name="EmiratiPlan" get-method="getEmiratiPlan" set-method="setEmiratiPlan"/>
+          <value style="element" name="EntCust" get-method="getEntCust" set-method="setEntCust"/>
+          <value style="element" name="entMssgingActv" get-method="getEntMssgingActv" set-method="setEntMssgingActv"/>
+          <value style="element" name="faxGroup3" get-method="getFaxGroup3" set-method="setFaxGroup3"/>
+          <value style="element" name="GlobalZoneOptIn" get-method="getGlobalZoneOptIn" set-method="setGlobalZoneOptIn"/>
+          <value style="element" name="GlobalZoneOptOut" get-method="getGlobalZoneOptOut" set-method="setGlobalZoneOptOut"/>
+          <value style="element" name="gprsPmail" get-method="getGprsPmail" set-method="setGprsPmail"/>
+          <value style="element" name="IDD2Act" get-method="getIDD2Act" set-method="setIDD2Act"/>
+          <value style="element" name="IDD2ActDate" get-method="getIDD2ActDate" set-method="setIDD2ActDate"/>
+          <value style="element" name="IDD2DeactDate" get-method="getIDD2DeactDate" set-method="setIDD2DeactDate"/>
+          <value style="element" name="IDDCutRateAct" get-method="getIDDCutRateAct" set-method="setIDDCutRateAct"/>
+          <value style="element" name="IDDCutRateActDate" get-method="getIDDCutRateActDate" set-method="setIDDCutRateActDate"/>
+          <value style="element" name="InternationalMin" get-method="getInternationalMin" set-method="setInternationalMin"/>
+          <value style="element" name="Language" get-method="getLanguage" set-method="setLanguage"/>
+          <value style="element" name="odbAll" get-method="getOdbAll" set-method="setOdbAll"/>
+          <value style="element" name="odbIncom" get-method="getOdbIncom" set-method="setOdbIncom"/>
+          <value style="element" name="odbInt" get-method="getOdbInt" set-method="setOdbInt"/>
+          <value style="element" name="odbIntExc" get-method="getOdbIntExc" set-method="setOdbIntExc"/>
+          <value style="element" name="odbOnlyVoice" get-method="getOdbOnlyVoice" set-method="setOdbOnlyVoice"/>
+          <value style="element" name="odbOutVoice" get-method="getOdbOutVoice" set-method="setOdbOutVoice"/>
+          <value style="element" name="odbWR" get-method="getOdbWR" set-method="setOdbWR"/>
+          <value style="element" name="PAYGDataFNL" get-method="getPAYGDataFNL" set-method="setPAYGDataFNL"/>
+          <value style="element" name="PAYGMet" get-method="getPAYGMet" set-method="setPAYGMet"/>
+          <value style="element" name="PCNGlobalOptin" get-method="getPCNGlobalOptin" set-method="setPCNGlobalOptin"/>
+          <value style="element" name="PCNGlobalOptout" get-method="getPCNGlobalOptout" set-method="setPCNGlobalOptout"/>
+          <value style="element" name="Plan" get-method="getPlan" set-method="setPlan"/>
+          <value style="element" name="ReceivePostCallSMS" get-method="getReceivePostCallSMS" set-method="setReceivePostCallSMS"/>
+          <value style="element" name="SocialBndlActChannel" get-method="getSocialBndlActChannel" set-method="setSocialBndlActChannel"/>
+          <value style="element" name="SocialBndlDeActChannel" get-method="getSocialBndlDeActChannel" set-method="setSocialBndlDeActChannel"/>
+          <value style="element" name="BstrVceIntNumExp" get-method="getBstrVceIntNumExp" set-method="setBstrVceIntNumExp"/>
+          <value style="element" name="BstrVceNatNumExp" get-method="getBstrVceNatNumExp" set-method="setBstrVceNatNumExp"/>
+          <value style="element" name="BstrVINChngsAllwd" get-method="getBstrVINChngsAllwd" set-method="setBstrVINChngsAllwd"/>
+          <value style="element" name="BstrVNNChngsAllwd" get-method="getBstrVNNChngsAllwd" set-method="setBstrVNNChngsAllwd"/>
+          <value style="element" name="TranslatedNumber" get-method="getTranslatedNumber" set-method="setTranslatedNumber"/>
+          <value style="element" name="TransNumber" get-method="getTransNumber" set-method="setTransNumber"/>
+          <value style="element" name="SmsBndl1Recur" get-method="getSmsBndl1Recur" set-method="setSmsBndl1Recur"/>
+          <value style="element" name="SmsExpDate" get-method="getSmsExpDate" set-method="setSmsExpDate"/>
+          <value style="element" name="SmsBndl2Recur" get-method="getSmsBndl2Recur" set-method="setSmsBndl2Recur"/>
+          <value style="element" name="PriceShout" get-method="getPriceShout" set-method="setPriceShout"/>
+          <value style="element" name="BlckBrryAct" get-method="getBlckBrryAct" set-method="setBlckBrryAct"/>
+          <value style="element" name="BlckBrryCnfdAct" get-method="getBlckBrryCnfdAct" set-method="setBlckBrryCnfdAct"/>
+          <value style="element" name="BlckBrryActCnfrmDate" get-method="getBlckBrryActCnfrmDate" set-method="setBlckBrryActCnfrmDate"/>
+          <value style="element" name="BlckBrryExpDate" get-method="getBlckBrryExpDate" set-method="setBlckBrryExpDate"/>
+          <value style="element" name="SmsBndl3Recur" get-method="getSmsBndl3Recur" set-method="setSmsBndl3Recur"/>
+          <value style="element" name="Bespoke" get-method="getBespoke" set-method="setBespoke"/>
+          <value style="element" name="ManRenDateLess1Y" get-method="getManRenDateLess1Y" set-method="setManRenDateLess1Y"/>
+          <value style="element" name="DataBndl1Recur" get-method="getDataBndl1Recur" set-method="setDataBndl1Recur"/>
+          <value style="element" name="DataBndlType" get-method="getDataBndlType" set-method="setDataBndlType"/>
+          <value style="element" name="DataExpDate" get-method="getDataExpDate" set-method="setDataExpDate"/>
+          <value style="element" name="DataGraceAct" get-method="getDataGraceAct" set-method="setDataGraceAct"/>
+          <value style="element" name="DataGraceEnd" get-method="getDataGraceEnd" set-method="setDataGraceEnd"/>
+          <value style="element" name="DataBndl2Recur" get-method="getDataBndl2Recur" set-method="setDataBndl2Recur"/>
+          <value style="element" name="DataBndl3Recur" get-method="getDataBndl3Recur" set-method="setDataBndl3Recur"/>
+          <value style="element" name="DataBndl4Recur" get-method="getDataBndl4Recur" set-method="setDataBndl4Recur"/>
+          <value style="element" name="DataBndl5Recur" get-method="getDataBndl5Recur" set-method="setDataBndl5Recur"/>
+          <value style="element" name="DataBndl6Recur" get-method="getDataBndl6Recur" set-method="setDataBndl6Recur"/>
+          <value style="element" name="DataBndl8Recur" get-method="getDataBndl8Recur" set-method="setDataBndl8Recur"/>
+          <value style="element" name="DataBndl9Recur" get-method="getDataBndl9Recur" set-method="setDataBndl9Recur"/>
+          <value style="element" name="MBB" get-method="getMBB" set-method="setMBB"/>
+          <value style="element" name="MBBExpDate" get-method="getMBBExpDate" set-method="setMBBExpDate"/>
+          <value style="element" name="MBBUnlimited" get-method="getMBBUnlimited" set-method="setMBBUnlimited"/>
+          <value style="element" name="MBBUnlimExpDate" get-method="getMBBUnlimExpDate" set-method="setMBBUnlimExpDate"/>
+          <value style="element" name="MBB2GB" get-method="getMBB2GB" set-method="setMBB2GB"/>
+          <value style="element" name="MBB2GBExpDate" get-method="getMBB2GBExpDate" set-method="setMBB2GBExpDate"/>
+          <value style="element" name="MBB10GB" get-method="getMBB10GB" set-method="setMBB10GB"/>
+          <value style="element" name="MBB10GBExpDate" get-method="getMBB10GBExpDate" set-method="setMBB10GBExpDate"/>
+          <value style="element" name="MBBGraceAct" get-method="getMBBGraceAct" set-method="setMBBGraceAct"/>
+          <value style="element" name="MBBGraceEnd" get-method="getMBBGraceEnd" set-method="setMBBGraceEnd"/>
+          <value style="element" name="MBBOfferExpDate" get-method="getMBBOfferExpDate" set-method="setMBBOfferExpDate"/>
+          <value style="element" name="TP_Social_Deact_Conf" get-method="getTPSocialDeactConf" set-method="setTPSocialDeactConf"/>
+          <value style="element" name="cbAct" get-method="getCbAct" set-method="setCbAct"/>
+          <value style="element" name="PokeSMSOptoutDate" get-method="getPokeSMSOptoutDate" set-method="setPokeSMSOptoutDate"/>
+          <value style="element" name="PokeSMSOptinDate" get-method="getPokeSMSOptinDate" set-method="setPokeSMSOptinDate"/>
+          <value style="element" name="BlckBrryActReqDate" get-method="getBlckBrryActReqDate" set-method="setBlckBrryActReqDate"/>
+          <value style="element" name="BlckBrryDeActReqDate" get-method="getBlckBrryDeActReqDate" set-method="setBlckBrryDeActReqDate"/>
+          <value style="element" name="BlckBrryDeactRbkDate" get-method="getBlckBrryDeactRbkDate" set-method="setBlckBrryDeactRbkDate"/>
+          <value style="element" name="BronzeDeactDate" get-method="getBronzeDeactDate" set-method="setBronzeDeactDate"/>
+          <value style="element" name="BronzeActDate" get-method="getBronzeActDate" set-method="setBronzeActDate"/>
+          <value style="element" name="umsCnfrmd" get-method="getUmsCnfrmd" set-method="setUmsCnfrmd"/>
+          <value style="element" name="umsInfSub" get-method="getUmsInfSub" set-method="setUmsInfSub"/>
+          <value style="element" name="ums" get-method="getUms" set-method="setUms"/>
+          <value style="element" name="umsF2M" get-method="getUmsF2M" set-method="setUmsF2M"/>
+          <value style="element" name="umsSMS2F" get-method="getUmsSMS2F" set-method="setUmsSMS2F"/>
+          <value style="element" name="umsVm2MMS" get-method="getUmsVm2MMS" set-method="setUmsVm2MMS"/>
+          <value style="element" name="TravSumOptInDate" get-method="getTravSumOptInDate" set-method="setTravSumOptInDate"/>
+          <value style="element" name="PassOptInDate" get-method="getPassOptInDate" set-method="setPassOptInDate"/>
+          <value style="element" name="PassOptOutDate" get-method="getPassOptOutDate" set-method="setPassOptOutDate"/>
+          <value style="element" name="TwinSIMNumber" get-method="getTwinSIMNumber" set-method="setTwinSIMNumber"/>
+          <value style="element" name="FstTimeActivation" get-method="getFstTimeActivation" set-method="setFstTimeActivation"/>
+          <value style="element" name="Anniversarytopuppromo" get-method="getAnniversarytopuppromo" set-method="setAnniversarytopuppromo"/>
+          <value style="element" name="AnniversarytopuppromoEnd" get-method="getAnniversarytopuppromoEnd" set-method="setAnniversarytopuppromoEnd"/>
+          <value style="element" name="SmartPhoneExpiry" get-method="getSmartPhoneExpiry" set-method="setSmartPhoneExpiry"/>
+          <value style="element" name="DSP_Promo" get-method="getDSPPromo" set-method="setDSPPromo"/>
+          <value style="element" name="guiBalAdjDate" get-method="getGuiBalAdjDate" set-method="setGuiBalAdjDate"/>
+          <value style="element" name="guiBalAdjVal" get-method="getGuiBalAdjVal" set-method="setGuiBalAdjVal"/>
+          <value style="element" name="BBBundName" get-method="getBBBundName" set-method="setBBBundName"/>
+          <value style="element" name="BBPromo" get-method="getBBPromo" set-method="setBBPromo"/>
+          <value style="element" name="BSCSAct" get-method="getBSCSAct" set-method="setBSCSAct"/>
+          <value style="element" name="BBPromoSubDate" get-method="getBBPromoSubDate" set-method="setBBPromoSubDate"/>
+          <value style="element" name="BBPromoEndDate" get-method="getBBPromoEndDate" set-method="setBBPromoEndDate"/>
+          <value style="element" name="BlckBrrySprssSMS" get-method="getBlckBrrySprssSMS" set-method="setBlckBrrySprssSMS"/>
+          <value style="element" name="BlckBrryDeActCnfrmDt" get-method="getBlckBrryDeActCnfrmDt" set-method="setBlckBrryDeActCnfrmDt"/>
+          <value style="element" name="Payg_Life_Optin" get-method="getPaygLifeOptin" set-method="setPaygLifeOptin"/>
+          <value style="element" name="gprsBasicSer" get-method="getGprsBasicSer" set-method="setGprsBasicSer"/>
+          <value style="element" name="gprsWap" get-method="getGprsWap" set-method="setGprsWap"/>
+          <value style="element" name="smsMtPp" get-method="getSmsMtPp" set-method="setSmsMtPp"/>
+          <value style="element" name="gprsMms" get-method="getGprsMms" set-method="setGprsMms"/>
+          <value style="element" name="smsMoPp" get-method="getSmsMoPp" set-method="setSmsMoPp"/>
+          <value style="element" name="callhold" get-method="getCallhold" set-method="setCallhold"/>
+          <value style="element" name="callwait" get-method="getCallwait" set-method="setCallwait"/>
+          <value style="element" name="multiParty" get-method="getMultiParty" set-method="setMultiParty"/>
+          <value style="element" name="IntRoam" get-method="getIntRoam" set-method="setIntRoam"/>
+          <value style="element" name="clip" get-method="getClip" set-method="setClip"/>
+          <value style="element" name="VdioCall" get-method="getVdioCall" set-method="setVdioCall"/>
+          <value style="element" name="DuCS" get-method="getDuCS" set-method="setDuCS"/>
+          <value style="element" name="BSCS_account_num" get-method="getBSCSAccountNum" set-method="setBSCSAccountNum"/>
+          <value style="element" name="CS_notification_num" get-method="getCSNotificationNum" set-method="setCSNotificationNum"/>
+          <value style="element" name="cbGraceAct" get-method="getCbGraceAct" set-method="setCbGraceAct"/>
+          <value style="element" name="cbGraceEnd" get-method="getCbGraceEnd" set-method="setCbGraceEnd"/>
+          <value style="element" name="cbGraceRenew" get-method="getCbGraceRenew" set-method="setCbGraceRenew"/>
+          <value style="element" name="gprsCarrier" get-method="getGprsCarrier" set-method="setGprsCarrier"/>
+          <value style="element" name="PAYGDataLineOffer" get-method="getPAYGDataLineOffer" set-method="setPAYGDataLineOffer"/>
+          <value style="element" name="PAYGDataWHSP" get-method="getPAYGDataWHSP" set-method="setPAYGDataWHSP"/>
+          <value style="element" name="PAYGDataWH" get-method="getPAYGDataWH" set-method="setPAYGDataWH"/>
+          <value style="element" name="msisdnChgDate" get-method="getMsisdnChgDate" set-method="setMsisdnChgDate"/>
+          <value style="element" name="mainMSISDN" get-method="getMainMSISDN" set-method="setMainMSISDN"/>
+          <value style="element" name="CashReturn" get-method="getCashReturn" set-method="setCashReturn"/>
+          <value style="element" name="NewTopUpValue" get-method="getNewTopUpValue" set-method="setNewTopUpValue"/>
+          <value style="element" name="bdgtCntrlTopUp" get-method="getBdgtCntrlTopUp" set-method="setBdgtCntrlTopUp"/>
+          <value style="element" name="BlckBrryBundle" get-method="getBlckBrryBundle" set-method="setBlckBrryBundle"/>
+          <value style="element" name="MBB10GBWelcome" get-method="getMBB10GBWelcome" set-method="setMBB10GBWelcome"/>
+          <value style="element" name="MBB2GBWelcome" get-method="getMBB2GBWelcome" set-method="setMBB2GBWelcome"/>
+          <value style="element" name="MBBUnlimWelcome" get-method="getMBBUnlimWelcome" set-method="setMBBUnlimWelcome"/>
+          <value style="element" name="MBBWelcome" get-method="getMBBWelcome" set-method="setMBBWelcome"/>
+          <value style="element" name="guiBalAdjCount" get-method="getGuiBalAdjCount" set-method="setGuiBalAdjCount"/>
+          <value style="element" name="LastChangeDateExpiry" get-method="getLastChangeDateExpiry" set-method="setLastChangeDateExpiry"/>
+          <value style="element" name="NewPPBundle" get-method="getNewPPBundle" set-method="setNewPPBundle"/>
+          <value style="element" name="SmsBndlType" get-method="getSmsBndlType" set-method="setSmsBndlType"/>
+          <value style="element" name="PCN1stCall" get-method="getPCN1stCall" set-method="setPCN1stCall"/>
+          <value style="element" name="RLHAct_ReqDate" get-method="getRLHActReqDate" set-method="setRLHActReqDate"/>
+          <value style="element" name="RLHDeact_Date" get-method="getRLHDeactDate" set-method="setRLHDeactDate"/>
+          <value style="element" name="entPDIntNum" get-method="getEntPDIntNum" set-method="setEntPDIntNum"/>
+          <value style="element" name="AloRchgBonusOptinDt" get-method="getAloRchgBonusOptinDt" set-method="setAloRchgBonusOptinDt"/>
+          <value style="element" name="Customer_ID" get-method="getCustomerID" set-method="setCustomerID"/>
+          <value style="element" name="IDDBundleActDate" get-method="getIDDBundleActDate" set-method="setIDDBundleActDate"/>
+          <value style="element" name="ICPBundle" get-method="getICPBundle" set-method="setICPBundle"/>
+          <value style="element" name="Mercury2DOptinoutDate" get-method="getMercury2DOptinoutDate" set-method="setMercury2DOptinoutDate"/>
+          <value style="element" name="Mercury2MOptinoutDate" get-method="getMercury2MOptinoutDate" set-method="setMercury2MOptinoutDate"/>
+          <value style="element" name="FamSponsr" get-method="getFamSponsr" set-method="setFamSponsr"/>
+          <value style="element" name="FamsponsorEtisalat" get-method="getFamsponsorEtisalat" set-method="setFamsponsorEtisalat"/>
+          <value style="element" name="NPPSocBndlDAPAct" get-method="getNPPSocBndlDAPAct" set-method="setNPPSocBndlDAPAct"/>
+          <value style="element" name="NPPBISDAPMod" get-method="getNPPBISDAPMod" set-method="setNPPBISDAPMod"/>
+          <value style="element" name="NPPBBSocialDAPMod" get-method="getNPPBBSocialDAPMod" set-method="setNPPBBSocialDAPMod"/>
+          <value style="element" name="NPPBBSocialDAPDeact" get-method="getNPPBBSocialDAPDeact" set-method="setNPPBBSocialDAPDeact"/>
+          <value style="element" name="MercuryDOptinDate" get-method="getMercuryDOptinDate" set-method="setMercuryDOptinDate"/>
+          <value style="element" name="MercuryDOptoutDate" get-method="getMercuryDOptoutDate" set-method="setMercuryDOptoutDate"/>
+          <value style="element" name="CVMDeactDate" get-method="getCVMDeactDate" set-method="setCVMDeactDate"/>
+          <value style="element" name="IDDRateCuttersOptinDate" get-method="getIDDRateCuttersOptinDate" set-method="setIDDRateCuttersOptinDate"/>
+          <value style="element" name="IDDRateCuttersOptoutDate" get-method="getIDDRateCuttersOptoutDate" set-method="setIDDRateCuttersOptoutDate"/>
+          <value style="element" name="NonstopSocActDate" get-method="getNonstopSocActDate" set-method="setNonstopSocActDate"/>
+          <value style="element" name="NonstopSocDeactDate" get-method="getNonstopSocDeactDate" set-method="setNonstopSocDeactDate"/>
+          <value style="element" name="OWFnFLabel" get-method="getOWFnFLabel" set-method="setOWFnFLabel"/>
+          <value style="element" name="OneWayFnF" get-method="getOneWayFnF" set-method="setOneWayFnF"/>
+          <value style="element" name="OneWayFnFModCount" get-method="getOneWayFnFModCount" set-method="setOneWayFnFModCount"/>
+          <value style="element" name="AutoRechargeValue" get-method="getAutoRechargeValue" set-method="setAutoRechargeValue"/>
+        </structure>
+      </structure>
+    </collection>
+  </mapping>
+  <mapping class="com.ericsson.jibx.beans.UsagecounterList" name="usagecounter_list">
+    <collection get-method="getUsagecounterInfoList" set-method="setUsagecounterInfoList" create-type="java.util.ArrayList">
+      <structure type="com.ericsson.jibx.beans.UsagecounterList$UsagecounterInfo" name="usagecounter_info">
+        <structure ordered="false">
+          <value style="element" name="account_id" get-method="getAccountId" set-method="setAccountId"/>
+          <value style="element" name="usage_counter_id" get-method="getUsageCounterId" set-method="setUsageCounterId"/>
+          <value style="element" name="associated_id" get-method="getAssociatedId" set-method="setAssociatedId"/>
+          <value style="element" name="value" get-method="getValue" set-method="setValue"/>
+          <value style="element" name="product_id" get-method="getProductId" set-method="setProductId"/>
+        </structure>
+      </structure>
+    </collection>
+  </mapping>
+</binding>

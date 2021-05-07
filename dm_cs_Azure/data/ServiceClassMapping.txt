@@ -1,0 +1,53 @@
+Pay as you Go 2,214,Prepaid,N,1001,187,187,365,365
+Alo,255,Prepaid,N,1002,187,187,365,365
+Business Mobile PaYG plus 2,194,Prepaid,N,1051,0,0,0,0
+NPP Special,559,Prepaid,N,1003,90,270,180,0
+Tourist SIM Extra,561,Prepaid,N,1004,90,90,0,0
+NPP Value,558,Prepaid,N,1005,90,270,180,0
+Pay as you Go Data Line,4,Prepaid,N,1006,187,187,365,365
+HotelPrepaid,602,Prepaid,N,1007,0,0,0,0
+Business mobile Pay as you Go plus,25,Prepaid,N,1052,0,0,0,0
+Visitor Mobile Line,5,Prepaid,Y,1008,90,120,276,246
+Pay as you Go Million,196,Prepaid,N,1009,365,395,91,61
+Business Mobile Postpaid,172,Hybrid,N,1151,0,0,0,0
+MCR,276,Hybrid,N,1152,0,0,0,0
+EMP,277,Hybrid,N,1101,0,0,0,0
+Postpaid Consumer,557,Hybrid,N,1102,0,0,0,0
+CS POST E,108,Carrier Select,N,1301,0,0,0,0
+CS POST C,109,Carrier Select,N,1302,0,0,0,0
+Homephone recharge,107,Carrier Select,Y,1303,0,0,0,0
+CallingCard3,436,Calling Card,N,1201,14,14,0,0
+CallingCard1,434,Calling Card,N,1202,30,30,0,0
+CallingCard5,537,Calling Card,N,1203,45,45,0,0
+CallingCard4,496,Calling Card,N,1204,60,60,0,0
+NonDu Basic 800,374,Toll Free,Y,1454,0,0,0,0
+Du Basic 800,275,Toll Free,Y,1451,0,0,0,0
+Du Basic 600,582,Toll Free,Y,1452,0,0,0,0
+DU ITFS,497,Toll Free,Y,1453,0,0,0,0
+du Family Prepaid,193,Employee,N,1351,0,0,0,0
+Non DU WiFi Prepaid,334,WiFi,N,1401,0,0,0,0
+Test Ionut and Marcel,105,Prepaid,Y,0,,,,
+Roaming_PT,415,Prepaid,Y,0,,,,
+CS Testprod,106,Toll Free,Y,0,,,,
+Du TEST 800,394,Toll Free,Y,0,,,,
+Pay as you Go 2 - TEST,517,Prepaid,Y,0,,,,
+Du Basic 900,456,Toll Free,Y,0,,,,
+Business Data PaYG plus,235,Hybrid,Y,0,,,,
+Pay as you Go Pioneer,170,Prepaid,Y,0,,,,
+du FUT Vanilla,110,Prepaid,Y,0,,,,
+du BSIM Vanilla,63,Prepaid,Y,0,,,,
+du BSIM Holiday,62,Prepaid,Y,0,,,,
+du FUT Vanilla Data,136,Prepaid,Y,0,,,,
+eSG Support Test,61,Prepaid,Y,0,,,,
+du BSIM Holiday Data,81,Prepaid,Y,0,,,,
+du budget test,153,Prepaid,Y,0,,,,
+du BSIM Vanilla Data,82,Prepaid,Y,0,,,,
+CS POST E test,476,Prepaid,Y,0,,,,
+TestCopyPT,354,Prepaid,Y,0,,,,
+TestCopyPT_Alo,355,Prepaid,Y,0,,,,
+Pay as you Go,3,Prepaid,Y,0,,,,
+Visitor Data Line,6,Prepaid,Y,0,,,,
+Tourist SIM,560,Prepaid,Y,0,,,,
+Home Cam Pay as you Go,195,Prepaid,Y,0,,,,
+duCC Access,314,Prepaid,Y,0,,,,
+Payphone,296,Prepaid,Y,0,,,,

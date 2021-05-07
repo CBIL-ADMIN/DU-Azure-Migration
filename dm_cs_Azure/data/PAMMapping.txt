@@ -1,0 +1,11 @@
+01,6,6,1,Monthly
+07,6,6,3,Monthly
+17,6,6,4,Monthly
+24,6,6,5,Monthly
+27,6,6,6,Monthly
+02,6,6,7,Monthly
+Rule 0:,,,,
+Pam_Period:,,,,
+Year = Current_Year,,,,
+Month = Current_Month,,,,
+eg. "Monthly_2019_Jan",,,,

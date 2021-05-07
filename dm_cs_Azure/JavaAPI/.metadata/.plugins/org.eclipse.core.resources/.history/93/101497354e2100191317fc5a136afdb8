@@ -1,0 +1,1165 @@
+package com.ericsson.dm.transform.implementation;
+
+import java.io.UnsupportedEncodingException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.stream.Collectors;
+
+import com.ericsson.dm.Utils.CommonUtilities;
+import com.ericsson.dm.inititialization.LoadSubscriberMapping;
+import com.ericsson.dm.transformation.ExecuteTransformation;
+import com.ericsson.jibx.beans.SubscriberXml;
+import com.ericsson.jibx.beans.SubscriberXml.SchemasubscriberbalancesdumpInfo;
+
+public class OfferAttribute implements Comparator<SchemasubscriberbalancesdumpInfo> {
+
+	SubscriberXml subscriber;
+	String msisdn;
+	String INITIAL_ACTIVATION_DATE;
+	String[] ExceptionBalances = {"2112","1387","1219","21","1832","3011","1512","2432"};
+	 
+	Set<String> rejectAndLog;
+	Set<String> onlyLog;
+	public CopyOnWriteArrayList<SchemasubscriberbalancesdumpInfo> SortedBalanceInput;
+	
+	public OfferAttribute()
+	{
+		
+	}
+	public OfferAttribute(SubscriberXml subscriber,Set<String> rejectAndLog, Set<String> onlyLog, String INITIAL_ACTIVATION_DATE) {
+		// TODO Auto-generated constructor stub
+		this.subscriber=subscriber;		
+		this.rejectAndLog=rejectAndLog;
+		this.onlyLog=onlyLog;
+		this.INITIAL_ACTIVATION_DATE = INITIAL_ACTIVATION_DATE;
+		SortedBalanceInput = new CopyOnWriteArrayList<>();
+	}
+	public Map<String, List<String>> execute() {
+		// TODO Auto-generated method stub
+		msisdn = subscriber.getSubscriberInfoMSISDN();
+		
+		SortedBalanceInput.addAll(subscriber.getBalancesdumpInfoList());
+		Collections.sort(SortedBalanceInput,new Offer());
+		
+		Map<String,List<String>> map = new HashMap<>();
+		map.put("OfferAttribute", generateOfferAttributes());
+
+		SortedBalanceInput.clear();
+		return map;
+	}
+	
+	@Override
+	public int compare(SchemasubscriberbalancesdumpInfo o1, SchemasubscriberbalancesdumpInfo o2) {
+		int value1 = o1.getBEEXPIRY().compareTo(o2.getBEEXPIRY());
+        if (value1 == 0) {
+        	return o1.getBEBUCKETID().compareTo(o2.getBEBUCKETID());
+        }
+        return value1;
+
+	}
+	
+	private List<String> generateOfferAttributes(){
+		
+		List<String> OfferAttributeList = new ArrayList<>();
+		OfferAttributeList.addAll(offerAttributeFromDefaultService(msisdn));
+		OfferAttributeList.addAll(offerAttributeFromBalanceMapping(msisdn));
+		
+		return OfferAttributeList;
+	}
+
+	private synchronized Collection<? extends String> offerAttributeFromBalanceMapping(String msisdn) {
+		Date currDate = new Date();
+		SimpleDateFormat sdfDaily = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		
+		List<String> BalanceOffAttrList =new ArrayList<>();
+		Set<String> CompletedGroup = new HashSet<>();
+		Set<String> CompletedBT_ID = new HashSet<>();
+		
+		for(com.ericsson.jibx.beans.SubscriberXml.SchemasubscriberbalancesdumpInfo balanceInput : SortedBalanceInput)
+		{			
+			String Balance_ID = balanceInput.getBALANCETYPE();
+			String Balance_ExpiryDate = balanceInput.getBEEXPIRY();
+			String Balance_Value = balanceInput.getBEBUCKETVALUE();
+			if(CompletedBT_ID.contains(Balance_ID))
+				continue;
+			
+			if(!Balance_ExpiryDate.equals("1970-01-01 00:00:00") && CommonUtilities.convertDateToEpoch(Balance_ExpiryDate) < CommonUtilities.convertDateToEpoch(sdfDaily.format(currDate)))
+			{
+				CompletedBT_ID.add(Balance_ID);
+				continue;
+			}
+			
+			if(LoadSubscriberMapping.BalanceEmptyBTGroupIdentifierMap.get(Balance_ID + "|") != null)
+			{
+				String OffAttr_ID = LoadSubscriberMapping.BalanceEmptyBTGroupIdentifierMap.get(Balance_ID + "|").getAttrOfferId();
+				String Symbol = LoadSubscriberMapping.BalanceEmptyBTGroupIdentifierMap.get(Balance_ID + "|").getSymbols();
+				String BT_Value = LoadSubscriberMapping.BalanceEmptyBTGroupIdentifierMap.get(Balance_ID + "|").getBTValue();
+				String OffAttr_Name = LoadSubscriberMapping.BalanceEmptyBTGroupIdentifierMap.get(Balance_ID + "|").getAttrName();
+				String OffAttr_Type = LoadSubscriberMapping.BalanceEmptyBTGroupIdentifierMap.get(Balance_ID + "|").getAttrType();
+							
+				if(!OffAttr_ID.isEmpty())
+				{					
+					if(Symbol.isEmpty() && BT_Value.isEmpty())
+					{	
+						String OfferAttr_Defination = "";
+						if(Integer.parseInt(OffAttr_Type) == 4)
+							OfferAttr_Defination = LoadSubscriberMapping.OfferAttrDefMap.get(OffAttr_ID + ',' + OffAttr_Name);
+						
+						try {
+							BalanceOffAttrList.add(msisdn+ "," + OffAttr_ID + "," + OfferAttr_Defination + "," + CommonUtilities.toHexadecimal(Balance_Value) + "," +  LoadSubscriberMapping.CommonConfigMap.get("default_ZERO"));
+						} catch (UnsupportedEncodingException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
+					}
+					else
+					{
+						boolean OffAttrCreation = false;
+						if(Symbol.equals(">=") && Integer.parseInt(Balance_Value) >= Integer.parseInt(BT_Value))
+							OffAttrCreation = true;
+						else if(Symbol.equals(">") && Integer.parseInt(Balance_Value) > Integer.parseInt(BT_Value))
+							OffAttrCreation = true;
+						else if(Symbol.equals("=") && Integer.parseInt(Balance_Value) == Integer.parseInt(BT_Value))
+							OffAttrCreation = true;
+						else if(Symbol.equals("or"))
+						{
+							//Integer.parseInt(Balance_Value) == Integer.parseInt(BT_Value)
+							String[] values = BT_Value.split(",");
+							
+							if(Arrays.stream(values).anyMatch(Balance_Value::equals))
+								OffAttrCreation = true;
+							//else
+							//	onlyLog.add("INC4004:Balance_Type match condition failed:MSISDN=" + msisdn + ":BALANCE_TYPE=" + Balance_ID + ":BE_BUCKET_VALUE=" + Balance_Value + ":BE_BUCKET_ID=" + balanceInput.getBEBUCKETID() +":ACTION=Logging");
+						}
+						//else
+						//	onlyLog.add("INC4004:Balance_Type match condition failed:MSISDN=" + msisdn + ":BALANCE_TYPE=" + Balance_ID + ":BE_BUCKET_VALUE=" + Balance_Value + ":BE_BUCKET_ID=" + balanceInput.getBEBUCKETID() +":ACTION=Logging");
+					
+						if(OffAttrCreation)
+						{
+							String OfferAttr_Defination = "";
+							if(Integer.parseInt(OffAttr_Type) == 4)
+								OfferAttr_Defination = LoadSubscriberMapping.OfferAttrDefMap.get(OffAttr_ID + ',' + OffAttr_Name);
+							
+							try {
+								
+								BalanceOffAttrList.add(msisdn+ "," + OffAttr_ID + "," + OfferAttr_Defination + "," + CommonUtilities.toHexadecimal(Balance_Value) + "," +  LoadSubscriberMapping.CommonConfigMap.get("default_ZERO"));
+							} catch (UnsupportedEncodingException e) {
+								// TODO Auto-generated catch block
+								e.printStackTrace();
+							}
+						}						
+					}
+				}	
+			}	
+			else
+			{	
+				if(Arrays.stream(ExceptionBalances).anyMatch(Balance_ID::equals))
+				{
+				}
+				else
+				{
+					String GroupName = "";
+					List<String> CurrentGroupBalance = new ArrayList<>();
+					List<String> ValidGroupBalanceOfferAttr = new ArrayList<>();
+					List<String> FinalAttrList = new ArrayList<>();
+					boolean ExtraOfferFlag = false;
+					for(Set<String> valueList : LoadSubscriberMapping.BalanceGroupingMap.values()) {					
+						if(valueList.contains(Balance_ID)){
+							GroupName = LoadSubscriberMapping.getKey(LoadSubscriberMapping.BalanceGroupingMap, valueList);
+							if(GroupName.startsWith("D-"))
+							{
+								GroupName = ComputeDGroup(Balance_ID,GroupName);
+								CurrentGroupBalance.addAll(LoadSubscriberMapping.BalanceGroupingMap.get(GroupName));
+							}
+							if(GroupName.startsWith("A-"))
+							{
+								GroupName = ComputeAGroup(Balance_ID,GroupName);
+								CurrentGroupBalance.addAll(LoadSubscriberMapping.BalanceGroupingMap.get(GroupName));
+							}							
+							/*if(GroupName.startsWith("C-"))
+							{
+								GroupName = ComputeCGroup(Balance_ID,GroupName);
+								CurrentGroupBalance.addAll(LoadSubscriberMapping.BalanceGroupingMap.get(GroupName));
+							}
+							if(GroupName.startsWith("F-"))
+							{
+								GroupName = ComputeFGroup(Balance_ID,GroupName);
+								CurrentGroupBalance.addAll(LoadSubscriberMapping.BalanceGroupingMap.get(GroupName));
+							}*/
+							else
+							{
+								CurrentGroupBalance.addAll(valueList);									
+							}
+							break;
+						}
+					}	
+					
+					
+					if(!CompletedGroup.contains(GroupName))
+					{
+						//System.out.println(Balance_ID + "----" +GroupName);						
+						if(CurrentGroupBalance.size() > 0)
+						{
+							String FinalGroupName = GroupName;
+							//System.out.println(FinalGroupName);	
+							for(String id : CurrentGroupBalance)
+							{
+								//System.out.println(id);
+								for(com.ericsson.jibx.beans.SubscriberXml.SchemasubscriberbalancesdumpInfo TempbalanceInput :  SortedBalanceInput){
+									String TempBalance_ID = TempbalanceInput.getBALANCETYPE();
+									String TempBalance_Name = TempbalanceInput.getBALANCETYPENAME();
+									String TempBalance_Value = TempbalanceInput.getBEBUCKETVALUE();
+									String TempBalance_StartDate = TempbalanceInput.getBEBUCKETSTARTDATE();
+									String TempBalance_ExpiryDate = TempbalanceInput.getBEEXPIRY();							
+									if(CompletedBT_ID.contains(TempBalance_ID))
+										continue;
+									if(id.equals(TempBalance_ID))
+									{
+										if(LoadSubscriberMapping.BalanceNonEmptyBTGroupIdentifierMap.get(id + "|" + FinalGroupName) != null)
+										{
+											String OffAttr_ID = LoadSubscriberMapping.BalanceNonEmptyBTGroupIdentifierMap.get(TempBalance_ID + "|" + FinalGroupName).getAttrOfferId();
+											String Symbol = LoadSubscriberMapping.BalanceNonEmptyBTGroupIdentifierMap.get(TempBalance_ID + "|" + FinalGroupName).getSymbols();
+											String BT_Value = LoadSubscriberMapping.BalanceNonEmptyBTGroupIdentifierMap.get(TempBalance_ID + "|" + FinalGroupName).getBTValue();
+											String OffAttr_Name = LoadSubscriberMapping.BalanceNonEmptyBTGroupIdentifierMap.get(TempBalance_ID + "|" + FinalGroupName).getAttrName();
+											String OffAttr_Type = LoadSubscriberMapping.BalanceNonEmptyBTGroupIdentifierMap.get(TempBalance_ID + "|" + FinalGroupName).getAttrType();
+											
+											if(Symbol.equals(">=") && Integer.parseInt(TempBalance_Value) >= Integer.parseInt(BT_Value))
+											{
+												CompletedGroup.add(FinalGroupName);
+												ValidGroupBalanceOfferAttr.add(TempBalance_Name + ";" + TempBalance_ID + ";" + TempBalance_Value +"|" + OffAttr_ID + ";" + OffAttr_Name + ";" + OffAttr_Type + ";" +  TempBalance_StartDate + ";" + TempBalance_ExpiryDate);
+												if(!OffAttr_ID.isEmpty())
+													FinalAttrList.add(TempBalance_Name + ";" + TempBalance_ID + ";" + TempBalance_Value +"|" + OffAttr_ID + ";" + OffAttr_Name + ";" + OffAttr_Type + ";" +  TempBalance_StartDate + ";" + TempBalance_ExpiryDate);
+												break;
+											}
+											else if(Symbol.equals(">") && Integer.parseInt(TempBalance_Value) > Integer.parseInt(BT_Value))
+											{
+												CompletedGroup.add(FinalGroupName);
+												ValidGroupBalanceOfferAttr.add(TempBalance_Name + ";" + TempBalance_ID + ";" + TempBalance_Value +"|" + OffAttr_ID + ";" + OffAttr_Name + ";" + OffAttr_Type + ";" +  TempBalance_StartDate + ";" + TempBalance_ExpiryDate);
+												if(!OffAttr_ID.isEmpty())
+													FinalAttrList.add(TempBalance_Name + ";" + TempBalance_ID + ";" + TempBalance_Value +"|" + OffAttr_ID + ";" + OffAttr_Name + ";" + OffAttr_Type + ";" +  TempBalance_StartDate + ";" + TempBalance_ExpiryDate);
+												break;
+											}
+											else if(Symbol.equals("=") && Integer.parseInt(TempBalance_Value) == Integer.parseInt(BT_Value))
+											{
+												CompletedGroup.add(FinalGroupName);
+												ValidGroupBalanceOfferAttr.add(TempBalance_Name + ";" + TempBalance_ID + ";" + TempBalance_Value +"|" + OffAttr_ID + ";" + OffAttr_Name + ";" + OffAttr_Type + ";" +  TempBalance_StartDate + ";" + TempBalance_ExpiryDate);
+												if(!OffAttr_ID.isEmpty())
+													FinalAttrList.add(TempBalance_Name + ";" + TempBalance_ID + ";" + TempBalance_Value +"|" + OffAttr_ID + ";" + OffAttr_Name + ";" + OffAttr_Type + ";" +  TempBalance_StartDate + ";" + TempBalance_ExpiryDate);
+												break;
+											}
+											else if(Symbol.equals("or"))
+											{
+												//Integer.parseInt(Balance_Value) == Integer.parseInt(BT_Value)
+												String[] values = BT_Value.split("\\|");											
+												if(Arrays.stream(values).anyMatch(TempBalance_Value::equals))
+												{
+													CompletedGroup.add(FinalGroupName);
+													ValidGroupBalanceOfferAttr.add(TempBalance_Name + ";" + TempBalance_ID + ";" + TempBalance_Value +"|" + OffAttr_ID + ";" + OffAttr_Name + ";" + OffAttr_Type + ";" +  TempBalance_StartDate + ";" + TempBalance_ExpiryDate);
+													if(!OffAttr_ID.isEmpty())
+														FinalAttrList.add(TempBalance_Name + ";" + TempBalance_ID + ";" + TempBalance_Value +"|" + OffAttr_ID + ";" + OffAttr_Name + ";" + OffAttr_Type + ";" +  TempBalance_StartDate + ";" + TempBalance_ExpiryDate);
+													break;
+												}
+												//else
+												//	onlyLog.add("INC4004:Balance_Type match condition failed:MSISDN=" + msisdn + ":BALANCE_TYPE=" + Balance_ID + ":BE_BUCKET_VALUE=" + Balance_Value + ":BE_BUCKET_ID=" + balanceInput.getBEBUCKETID() +":ACTION=Logging");
+											}
+											//else
+												//onlyLog.add("INC4004:Balance_Type match condition failed:MSISDN=" + msisdn + ":BALANCE_TYPE=" + Balance_ID + ":BE_BUCKET_VALUE=" + Balance_Value + ":BE_BUCKET_ID=" + balanceInput.getBEBUCKETID() +":ACTION=Logging");
+										
+										}
+									}
+								}
+							}
+							if(FinalGroupName.startsWith("B-"))
+							{
+								if(ValidGroupBalanceOfferAttr.size() == CurrentGroupBalance.size())
+								{
+									FinalAttrList.forEach(item->{
+										String Attr_Fields = item.split("\\|")[1];
+										String BalanceValue = item.split("\\|")[0].split(";")[2];
+										String OfferAttr_Defination = "";
+										if(Integer.parseInt(Attr_Fields.split(";")[2]) == 4)
+											OfferAttr_Defination = LoadSubscriberMapping.OfferAttrDefMap.get(Attr_Fields.split(";")[0] + ',' + Attr_Fields.split(";")[1]);
+										
+										try {
+											
+											BalanceOffAttrList.add(msisdn+ "," + Attr_Fields.split(";")[0] + "," + OfferAttr_Defination + "," + CommonUtilities.toHexadecimal(BalanceValue) + "," +  LoadSubscriberMapping.CommonConfigMap.get("default_ZERO"));
+										} catch (UnsupportedEncodingException e) {
+											// TODO Auto-generated catch block
+											e.printStackTrace();
+										}
+									});
+									
+									CompletedBT_ID.addAll(CurrentGroupBalance);
+								}
+								else
+								{
+															
+								}
+							}
+							//Add code here
+						}
+					}
+				}
+			}
+		}
+		
+		return BalanceOffAttrList;
+	}
+	
+	public String ComputeAGroup(String inputBalance_ID, String inputGroupName) {
+		// TODO Auto-generated method stub
+		String FinalGroupName ="";
+		
+		List<String>AllAvailableGroup = new ArrayList<>();
+		
+		for(Set<String> valueList : LoadSubscriberMapping.BalanceGroupingMap.values()) {					
+			if(valueList.contains(inputBalance_ID)){
+				AllAvailableGroup.add(LoadSubscriberMapping.getKey(LoadSubscriberMapping.BalanceGroupingMap, valueList));	
+			}
+		}
+		
+		for(String A_ID: AllAvailableGroup)
+		{
+			if(LoadSubscriberMapping.BalanceOnlyAGroupMap.containsKey(A_ID))
+			{
+				Set<String> A_Items = Arrays.stream(LoadSubscriberMapping.BalanceOnlyAGroupMap.get(A_ID).split(",")).collect(Collectors.toSet());
+				int i =0;
+				for(com.ericsson.jibx.beans.SubscriberXml.SchemasubscriberbalancesdumpInfo balanceInput : SortedBalanceInput){
+					if(A_Items.contains(balanceInput.getBALANCETYPE()))
+					{
+						i++;
+						FinalGroupName = A_ID;
+						continue;
+					}
+					if(A_Items.size() == i)
+					{
+						FinalGroupName = A_ID;
+						break;
+					}						
+				}
+			}
+		}		
+		return FinalGroupName;
+	}
+	
+	
+	public String ComputeDGroup(String inputBalance_ID, String inputGroupName) {
+		// TODO Auto-generated method stub
+		String FinalGroupName ="";
+		
+		List<String>AllAvailableGroup = new ArrayList<>();
+		
+		for(Set<String> valueList : LoadSubscriberMapping.BalanceGroupingMap.values()) {					
+			if(valueList.contains(inputBalance_ID)){
+				AllAvailableGroup.add(LoadSubscriberMapping.getKey(LoadSubscriberMapping.BalanceGroupingMap, valueList));	
+			}
+		}
+		
+		for(String D_ID: AllAvailableGroup)
+		{
+			if(LoadSubscriberMapping.BalanceOnlyDGroupMap.containsKey(D_ID))
+			{
+				Set<String> D_Items = Arrays.stream(LoadSubscriberMapping.BalanceOnlyDGroupMap.get(D_ID).split(",")).collect(Collectors.toSet());
+				int i =0;
+				for(com.ericsson.jibx.beans.SubscriberXml.SchemasubscriberbalancesdumpInfo balanceInput : SortedBalanceInput){
+					if(D_Items.contains(balanceInput.getBALANCETYPE()))
+					{
+						i++;
+						FinalGroupName = D_ID;
+						continue;
+					}
+					if(D_Items.size() == i)
+					{
+						FinalGroupName = D_ID;
+						break;
+					}						
+				}
+			}
+		}		
+		return FinalGroupName;
+	}
+	
+	public String ComputeCGroup(String inputBalance_ID, String inputGroupName) {
+		// TODO Auto-generated method stub
+		String FinalGroupName ="";
+		
+		List<String>AllAvailableGroup = new ArrayList<>();
+		
+		for(Set<String> valueList : LoadSubscriberMapping.BalanceGroupingMap.values()) {					
+			if(valueList.contains(inputBalance_ID)){
+				AllAvailableGroup.add(LoadSubscriberMapping.getKey(LoadSubscriberMapping.BalanceGroupingMap, valueList));	
+			}
+		}
+		
+		for(String C_ID: AllAvailableGroup)
+		{
+			if(LoadSubscriberMapping.BalanceOnlyAGroupMap.containsKey(C_ID))
+			{
+				Set<String> C_Items = Arrays.stream(LoadSubscriberMapping.BalanceOnlyAGroupMap.get(C_ID).split(",")).collect(Collectors.toSet());
+				int i =0;
+				for(com.ericsson.jibx.beans.SubscriberXml.SchemasubscriberbalancesdumpInfo balanceInput : SortedBalanceInput){
+					if(C_Items.contains(balanceInput.getBALANCETYPE()))
+					{
+						i++;
+						FinalGroupName = C_ID;
+						continue;
+					}
+					if(C_Items.size() == i)
+					{
+						FinalGroupName = C_ID;
+						break;
+					}						
+				}
+			}
+		}		
+		return FinalGroupName;
+	}
+	
+	public String ComputeFGroup(String inputBalance_ID, String inputGroupName) {
+		// TODO Auto-generated method stub
+		String FinalGroupName ="";
+		
+		List<String>AllAvailableGroup = new ArrayList<>();
+		
+		for(Set<String> valueList : LoadSubscriberMapping.BalanceGroupingMap.values()) {					
+			if(valueList.contains(inputBalance_ID)){
+				AllAvailableGroup.add(LoadSubscriberMapping.getKey(LoadSubscriberMapping.BalanceGroupingMap, valueList));	
+			}
+		}
+		
+		for(String F_ID: AllAvailableGroup)
+		{
+			if(LoadSubscriberMapping.BalanceOnlyAGroupMap.containsKey(F_ID))
+			{
+				Set<String> F_Items = Arrays.stream(LoadSubscriberMapping.BalanceOnlyAGroupMap.get(F_ID).split(",")).collect(Collectors.toSet());
+				int i =0;
+				for(com.ericsson.jibx.beans.SubscriberXml.SchemasubscriberbalancesdumpInfo balanceInput : SortedBalanceInput){
+					if(F_Items.contains(balanceInput.getBALANCETYPE()))
+					{
+						i++;
+						FinalGroupName = F_ID;
+						continue;
+					}
+					if(F_Items.size() == i)
+					{
+						FinalGroupName = F_ID;
+						break;
+					}						
+				}
+			}
+		}		
+		return FinalGroupName;
+	}
+	
+	private List<String> offerAttributeFromDefaultService(String msisdn)
+	{
+		List<String> defaultOfferList = new ArrayList<>();
+		
+		/*for (String string : LoadSubscriberMapping.DefaultServicesMap.keySet()) 
+		{
+			
+		}*/	
+		if(subscriber.getProfiledumpInfoList().size() == 1)
+		{
+		
+			if(subscriber.getProfiledumpInfoList().get(0).getIMEI().length() == 0 || subscriber.getProfiledumpInfoList().get(0).getIMSI().length() == 0 || subscriber.getProfiledumpInfoList().get(0).getHlrAddr().length() == 0 || subscriber.getProfiledumpInfoList().get(0).getLanguageID().length() == 0)
+			{
+				onlyLog.add("INC2001:Subscriber Profile field Missing:MSISDN=" + msisdn + ":IMEI=" + subscriber.getProfiledumpInfoList().get(0).getIMEI() + ":IMSI=" + subscriber.getProfiledumpInfoList().get(0).getIMSI() + ":HLRAddress=" + subscriber.getProfiledumpInfoList().get(0).getHlrAddr() + ":LanguageID=" + subscriber.getProfiledumpInfoList().get(0).getLanguageID() +":ACTION=Logging");
+			}
+			
+			for (Map.Entry<String, String> entry : LoadSubscriberMapping.DefaultServicesMap.entrySet())
+			{
+				String v = entry.getValue();
+				
+				if (v.split(",",-1)[1].trim().equals("N"))
+				{
+					if (!v.split(",",-1)[9].isEmpty() && v.split(",",-1)[9].length() != 0)
+					{
+						String OfferAttr_ID = v.split(",",-1)[9];
+						String Attr_name = v.split(",",-1)[10];
+						String Attr_type = v.split(",",-1)[11];
+						
+						String Attr_value = "";
+						String OfferAttr_Defination = "";
+
+						if(Attr_name.equals("IMEI")   && subscriber.getProfiledumpInfoList().get(0).getIMEI().length() > 0)
+							Attr_value = subscriber.getProfiledumpInfoList().get(0).getIMEI();
+						if(Attr_name.equals("IMSI")   && subscriber.getProfiledumpInfoList().get(0).getIMSI().length() > 0)
+							Attr_value = subscriber.getProfiledumpInfoList().get(0).getIMSI();								
+						if(Attr_name.equals("HLRAddress")   && subscriber.getProfiledumpInfoList().get(0).getHlrAddr().length() > 0)
+							Attr_value = subscriber.getProfiledumpInfoList().get(0).getHlrAddr();
+						if(Attr_name.equals("CSBAR")   && subscriber.getProfiledumpInfoList().get(0).getCSBAR().length() > 0)
+								Attr_value = subscriber.getProfiledumpInfoList().get(0).getCSBAR();
+						if(Attr_name.equals("crbtActReqDate")   && subscriber.getProfiledumpInfoList().get(0).getCrbtActReqDate().length() > 0)
+								Attr_value = subscriber.getProfiledumpInfoList().get(0).getCrbtActReqDate();
+						if(Attr_name.equals("crtCnfrmd")   && subscriber.getProfiledumpInfoList().get(0).getCrtCnfrmd().length() > 0)
+								Attr_value = subscriber.getProfiledumpInfoList().get(0).getCrtCnfrmd();
+						if(Attr_name.equals("crbtActConfirmDate")   && subscriber.getProfiledumpInfoList().get(0).getCrbtActConfirmDate().length() > 0)
+								Attr_value = subscriber.getProfiledumpInfoList().get(0).getCrbtActConfirmDate();
+						if(Attr_name.equals("crbtDeact")   && subscriber.getProfiledumpInfoList().get(0).getCrbtDeact().length() > 0)
+								Attr_value = subscriber.getProfiledumpInfoList().get(0).getCrbtDeact();
+						if(Attr_name.equals("crbtDeActReqDate")   && subscriber.getProfiledumpInfoList().get(0).getCrbtActReqDate().length() > 0)
+								Attr_value = subscriber.getProfiledumpInfoList().get(0).getCrbtDeActReqDate();
+						if(Attr_name.equals("crbtDeActConfirmDate")   && subscriber.getProfiledumpInfoList().get(0).getCrbtDeActConfirmDate().length() > 0)
+								Attr_value = subscriber.getProfiledumpInfoList().get(0).getCrbtDeActConfirmDate();
+						if(Attr_name.equals("cbActConfirmDate")   && subscriber.getProfiledumpInfoList().get(0).getCbActConfirmDate.length() > 0)
+								Attr_value = subscriber.getProfiledumpInfoList().get(0).getCbActConfirmDate();
+						if(Attr_name.equals("cbExpDate")   && subscriber.getProfiledumpInfoList().get(0).get
+								Attr_value = subscriber.getProfiledumpInfoList().get(0).getIMEI();
+						if(Attr_name.equals("cbCnfdAct")   && subscriber.getProfiledumpInfoList().get(0).get
+								Attr_value = subscriber.getProfiledumpInfoList().get(0).getIMEI();
+						if(Attr_name.equals("cbWarn1")   && subscriber.getProfiledumpInfoList().get(0).get
+								Attr_value = subscriber.getProfiledumpInfoList().get(0).getIMEI();
+						if(Attr_name.equals("cbWarn2")   && subscriber.getProfiledumpInfoList().get(0).get
+								Attr_value = subscriber.getProfiledumpInfoList().get(0).getIMEI();
+						if(Attr_name.equals("cbDeActReqDate")   && subscriber.getProfiledumpInfoList().get(0).get
+								Attr_value = subscriber.getProfiledumpInfoList().get(0).getIMEI();
+						if(Attr_name.equals("cbDeActConfirmDate")   && subscriber.getProfiledumpInfoList().get(0).get
+								Attr_value = subscriber.getProfiledumpInfoList().get(0).getIMEI();
+						if(Attr_name.equals("cfActConfirmDate")   && subscriber.getProfiledumpInfoList().get(0).get
+								Attr_value = subscriber.getProfiledumpInfoList().get(0).getIMEI();
+						if(Attr_name.equals("cfConfActive")   && subscriber.getProfiledumpInfoList().get(0).get
+								Attr_value = subscriber.getProfiledumpInfoList().get(0).getIMEI();
+						if(Attr_name.equals("cfDeActConfirmDate")   && subscriber.getProfiledumpInfoList().get(0).get
+								Attr_value = subscriber.getProfiledumpInfoList().get(0).getIMEI();
+						if(Attr_name.equals("cfDeActReqDate")   && subscriber.getProfiledumpInfoList().get(0).get
+								Attr_value = subscriber.getProfiledumpInfoList().get(0).getIMEI();
+						if(Attr_name.equals("avmActConfirmDate")   && subscriber.getProfiledumpInfoList().get(0).get
+								Attr_value = subscriber.getProfiledumpInfoList().get(0).getIMEI();
+						if(Attr_name.equals("avmCnfrmd")   && subscriber.getProfiledumpInfoList().get(0).get
+								Attr_value = subscriber.getProfiledumpInfoList().get(0).getIMEI();
+						if(Attr_name.equals("avmDeActReqDate")   && subscriber.getProfiledumpInfoList().get(0).get
+								Attr_value = subscriber.getProfiledumpInfoList().get(0).getIMEI();
+						if(Attr_name.equals("avmDeActConfirmDate")   && subscriber.getProfiledumpInfoList().get(0).get
+								Attr_value = subscriber.getProfiledumpInfoList().get(0).getIMEI();
+						if(Attr_name.equals("SprssNtfctn")   && subscriber.getProfiledumpInfoList().get(0).get
+								Attr_value = subscriber.getProfiledumpInfoList().get(0).getIMEI();
+						if(Attr_name.equals("avm")   && subscriber.getProfiledumpInfoList().get(0).get
+								Attr_value = subscriber.getProfiledumpInfoList().get(0).getIMEI();
+						if(Attr_name.equals("avmActReqDate")   && subscriber.getProfiledumpInfoList().get(0).get
+								Attr_value = subscriber.getProfiledumpInfoList().get(0).getIMEI();
+						if(Attr_name.equals("MssdCallNot")   && subscriber.getProfiledumpInfoList().get(0).get
+								Attr_value = subscriber.getProfiledumpInfoList().get(0).getIMEI();
+						if(Attr_name.equals("VMCIMEI")   && subscriber.getProfiledumpInfoList().get(0).get
+								Attr_value = subscriber.getProfiledumpInfoList().get(0).getIMEI();
+						if(Attr_name.equals("VMCName")   && subscriber.getProfiledumpInfoList().get(0).get
+								Attr_value = subscriber.getProfiledumpInfoList().get(0).getIMEI();
+						if(Attr_name.equals("AcctActiveMonth")   && subscriber.getProfiledumpInfoList().get(0).get
+								Attr_value = subscriber.getProfiledumpInfoList().get(0).getIMEI();
+						if(Attr_name.equals("AcctActiveYear")   && subscriber.getProfiledumpInfoList().get(0).get
+								Attr_value = subscriber.getProfiledumpInfoList().get(0).getIMEI();
+						if(Attr_name.equals("2Active")   && subscriber.getProfiledumpInfoList().get(0).get
+								Attr_value = subscriber.getProfiledumpInfoList().get(0).getIMEI();
+						if(Attr_name.equals("BusMobPayg50")   && subscriber.getProfiledumpInfoList().get(0).get
+								Attr_value = subscriber.getProfiledumpInfoList().get(0).getIMEI();
+						if(Attr_name.equals("BusMobTopUp")   && subscriber.getProfiledumpInfoList().get(0).get
+								Attr_value = subscriber.getProfiledumpInfoList().get(0).getIMEI();
+						if(Attr_name.equals("Date1")   && subscriber.getProfiledumpInfoList().get(0).get
+								Attr_value = subscriber.getProfiledumpInfoList().get(0).getIMEI();
+						if(Attr_name.equals("DisabilityActivationDate")   && subscriber.getProfiledumpInfoList().get(0).get
+								Attr_value = subscriber.getProfiledumpInfoList().get(0).getIMEI();
+						if(Attr_name.equals("DisabilityDectivationDate")   && subscriber.getProfiledumpInfoList().get(0).get
+								Attr_value = subscriber.getProfiledumpInfoList().get(0).getIMEI();
+						if(Attr_name.equals("EntCust")   && subscriber.getProfiledumpInfoList().get(0).get
+								Attr_value = subscriber.getProfiledumpInfoList().get(0).getIMEI();
+						if(Attr_name.equals("GlobalZoneOptIn")   && subscriber.getProfiledumpInfoList().get(0).get
+								Attr_value = subscriber.getProfiledumpInfoList().get(0).getIMEI();
+						if(Attr_name.equals("GlobalZoneOptOut")   && subscriber.getProfiledumpInfoList().get(0).get
+								Attr_value = subscriber.getProfiledumpInfoList().get(0).getIMEI();
+						if(Attr_name.equals("IDD2Act")   && subscriber.getProfiledumpInfoList().get(0).get
+								Attr_value = subscriber.getProfiledumpInfoList().get(0).getIMEI();
+						if(Attr_name.equals("IDD2ActDate")   && subscriber.getProfiledumpInfoList().get(0).get
+								Attr_value = subscriber.getProfiledumpInfoList().get(0).getIMEI();
+						if(Attr_name.equals("InternationalMin")   && subscriber.getProfiledumpInfoList().get(0).get
+								Attr_value = subscriber.getProfiledumpInfoList().get(0).getIMEI();
+						if(Attr_name.equals("Language")   && subscriber.getProfiledumpInfoList().get(0).get
+								Attr_value = subscriber.getProfiledumpInfoList().get(0).getIMEI();
+						if(Attr_name.equals("MercuryOptInOutDate")   && subscriber.getProfiledumpInfoList().get(0).get
+								Attr_value = subscriber.getProfiledumpInfoList().get(0).getIMEI();
+						if(Attr_name.equals("PAYGDataFNL")   && subscriber.getProfiledumpInfoList().get(0).get
+								Attr_value = subscriber.getProfiledumpInfoList().get(0).getIMEI();
+						if(Attr_name.equals("PAYGMet")   && subscriber.getProfiledumpInfoList().get(0).get
+								Attr_value = subscriber.getProfiledumpInfoList().get(0).getIMEI();
+						if(Attr_name.equals("PCNGlobalOptin")   && subscriber.getProfiledumpInfoList().get(0).get
+								Attr_value = subscriber.getProfiledumpInfoList().get(0).getIMEI();
+						if(Attr_name.equals("PCNGlobalOptout")   && subscriber.getProfiledumpInfoList().get(0).get
+								Attr_value = subscriber.getProfiledumpInfoList().get(0).getIMEI();
+						if(Attr_name.equals("ReceivePostCallSMS")   && subscriber.getProfiledumpInfoList().get(0).get
+								Attr_value = subscriber.getProfiledumpInfoList().get(0).getIMEI();
+						if(Attr_name.equals("avmInfSub")   && subscriber.getProfiledumpInfoList().get(0).get
+								Attr_value = subscriber.getProfiledumpInfoList().get(0).getIMEI();
+						if(Attr_name.equals("avmPin")   && subscriber.getProfiledumpInfoList().get(0).get
+								Attr_value = subscriber.getProfiledumpInfoList().get(0).getIMEI();
+						if(Attr_name.equals("avmProf")   && subscriber.getProfiledumpInfoList().get(0).get
+								Attr_value = subscriber.getProfiledumpInfoList().get(0).getIMEI();
+						if(Attr_name.equals("cbActReqDate")   && subscriber.getProfiledumpInfoList().get(0).get
+								Attr_value = subscriber.getProfiledumpInfoList().get(0).getIMEI();
+						if(Attr_name.equals("cfActReqDate")   && subscriber.getProfiledumpInfoList().get(0).get
+								Attr_value = subscriber.getProfiledumpInfoList().get(0).getIMEI();
+						if(Attr_name.equals("cfBusy")   && subscriber.getProfiledumpInfoList().get(0).get
+								Attr_value = subscriber.getProfiledumpInfoList().get(0).getIMEI();
+						if(Attr_name.equals("cfData")   && subscriber.getProfiledumpInfoList().get(0).get
+								Attr_value = subscriber.getProfiledumpInfoList().get(0).getIMEI();
+						if(Attr_name.equals("cfFax")   && subscriber.getProfiledumpInfoList().get(0).get
+								Attr_value = subscriber.getProfiledumpInfoList().get(0).getIMEI();
+						if(Attr_name.equals("cfInt")   && subscriber.getProfiledumpInfoList().get(0).get
+								Attr_value = subscriber.getProfiledumpInfoList().get(0).getIMEI();
+						if(Attr_name.equals("cfLastFaildDate")   && subscriber.getProfiledumpInfoList().get(0).get
+								Attr_value = subscriber.getProfiledumpInfoList().get(0).getIMEI();
+						if(Attr_name.equals("cfNoReply")   && subscriber.getProfiledumpInfoList().get(0).get
+								Attr_value = subscriber.getProfiledumpInfoList().get(0).getIMEI();
+						if(Attr_name.equals("cfNotReach")   && subscriber.getProfiledumpInfoList().get(0).get
+								Attr_value = subscriber.getProfiledumpInfoList().get(0).getIMEI();
+						if(Attr_name.equals("cfVoice")   && subscriber.getProfiledumpInfoList().get(0).get
+								Attr_value = subscriber.getProfiledumpInfoList().get(0).getIMEI();
+						if(Attr_name.equals("cllrRngTne")   && subscriber.getProfiledumpInfoList().get(0).get
+								Attr_value = subscriber.getProfiledumpInfoList().get(0).getIMEI();
+						if(Attr_name.equals("odbOutVoice")   && subscriber.getProfiledumpInfoList().get(0).get
+								Attr_value = subscriber.getProfiledumpInfoList().get(0).getIMEI();
+						if(Attr_name.equals("IDD2DeactDate")   && subscriber.getProfiledumpInfoList().get(0).get
+								Attr_value = subscriber.getProfiledumpInfoList().get(0).getIMEI();
+						if(Attr_name.equals("IDDCutRateActDate")   && subscriber.getProfiledumpInfoList().get(0).get
+								Attr_value = subscriber.getProfiledumpInfoList().get(0).getIMEI();
+						if(Attr_name.equals("cbAll")   && subscriber.getProfiledumpInfoList().get(0).get
+								Attr_value = subscriber.getProfiledumpInfoList().get(0).getIMEI();
+						if(Attr_name.equals("cbInt")   && subscriber.getProfiledumpInfoList().get(0).get
+								Attr_value = subscriber.getProfiledumpInfoList().get(0).getIMEI();
+						if(Attr_name.equals("cbIntExc")   && subscriber.getProfiledumpInfoList().get(0).get
+								Attr_value = subscriber.getProfiledumpInfoList().get(0).getIMEI();
+						if(Attr_name.equals("cbIncom")   && subscriber.getProfiledumpInfoList().get(0).get
+								Attr_value = subscriber.getProfiledumpInfoList().get(0).getIMEI();
+						if(Attr_name.equals("cbWR")   && subscriber.getProfiledumpInfoList().get(0).get
+								Attr_value = subscriber.getProfiledumpInfoList().get(0).getIMEI();
+						if(Attr_name.equals("clir")   && subscriber.getProfiledumpInfoList().get(0).get
+								Attr_value = subscriber.getProfiledumpInfoList().get(0).getIMEI();
+						if(Attr_name.equals("faxGroup3")   && subscriber.getProfiledumpInfoList().get(0).get
+								Attr_value = subscriber.getProfiledumpInfoList().get(0).getIMEI();
+						if(Attr_name.equals("dataGeneric")   && subscriber.getProfiledumpInfoList().get(0).get
+								Attr_value = subscriber.getProfiledumpInfoList().get(0).getIMEI();
+						if(Attr_name.equals("odbIncom")   && subscriber.getProfiledumpInfoList().get(0).get
+								Attr_value = subscriber.getProfiledumpInfoList().get(0).getIMEI();
+						if(Attr_name.equals("odbWR")   && subscriber.getProfiledumpInfoList().get(0).get
+								Attr_value = subscriber.getProfiledumpInfoList().get(0).getIMEI();
+						if(Attr_name.equals("odbIntExc")   && subscriber.getProfiledumpInfoList().get(0).get
+								Attr_value = subscriber.getProfiledumpInfoList().get(0).getIMEI();
+						if(Attr_name.equals("odbInt")   && subscriber.getProfiledumpInfoList().get(0).get
+								Attr_value = subscriber.getProfiledumpInfoList().get(0).getIMEI();
+						if(Attr_name.equals("odbOnlyVoice")   && subscriber.getProfiledumpInfoList().get(0).get
+								Attr_value = subscriber.getProfiledumpInfoList().get(0).getIMEI();
+						if(Attr_name.equals("entMssgingActv")   && subscriber.getProfiledumpInfoList().get(0).get
+								Attr_value = subscriber.getProfiledumpInfoList().get(0).getIMEI();
+						if(Attr_name.equals("gprsPmail")   && subscriber.getProfiledumpInfoList().get(0).get
+								Attr_value = subscriber.getProfiledumpInfoList().get(0).getIMEI();
+						if(Attr_name.equals("BstrVINActReqDate")   && subscriber.getProfiledumpInfoList().get(0).get
+								Attr_value = subscriber.getProfiledumpInfoList().get(0).getIMEI();
+						if(Attr_name.equals("BstrVINConfirmDate")   && subscriber.getProfiledumpInfoList().get(0).get
+								Attr_value = subscriber.getProfiledumpInfoList().get(0).getIMEI();
+						if(Attr_name.equals("BstrVINDeActReqDate")   && subscriber.getProfiledumpInfoList().get(0).get
+								Attr_value = subscriber.getProfiledumpInfoList().get(0).getIMEI();
+						if(Attr_name.equals("BstrVINDeActConfDate")   && subscriber.getProfiledumpInfoList().get(0).get
+								Attr_value = subscriber.getProfiledumpInfoList().get(0).getIMEI();
+						if(Attr_name.equals("BronzeMPromoActDate")   && subscriber.getProfiledumpInfoList().get(0).get
+								Attr_value = subscriber.getProfiledumpInfoList().get(0).getIMEI();
+						if(Attr_name.equals("BronzeMPromoDeactDate")   && subscriber.getProfiledumpInfoList().get(0).get
+								Attr_value = subscriber.getProfiledumpInfoList().get(0).getIMEI();
+						if(Attr_name.equals("SocialBndlActChannel")   && subscriber.getProfiledumpInfoList().get(0).get
+								Attr_value = subscriber.getProfiledumpInfoList().get(0).getIMEI();
+						if(Attr_name.equals("SocialBndlDeActChannel")   && subscriber.getProfiledumpInfoList().get(0).get
+								Attr_value = subscriber.getProfiledumpInfoList().get(0).getIMEI();
+						if(Attr_name.equals("BstrVNNActReqDate")   && subscriber.getProfiledumpInfoList().get(0).get
+								Attr_value = subscriber.getProfiledumpInfoList().get(0).getIMEI();
+						if(Attr_name.equals("BstrVNNConfirmDate")   && subscriber.getProfiledumpInfoList().get(0).get
+								Attr_value = subscriber.getProfiledumpInfoList().get(0).getIMEI();
+						if(Attr_name.equals("BstrVNNDeActConfDate")   && subscriber.getProfiledumpInfoList().get(0).get
+								Attr_value = subscriber.getProfiledumpInfoList().get(0).getIMEI();
+						if(Attr_name.equals("BstrVNNDeActReqDate")   && subscriber.getProfiledumpInfoList().get(0).get
+								Attr_value = subscriber.getProfiledumpInfoList().get(0).getIMEI();
+						if(Attr_name.equals("odbAll")   && subscriber.getProfiledumpInfoList().get(0).get
+								Attr_value = subscriber.getProfiledumpInfoList().get(0).getIMEI();
+
+						
+						
+						
+						
+						
+						if(Attr_name.equals("IMEI") && subscriber.getProfiledumpInfoList().get(0).getIMEI().length() > 0)
+							Attr_value = subscriber.getProfiledumpInfoList().get(0).getIMEI();
+						else if(Attr_name.equals("IMSI"))
+							Attr_value = subscriber.getProfiledumpInfoList().get(0).getIMSI();
+						else if(Attr_name.equals("HLRAddress"))
+							Attr_value = subscriber.getProfiledumpInfoList().get(0).getHlrAddr();
+						//else if(Attr_name.equals("CustomerID"))
+							//Attr_value = subscriber.getProfiledumpInfoC CustomerID();
+						else if(Attr_name.equals("CSBAR"))
+							Attr_value = subscriber.getProfiledumpInfoList().get(0).getCSBAR();
+						else if(Attr_name.equals("crbtActReqDate"))
+							Attr_value = subscriber.getProfiledumpInfoList().get(0).getCrbtActReqDate();
+						else if(Attr_name.equals("crtCnfrmd"))
+							Attr_value = subscriber.getProfiledumpInfoList().get(0).getCrtCnfrmd();
+						else if(Attr_name.equals("crbtActConfirmDate"))
+							Attr_value = subscriber.getProfiledumpInfoList().get(0).getCrbtActConfirmDate();
+						else if(Attr_name.equals("crbtDeact"))
+							Attr_value = subscriber.getProfiledumpInfoList().get(0).getCrbtDeact();	
+						else if(Attr_name.equals("crbtDeActReqDate"))
+							Attr_value = subscriber.getProfiledumpInfoList().get(0).getCrbtDeActConfirmDate();
+						else if(Attr_name.equals("crbtDeActConfirmDate"))
+							Attr_value = subscriber.getProfiledumpInfoList().get(0).getCrbtDeActConfirmDate();
+						else if(Attr_name.equals("cbActConfirmDate"))
+							Attr_value = subscriber.getProfiledumpInfoList().get(0).getCbActConfirmDate();
+						else if(Attr_name.equals("cbExpDate"))
+							Attr_value = subscriber.getProfiledumpInfoList().get(0).getCbExpDate();
+						else if(Attr_name.equals("cbCnfdAct"))
+							Attr_value = subscriber.getProfiledumpInfoList().get(0).getCbCnfdAct();
+						else if(Attr_name.equals("cbWarn1"))
+							Attr_value = subscriber.getProfiledumpInfoList().get(0).getCbWarn1();
+						else if(Attr_name.equals("cbWarn2"))
+							Attr_value = subscriber.getProfiledumpInfoList().get(0).getCbWarn2();
+						else if(Attr_name.equals("cbDeActReqDate"))
+							Attr_value = subscriber.getProfiledumpInfoList().get(0).getCbDeActReqDate();
+						else if(Attr_name.equals("cbDeActConfirmDate"))
+							Attr_value = subscriber.getProfiledumpInfoList().get(0).getCbDeActConfirmDate();
+						else if(Attr_name.equals("cfActConfirmDate"))
+							Attr_value = subscriber.getProfiledumpInfoList().get(0).getCfActConfirmDate();
+						else if(Attr_name.equals("cfConfActive"))
+							Attr_value = subscriber.getProfiledumpInfoList().get(0).getCfConfActive();
+						else if(Attr_name.equals("cfDeActConfirmDate"))
+							Attr_value = subscriber.getProfiledumpInfoList().get(0).getCfDeActConfirmDate();
+						else if(Attr_name.equals("cfDeActReqDate"))
+							Attr_value = subscriber.getProfiledumpInfoList().get(0).getCfDeActReqDate();
+						//else if(Attr_name.equals("cfLastFailddate"))
+						//	Attr_value = subscriber.getProfiledumpInfoList().get(0).getCfLastFailddate();
+						else if(Attr_name.equals("avmActConfirmDate"))
+							Attr_value = subscriber.getProfiledumpInfoList().get(0).getAvmActConfirmDate();
+						else if(Attr_name.equals("avmCnfrmd"))
+							Attr_value = subscriber.getProfiledumpInfoList().get(0).getAvmCnfrmd();
+						else if(Attr_name.equals("avmDeActReqDate"))
+							Attr_value = subscriber.getProfiledumpInfoList().get(0).getAvmDeActReqDate();
+						else if(Attr_name.equals("avmDeActConfirmDate"))
+							Attr_value = subscriber.getProfiledumpInfoList().get(0).getAvmDeActConfirmDate();
+						else if(Attr_name.equals("SprssNtfctn"))
+							Attr_value = subscriber.getProfiledumpInfoList().get(0).getSprssNtfctn();
+						else if(Attr_name.equals("avm"))
+							Attr_value = subscriber.getProfiledumpInfoList().get(0).getAvm();
+						else if(Attr_name.equals("avmActReqDate"))
+							Attr_value = subscriber.getProfiledumpInfoList().get(0).getAvmActReqDate();
+						else if(Attr_name.equals("MssdCallNot"))
+							Attr_value = subscriber.getProfiledumpInfoList().get(0).getMssdCallNot();
+						else if(Attr_name.equals("VMCIMEI"))
+							Attr_value = subscriber.getProfiledumpInfoList().get(0).getVMCIMEI();
+						//else if(Attr_name.equals("VMCName"))
+						//	Attr_value = subscriber.getProfiledumpInfoVMCName();
+						else if(Attr_name.equals("Acct Active Month"))
+							Attr_value = subscriber.getProfiledumpInfoList().get(0).getAcctActiveMonth();
+						else if(Attr_name.equals("Acct Active Year"))
+							Attr_value = subscriber.getProfiledumpInfoList().get(0).getAcctActiveYear();
+						
+						if(Integer.parseInt(Attr_type) == 4)
+							OfferAttr_Defination = LoadSubscriberMapping.OfferAttrDefMap.get(OfferAttr_ID + ',' + Attr_name);
+						
+						
+						
+						StringBuffer sb = new StringBuffer();
+						if(Attr_value.length() !=0 && OfferAttr_Defination != null)
+						{
+							try {	
+								sb.append(msisdn).append(",");
+								sb.append(OfferAttr_ID).append(",");
+								sb.append(OfferAttr_Defination).append(",");
+								sb.append(CommonUtilities.toHexadecimal(Attr_value)).append(",");
+								sb.append(LoadSubscriberMapping.CommonConfigMap.get("default_ZERO"));
+							} catch (Exception e) {
+								// TODO Auto-generated catch block
+								e.printStackTrace();
+							}
+							defaultOfferList.add(sb.toString());
+						}
+						
+						
+						sb = null;
+					}
+				}			
+			
+				
+			}
+			/*LoadSubscriberMapping.DefaultServicesMap.forEach((k,v)->{
+			});*/
+		}
+		
+		return defaultOfferList;	
+	}
+	
+	private List<String> offerAttributeFromDefaultService_backup(String msisdn)
+	{
+		List<String> defaultOfferList = new ArrayList<>();
+		
+		/*for (String string : LoadSubscriberMapping.DefaultServicesMap.keySet()) 
+		{
+			
+		}*/	
+		if(subscriber.getProfiledumpInfoList().size() == 1)
+		{
+		
+			if(subscriber.getProfiledumpInfoList().get(0).getIMEI().length() == 0 || subscriber.getProfiledumpInfoList().get(0).getIMSI().length() == 0 || subscriber.getProfiledumpInfoList().get(0).getHlrAddr().length() == 0 || subscriber.getProfiledumpInfoList().get(0).getLanguageID().length() == 0)
+			{
+				onlyLog.add("INC2001:Subscriber Profile field Missing:MSISDN=" + msisdn + ":IMEI=" + subscriber.getProfiledumpInfoList().get(0).getIMEI() + ":IMSI=" + subscriber.getProfiledumpInfoList().get(0).getIMSI() + ":HLRAddress=" + subscriber.getProfiledumpInfoList().get(0).getHlrAddr() + ":LanguageID=" + subscriber.getProfiledumpInfoList().get(0).getLanguageID() +":ACTION=Logging");
+			}
+			
+			for (Map.Entry<String, String> entry : LoadSubscriberMapping.DefaultServicesMap.entrySet())
+			{
+				String v = entry.getValue();
+				
+				if (v.split(",",-1)[1].trim().equals("N"))
+				{
+					if (!v.split(",",-1)[9].isEmpty() && v.split(",",-1)[9].length() != 0)
+					{
+						String OfferAttr_ID = v.split(",",-1)[9];
+						String Attr_name = v.split(",",-1)[10];
+						String Attr_type = v.split(",",-1)[11];
+						
+						String Attr_value = "";
+						String OfferAttr_Defination = "";
+
+						
+						if(Attr_name.equals("IMEI"))
+							Attr_value = subscriber.getProfiledumpInfoList().get(0).getIMEI();
+						else if(Attr_name.equals("IMSI"))
+							Attr_value = subscriber.getProfiledumpInfoList().get(0).getIMSI();
+						else if(Attr_name.equals("HLRAddress"))
+							Attr_value = subscriber.getProfiledumpInfoList().get(0).getHlrAddr();
+						//else if(Attr_name.equals("CustomerID"))
+							//Attr_value = subscriber.getProfiledumpInfoC CustomerID();
+						else if(Attr_name.equals("CSBAR"))
+							Attr_value = subscriber.getProfiledumpInfoList().get(0).getCSBAR();
+						else if(Attr_name.equals("crbtActReqDate"))
+							Attr_value = subscriber.getProfiledumpInfoList().get(0).getCrbtActReqDate();
+						else if(Attr_name.equals("crtCnfrmd"))
+							Attr_value = subscriber.getProfiledumpInfoList().get(0).getCrtCnfrmd();
+						else if(Attr_name.equals("crbtActConfirmDate"))
+							Attr_value = subscriber.getProfiledumpInfoList().get(0).getCrbtActConfirmDate();
+						else if(Attr_name.equals("crbtDeact"))
+							Attr_value = subscriber.getProfiledumpInfoList().get(0).getCrbtDeact();	
+						else if(Attr_name.equals("crbtDeActReqDate"))
+							Attr_value = subscriber.getProfiledumpInfoList().get(0).getCrbtDeActConfirmDate();
+						else if(Attr_name.equals("crbtDeActConfirmDate"))
+							Attr_value = subscriber.getProfiledumpInfoList().get(0).getCrbtDeActConfirmDate();
+						else if(Attr_name.equals("cbActConfirmDate"))
+							Attr_value = subscriber.getProfiledumpInfoList().get(0).getCbActConfirmDate();
+						else if(Attr_name.equals("cbExpDate"))
+							Attr_value = subscriber.getProfiledumpInfoList().get(0).getCbExpDate();
+						else if(Attr_name.equals("cbCnfdAct"))
+							Attr_value = subscriber.getProfiledumpInfoList().get(0).getCbCnfdAct();
+						else if(Attr_name.equals("cbWarn1"))
+							Attr_value = subscriber.getProfiledumpInfoList().get(0).getCbWarn1();
+						else if(Attr_name.equals("cbWarn2"))
+							Attr_value = subscriber.getProfiledumpInfoList().get(0).getCbWarn2();
+						else if(Attr_name.equals("cbDeActReqDate"))
+							Attr_value = subscriber.getProfiledumpInfoList().get(0).getCbDeActReqDate();
+						else if(Attr_name.equals("cbDeActConfirmDate"))
+							Attr_value = subscriber.getProfiledumpInfoList().get(0).getCbDeActConfirmDate();
+						else if(Attr_name.equals("cfActConfirmDate"))
+							Attr_value = subscriber.getProfiledumpInfoList().get(0).getCfActConfirmDate();
+						else if(Attr_name.equals("cfConfActive"))
+							Attr_value = subscriber.getProfiledumpInfoList().get(0).getCfConfActive();
+						else if(Attr_name.equals("cfDeActConfirmDate"))
+							Attr_value = subscriber.getProfiledumpInfoList().get(0).getCfDeActConfirmDate();
+						else if(Attr_name.equals("cfDeActReqDate"))
+							Attr_value = subscriber.getProfiledumpInfoList().get(0).getCfDeActReqDate();
+						//else if(Attr_name.equals("cfLastFailddate"))
+						//	Attr_value = subscriber.getProfiledumpInfoList().get(0).getCfLastFailddate();
+						else if(Attr_name.equals("avmActConfirmDate"))
+							Attr_value = subscriber.getProfiledumpInfoList().get(0).getAvmActConfirmDate();
+						else if(Attr_name.equals("avmCnfrmd"))
+							Attr_value = subscriber.getProfiledumpInfoList().get(0).getAvmCnfrmd();
+						else if(Attr_name.equals("avmDeActReqDate"))
+							Attr_value = subscriber.getProfiledumpInfoList().get(0).getAvmDeActReqDate();
+						else if(Attr_name.equals("avmDeActConfirmDate"))
+							Attr_value = subscriber.getProfiledumpInfoList().get(0).getAvmDeActConfirmDate();
+						else if(Attr_name.equals("SprssNtfctn"))
+							Attr_value = subscriber.getProfiledumpInfoList().get(0).getSprssNtfctn();
+						else if(Attr_name.equals("avm"))
+							Attr_value = subscriber.getProfiledumpInfoList().get(0).getAvm();
+						else if(Attr_name.equals("avmActReqDate"))
+							Attr_value = subscriber.getProfiledumpInfoList().get(0).getAvmActReqDate();
+						else if(Attr_name.equals("MssdCallNot"))
+							Attr_value = subscriber.getProfiledumpInfoList().get(0).getMssdCallNot();
+						else if(Attr_name.equals("VMCIMEI"))
+							Attr_value = subscriber.getProfiledumpInfoList().get(0).getVMCIMEI();
+						//else if(Attr_name.equals("VMCName"))
+						//	Attr_value = subscriber.getProfiledumpInfoVMCName();
+						else if(Attr_name.equals("Acct Active Month"))
+							Attr_value = subscriber.getProfiledumpInfoList().get(0).getAcctActiveMonth();
+						else if(Attr_name.equals("Acct Active Year"))
+							Attr_value = subscriber.getProfiledumpInfoList().get(0).getAcctActiveYear();
+						
+						if(Integer.parseInt(Attr_type) == 4)
+							OfferAttr_Defination = LoadSubscriberMapping.OfferAttrDefMap.get(OfferAttr_ID + ',' + Attr_name);
+						
+						
+						
+						StringBuffer sb = new StringBuffer();
+						if(Attr_value.length() !=0 && OfferAttr_Defination != null)
+						{
+							try {	
+								sb.append(msisdn).append(",");
+								sb.append(OfferAttr_ID).append(",");
+								sb.append(OfferAttr_Defination).append(",");
+								sb.append(CommonUtilities.toHexadecimal(Attr_value)).append(",");
+								sb.append(LoadSubscriberMapping.CommonConfigMap.get("default_ZERO"));
+							} catch (Exception e) {
+								// TODO Auto-generated catch block
+								e.printStackTrace();
+							}
+							defaultOfferList.add(sb.toString());
+						}
+						
+						
+						sb = null;
+					}
+				}			
+			
+				
+			}
+			/*LoadSubscriberMapping.DefaultServicesMap.forEach((k,v)->{
+			});*/
+		}
+		
+		return defaultOfferList;	
+	}
+	
+	/*private Collection<? extends String> offerAttributeFromBalanceMapping(String msisdn) {
+		List<String> BalanceOffAttrList =new ArrayList<>();
+		Set<String> CompletedGroup = new HashSet<>();
+		for(com.ericsson.jibx.beans.SubscriberXml.SchemasubscriberbalancesdumpInfo balanceInput :  subscriber.getBalancesdumpInfoList())
+		{
+			String Balance_ID = balanceInput.getBALANCETYPE();
+			//System.out.println("Master Balance_ID: " + Balance_ID);
+			String Balance_Value = balanceInput.getBEBUCKETVALUE();
+			String Balance_StartDate = balanceInput.getBEBUCKETSTARTDATE();
+			String Balance_ExpiryDate = balanceInput.getBEEXPIRY();
+			if(LoadSubscriberMapping.BalanceEmptyBTGroupIdentifierMapForOffAttr.get(Balance_ID + "|") != null)
+			{
+				String OffAttr_ID = LoadSubscriberMapping.BalanceEmptyBTGroupIdentifierMapForOffAttr.get(Balance_ID + "|").getAttrOfferId();
+				String Symbol = LoadSubscriberMapping.BalanceEmptyBTGroupIdentifierMapForOffAttr.get(Balance_ID + "|").getSymbols();
+				String BT_Value = LoadSubscriberMapping.BalanceEmptyBTGroupIdentifierMapForOffAttr.get(Balance_ID + "|").getBTValue();
+				String OffAttr_Name = LoadSubscriberMapping.BalanceEmptyBTGroupIdentifierMapForOffAttr.get(Balance_ID + "|").getAttrName();
+				String OffAttr_Type = LoadSubscriberMapping.BalanceEmptyBTGroupIdentifierMapForOffAttr.get(Balance_ID + "|").getAttrType();
+				
+				if(!OffAttr_ID.isEmpty())
+				{					
+					if(Symbol.isEmpty() && BT_Value.isEmpty())
+					{	
+						String OfferAttr_Defination = "";
+						if(Integer.parseInt(OffAttr_Type) == 4)
+							OfferAttr_Defination = LoadSubscriberMapping.OfferAttrDefMap.get(OffAttr_ID + ',' + OffAttr_Name);
+						
+						try {
+							BalanceOffAttrList.add(msisdn+ "," + OffAttr_ID + "," + OfferAttr_Defination + "," + CommonUtilities.toHexadecimal(Balance_Value) + "," +  LoadSubscriberMapping.CommonConfigMap.get("default_ZERO"));
+						} catch (UnsupportedEncodingException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
+					}
+					else
+					{
+						boolean OffAttrCreation = false;
+						if(Symbol.equals(">=") && Integer.parseInt(Balance_Value) >= Integer.parseInt(BT_Value))
+							OffAttrCreation = true;
+						else if(Symbol.equals(">") && Integer.parseInt(Balance_Value) > Integer.parseInt(BT_Value))
+							OffAttrCreation = true;
+						else if(Symbol.equals("=") && Integer.parseInt(Balance_Value) == Integer.parseInt(BT_Value))
+							OffAttrCreation = true;
+						else if(Symbol.equals("or"))
+						{
+							//Integer.parseInt(Balance_Value) == Integer.parseInt(BT_Value)
+							String[] values = BT_Value.split(",");
+							
+							if(Arrays.stream(values).anyMatch(Balance_Value::equals))
+								OffAttrCreation = true;
+							else
+								onlyLog.add("INC4004:Balance_Type lookup failed in Product_Mapping:MSISDN=" + msisdn + ":BALANCE_TYPE_ID=" + Balance_ID + ":BE_BUCKET_VALUE=" + Balance_Value + ":ACTION=Logging");
+						}
+						else
+							onlyLog.add("INC4004:Balance_Type lookup failed in Product_Mapping:MSISDN=" + msisdn + ":BALANCE_TYPE_ID=" + Balance_ID + ":BE_BUCKET_VALUE=" + Balance_Value + ":ACTION=Logging");
+					
+						if(OffAttrCreation)
+						{
+							String OfferAttr_Defination = "";
+							if(Integer.parseInt(OffAttr_Type) == 4)
+								OfferAttr_Defination = LoadSubscriberMapping.OfferAttrDefMap.get(OffAttr_ID + ',' + OffAttr_Name);
+							
+							try {
+								
+								BalanceOffAttrList.add(msisdn+ "," + OffAttr_ID + "," + OfferAttr_Defination + "," + CommonUtilities.toHexadecimal(Balance_Value) + "," +  LoadSubscriberMapping.CommonConfigMap.get("default_ZERO"));
+							} catch (UnsupportedEncodingException e) {
+								// TODO Auto-generated catch block
+								e.printStackTrace();
+							}
+						}
+					}
+				}	
+			}	
+			else
+			{
+				String GroupName = "";
+				List<String> CurrentGroupBalance = new ArrayList<>();
+				List<String> ValidGroupBalanceOfferAttr = new ArrayList<>();
+				for(Set<String> valueList : LoadSubscriberMapping.BalanceGroupingMap.values()) {					
+					if(valueList.contains(Balance_ID)){
+						GroupName = LoadSubscriberMapping.getKey(LoadSubscriberMapping.BalanceGroupingMap, valueList);
+						for (String x : valueList)
+							CurrentGroupBalance.add(x); 
+						break;
+					}
+				}				
+				if(!CompletedGroup.contains(GroupName))
+				{
+					//System.out.println(Balance_ID + "----" +GroupName);					
+					if(CurrentGroupBalance.size() > 0)
+					{
+						String FinalGroupName = GroupName;
+						//System.out.println(FinalGroupName);	
+						for(String id : CurrentGroupBalance)
+						{
+							//System.out.println(id);
+							for(com.ericsson.jibx.beans.SubscriberXml.SchemasubscriberbalancesdumpInfo TempbalanceInput :  subscriber.getBalancesdumpInfoList()){
+								String TempBalance_ID = TempbalanceInput.getBALANCETYPE();
+								String TempBalance_Name = TempbalanceInput.getBALANCETYPENAME();
+								String TempBalance_Value = TempbalanceInput.getBEBUCKETVALUE();
+								String TempBalance_StartDate = TempbalanceInput.getBEBUCKETSTARTDATE();
+								String TempBalance_ExpiryDate = TempbalanceInput.getBEEXPIRY();							
+								if(id.equals(TempBalance_ID))
+								{
+									if(LoadSubscriberMapping.BalanceNonEmptyBTGroupIdentifierMapForOffAttr.get(id + "|" + FinalGroupName) != null)
+									{
+										String OffAttr_ID = LoadSubscriberMapping.BalanceNonEmptyBTGroupIdentifierMapForOffAttr.get(TempBalance_ID + "|" + FinalGroupName).getAttrOfferId();
+										String Symbol = LoadSubscriberMapping.BalanceNonEmptyBTGroupIdentifierMapForOffAttr.get(TempBalance_ID + "|" + FinalGroupName).getSymbols();
+										String BT_Value = LoadSubscriberMapping.BalanceNonEmptyBTGroupIdentifierMapForOffAttr.get(TempBalance_ID + "|" + FinalGroupName).getBTValue();
+										String OffAttr_Name = LoadSubscriberMapping.BalanceNonEmptyBTGroupIdentifierMapForOffAttr.get(TempBalance_ID + "|" + FinalGroupName).getAttrName();
+										String OffAttr_Type = LoadSubscriberMapping.BalanceNonEmptyBTGroupIdentifierMapForOffAttr.get(TempBalance_ID + "|" + FinalGroupName).getAttrType();
+										
+										if(Symbol.equals(">=") && Integer.parseInt(TempBalance_Value) >= Integer.parseInt(BT_Value))
+										{
+											CompletedGroup.add(FinalGroupName);
+											ValidGroupBalanceOfferAttr.add(TempBalance_Name + ";" + TempBalance_ID + ";" + TempBalance_Value +"|" + OffAttr_ID + ";" + OffAttr_Name + ";" + OffAttr_Type + ";" +  TempBalance_StartDate + ";" + TempBalance_ExpiryDate);
+											break;
+										}
+										else if(Symbol.equals(">") && Integer.parseInt(TempBalance_Value) > Integer.parseInt(BT_Value))
+										{
+											CompletedGroup.add(FinalGroupName);
+											ValidGroupBalanceOfferAttr.add(TempBalance_Name + ";" + TempBalance_ID + ";" + TempBalance_Value +"|" + OffAttr_ID + ";" + OffAttr_Name + ";" + OffAttr_Type + ";" +  TempBalance_StartDate + ";" + TempBalance_ExpiryDate);
+											break;
+										}
+										else if(Symbol.equals("=") && Integer.parseInt(TempBalance_Value) == Integer.parseInt(BT_Value))
+										{
+											CompletedGroup.add(FinalGroupName);
+											ValidGroupBalanceOfferAttr.add(TempBalance_Name + ";" + TempBalance_ID + ";" + TempBalance_Value +"|" + OffAttr_ID + ";" + OffAttr_Name + ";" + OffAttr_Type + ";" +  TempBalance_StartDate + ";" + TempBalance_ExpiryDate);
+											break;
+										}
+										else if(Symbol.equals("or"))
+										{
+											//Integer.parseInt(Balance_Value) == Integer.parseInt(BT_Value)
+											String[] values = BT_Value.split(",");											
+											if(Arrays.stream(values).anyMatch(TempBalance_Value::equals))
+											{
+												CompletedGroup.add(FinalGroupName);
+												ValidGroupBalanceOfferAttr.add(TempBalance_Name + ";" + TempBalance_ID + ";" + TempBalance_Value +"|" + OffAttr_ID + ";" + OffAttr_Name + ";" + OffAttr_Type + ";" +  TempBalance_StartDate + ";" + TempBalance_ExpiryDate);
+												break;
+											}
+											else
+												onlyLog.add("INC4004:Balance_Type lookup failed in Product_Mapping:MSISDN=" + msisdn + ":BALANCE_TYPE_ID=" + TempBalance_ID + ":BE_BUCKET_VALUE=" + TempBalance_Value + ":ACTION=Logging");
+										}
+										else
+											onlyLog.add("INC4004:Balance_Type lookup failed in Product_Mapping:MSISDN=" + msisdn + ":BALANCE_TYPE_ID=" + TempBalance_ID + ":BE_BUCKET_VALUE=" + TempBalance_Value + ":ACTION=Logging");
+									}
+									else
+									{
+										//System.out.println("Discarded Logs: " + id);
+										onlyLog.add("INC4004:Balance_Type lookup failed in Product_Mapping:MSISDN=" + msisdn + ":BALANCE_TYPE_ID=" + TempBalance_ID + ":BE_BUCKET_VALUE=" + TempBalance_Value + ":ACTION=Logging");
+									}
+								}
+							}
+							
+							if(FinalGroupName.startsWith("B"))
+							{								
+								String[] ExceptionOffAttr = {"B1","B2","B3"};
+								if(Arrays.stream(ExceptionOffAttr).anyMatch(FinalGroupName::equals))
+								{
+									//TempBalance_Name + ";" + TempBalance_ID + ";" + TempBalance_Value +"|" + OffAttr_ID + ";" + OffAttr_Name + ";" + OffAttr_Type + ";" +  TempBalance_StartDate + ";" + TempBalance_ExpiryDate);
+									if(ValidGroupBalanceOfferAttr.size() == CurrentGroupBalance.size())
+									{
+										String Attr_Fields = ValidGroupBalanceOfferAttr.get(0).split("\\|")[1];
+										String BalanceValue = ValidGroupBalanceOfferAttr.get(0).split("\\|")[0].split(";")[2];
+										String OfferAttr_Defination = "";
+										if(Integer.parseInt(Attr_Fields.split(";")[2]) == 4)
+											OfferAttr_Defination = LoadSubscriberMapping.OfferAttrDefMap.get(Attr_Fields.split(";")[0] + ',' + Attr_Fields.split(";")[1]);
+										
+										try {
+											
+											BalanceOffAttrList.add(msisdn+ "," + Attr_Fields.split(";")[0] + "," + OfferAttr_Defination + "," + CommonUtilities.toHexadecimal(BalanceValue) + "," +  LoadSubscriberMapping.CommonConfigMap.get("default_ZERO"));
+										} catch (UnsupportedEncodingException e) {
+											// TODO Auto-generated catch block
+											e.printStackTrace();
+										}
+									}
+								}
+								else
+								{
+									ValidGroupBalanceOfferAttr.forEach(item->{
+										String Attr_Fields = item.split("\\|")[1];
+										String BalanceValue = item.split("\\|")[0].split(";")[2];
+										String OfferAttr_Defination = "";
+										if(Integer.parseInt(Attr_Fields.split(";")[2]) == 4)
+											OfferAttr_Defination = LoadSubscriberMapping.OfferAttrDefMap.get(Attr_Fields.split(";")[0] + ',' + Attr_Fields.split(";")[1]);
+										
+										try {
+											
+											BalanceOffAttrList.add(msisdn+ "," + Attr_Fields.split(";")[0] + "," + OfferAttr_Defination + "," + CommonUtilities.toHexadecimal(BalanceValue) + "," +  LoadSubscriberMapping.CommonConfigMap.get("default_ZERO"));
+										} catch (UnsupportedEncodingException e) {
+											// TODO Auto-generated catch block
+											e.printStackTrace();
+										}
+									});									
+								}	
+							}
+							if(FinalGroupName.startsWith("3011_1_DUMMY"))
+							{
+								if(ValidGroupBalanceOfferAttr.size() == CurrentGroupBalance.size())
+								{
+									String Attr_Fields = ValidGroupBalanceOfferAttr.get(0).split("\\|")[1];
+									// Offer_ID + ";" + Offer_Type + ";" + startFlag + ";" + expiryFalg + ";" + Balance_StartDate + ";" + Balance_ExpiryDate  + ";" + Product_Private
+									
+									String BalanceValue = ValidGroupBalanceOfferAttr.get(0).split("\\|")[0].split(";")[2];
+									String OfferAttr_Defination = "";
+									if(Integer.parseInt(Attr_Fields.split(";")[2]) == 4)
+										OfferAttr_Defination = LoadSubscriberMapping.OfferAttrDefMap.get(Attr_Fields.split(";")[0] + ',' + Attr_Fields.split(";")[1]);
+									
+									try {
+										
+										BalanceOffAttrList.add(msisdn+ "," + Attr_Fields.split(";")[0] + "," + OfferAttr_Defination + "," + CommonUtilities.toHexadecimal(BalanceValue) + "," +  LoadSubscriberMapping.CommonConfigMap.get("default_ZERO"));
+									} catch (UnsupportedEncodingException e) {
+										// TODO Auto-generated catch block
+										e.printStackTrace();
+									}
+								}
+							}
+							//Add a code here
+							
+						}
+					}
+				}
+			}
+		}
+		return BalanceOffAttrList;
+	}*/
+}

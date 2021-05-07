@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<section name="Workbench">
+	<section name="org.eclipse.ui.texteditor.GotoLineAction$GotoLineDialog_dialogBounds">
+		<item value="421" key="DIALOG_X_ORIGIN"/>
+		<item value="268" key="DIALOG_Y_ORIGIN"/>
+	</section>
+	<section name="org.eclipse.ui.texteditor.FindReplaceDialog">
+		<item value="false" key="isRegEx"/>
+		<item value="CompletedBTIDSet" key="selection"/>
+		<item value="false" key="casesensitive"/>
+		<item value="false" key="incremental"/>
+		<item value="true" key="wrap"/>
+		<item value="false" key="wholeword"/>
+		<list key="findhistory">
+			<item value="CompletedBTIDSet"/>
+			<item value="AS2"/>
+			<item value="AS1"/>
+			<item value="INC4004"/>
+			<item value="&quot;A-"/>
+			<item value="GGroup"/>
+			<item value="Blackberry Bundle"/>
+			<item value="x-&gt;x.contains(&quot;Blackberry Bundle&quot;)"/>
+		</list>
+		<list key="replacehistory">
+			<item value="LoadSubscriberMapping.CommonConfigMap.get(&quot;migration_date&quot;).toString()"/>
+			<item value=""/>
+			<item value="SourceBTID"/>
+			<item value="BTID"/>
+			<item value="PROFILE_TAG_VALUE"/>
+			<item value="="/>
+			<item value="LoadSubscriberMapping.CommonConfigMap.get(&quot;Lifetime_validity_value&quot;).toString()"/>
+			<item value="1970-01-01 04:00:00"/>
+		</list>
+	</section>
+	<section name="org.eclipse.ui.texteditor.FindReplaceDialog_dialogBounds">
+		<item value="475" key="DIALOG_WIDTH"/>
+		<item value="1|Segoe UI|9.0|0|WINDOWS|1|-12|0|0|0|400|0|0|0|1|0|0|0|0|Segoe UI" key="DIALOG_FONT_NAME"/>
+		<item value="183" key="DIALOG_HEIGHT"/>
+		<item value="501" key="DIALOG_X_ORIGIN"/>
+		<item value="541" key="DIALOG_Y_ORIGIN"/>
+	</section>
+</section>

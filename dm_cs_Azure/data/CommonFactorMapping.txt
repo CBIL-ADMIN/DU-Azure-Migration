@@ -1,0 +1,8 @@
+Seconds,Direct mapping. Ignore Decimals,1
+Min,New Amount = Amount *60. Ignore Decimals,60
+Bytes,Direct mapping. Ignore Decimals,1
+KB,New Amount = Amount *1024. Ignore Decimals,1024
+MB,New Amount = Amount *1024*1024. Ignore Decimals,1048576
+GB,New Amount = Amount *1024*1024*1024. Ignore Decimals,1073741824
+Units,Direct Mapping. Ignore Decimals,1
+Money,New Amount = Amount *1000000,1000000

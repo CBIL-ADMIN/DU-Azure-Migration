@@ -1,0 +1,6 @@
+REJECTION_REASON-REJECTION_COUNT
+SNA Destination number is empty-12320
+Service class Ignored-22379
+Lifecycle lookup mismatch-44927
+Subscriber relation missing-222
+SNA length is less than six Digit-1

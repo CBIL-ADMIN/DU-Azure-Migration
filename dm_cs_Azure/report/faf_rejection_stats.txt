@@ -1,0 +1,3 @@
+REJECTION_REASON-REJECTION_COUNT
+Service class Ignored-46
+Lifecycle lookup mismatch-8

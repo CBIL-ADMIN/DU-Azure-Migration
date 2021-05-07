@@ -1,0 +1,48 @@
+INC1001|Service class Lookup Failed|MSISDN,CCS_ACCT_TYPE_ID,SERVICE_STATE|E|Discard and log|Discarded.log
+INC1002|Service class Ignored|MSISDN,CCS_ACCT_TYPE_ID,SERVICE_STATE|E|Discard and log|Discarded.log
+INC1003|Subscriber relation data missing|MSISDN,BE,USMS,PROFILE,BALANCES,CUG|E|Discard and log|Discarded.log
+INC1004|Lifecycle lookup mismatch|MSISDN,CCS_ACCT_TYPE_ID,SERVICE_STATE|E|Discard and log|Discarded.log
+INC1005|NPP_Lifecycle PBT_ID not found|MSISDN,CCS_ACCT_TYPE_ID,SERVICE_STATE|W|Logging|Exception.log
+INC1006|NPP_Lifecycle match condition failed|MSISDN,CCS_ACCT_TYPE_ID,SERVICE_STATE,BALANCE_TYPE,BE_BUCKET_VALUE,BE_BUCKET_ID|W|Logging|Exception.log
+INC2001|Subscriber Profile field Missing|MSISDN, IMSI, IMEI, hlraddress, LanguageID|W|Logging|Exception.log
+INC2002|Language Lookup failed|MSISDN, LANGUAGE_ID|W|Logging|Exception.log
+INC3001|Default service mapped attribute lookup failed|MSISDN,PROFILE_TAG_NAME,PROFILE_TAG_VALUE,ATTR_NAME|W|Logging|Exception.log
+INC4001|Balance_Type expired|MSISDN,BALANCE_TYPE,BE_BUCKET_VALUE,BE_BUCKET_ID,BE_EXPIRY|W|Logging|Exception.log
+INC4002|Balance_Type lookup failed|MSISDN,BALANCE_TYPE,BE_BUCKET_VALUE,BE_BUCKET_ID|W|Logging|Exception.log
+INC4003|Balance_Type Ignored|MSISDN,BALANCE_TYPE,BE_BUCKET_VALUE,BE_BUCKET_ID|W|Logging|Exception.log
+INC4004|Balance_Type match condition failed|MSISDN,BALANCE_TYPE,BE_BUCKET_VALUE,BE_BUCKET_ID|W|Logging|Exception.log
+INC4005|Periodic Charge is not active|MSISDN,BALANCE_TYPE,BE_BUCKET_VALUE,BE_BUCKET_ID|W|Logging|Exception.log
+INC4006|BT mapped CIS Product Mapping failed|MSISDN,BALANCE_TYPE,BE_BUCKET_VALUE,BE_BUCKET_ID,BUNDLE_TYPE,PRODUCT_ID|W|Logging|Exception.log
+INC4007|BT mapped CIS NWPC Mapping failed|MSISDN,BALANCE_TYPE,BE_BUCKET_VALUE,BE_BUCKET_ID,BUNDLE_TYPE,PRODUCT_ID,BT_ID,BT_VALUE|W|Logging|Exception.log
+INC4008|BillCycle PC expiry not matching with PAM|MSISDN,BALANCE_TYPE,BE_BUCKET_VALUE,BE_EXPIRY|W|Logging|Exception.log
+INC4009|BillCycle More than one PC with diff expiry.|MSISDN,BALANCE_TYPE,BE_BUCKET_VALUE,BE_EXPIRY|W|Logging|Exception.log
+INC4010|BT mapped attribute Lookup failed|MSISDN,BALANCE_TYPE,BE_BUCKET_VALUE,ATTR_NAME|W|Logging|Exception.log
+INC4011|Balance_Type match condition failed|MSISDN,BALANCE_TYPE,BE_BUCKET_VALUE,BE_BUCKET_ID|W|Logging|Exception.log
+INC4012|NetworkBundle specific BT ignored|MSISDN,BALANCE_TYPE,BE_BUCKET_VALUE,BE_BUCKET_ID|W|Logging|Exception.log
+INC5001|Community Lookup failed|MSISDN,CUG_NAME|W|Logging|Exception.log
+INC6001|Profile_Tags Mapping lookup Failed|MSISDN,PROFILE_TAG_NAME,PROFILE_TAG_VALUE|W|Logging|Exception.log
+INC6002|Profile_Tags Mapping Ignored|MSISDN,PROFILE_TAG_NAME,PROFILE_TAG_VALUE|W|Logging|Exception.log
+INC6003|Profile Tag match condition Failed|MSISDN,PROFILE_TAG_NAME,PROFILE_TAG_VALUE,ADD_PROFILE_TAG_NAME,ADD_PROFILE_TAG_VALUE|W|Logging|Exception.log
+INC6004|Profile Tag mapped attribute Lookup failed|MSISDN,PROFILE_TAG_NAME,PROFILE_TAG_VALUE,ATTR_NAME|W|Logging|Exception.log
+INC6005|Profile Tag mapped CIS Product Mapping failed|MSISDN,PROFILE_TAG_NAME,PROFILE_TAG_VALUE,BUNDLE_TYPE,PRODUCT_ID|E|Logging|Exception.log
+INC7001|Master mapping considered|MSISDN,BALANCE_TYPE,BE_BUCKET_ID,OFFER_ID|I|Logging|Track.log
+INC7002|Add_DA considered|MSISDN,BALANCE_TYPE,BE_BUCKET_ID,DA_ID,DA_BALANCE|I|Logging|Track.log
+INC7003|Add_UC considered|MSISDN,BALANCE_TYPE,BE_BUCKET_ID,UC_ID,UC_VALUE|I|Logging|Track.log
+INC7004|GRACE BT considered|MSISDN,BALANCE_TYPE,BE_BUCKET_ID,OFFER_ID|I|Logging|Track.log
+INC7005|GRACE PT considered|MSISDN,PROFILE_TAG_NAME,OFFER_ID|I|Logging|Track.log
+INC7006|Negative BT_Value Found will be migrated as Zero|MSISDN,BALANCE_TYPE,BE_BUCKET_VALUE,BE_BUCKET_ID, TARGET_ID, MIGRATED_VALUE|W|Logging|Track.log
+INC7007|Derived DA_BALANCE or UC_VALUE is negative but migrated as zero|MSISDN,BALANCE_TYPE,BE_BUCKET_VALUE,BE_BUCKET_ID, TARGET_ID, MIGRATED_VALUE, DERIVED_VALUE|W|Logging|Track.log
+INC7008|Actual derived value post conversion|MSISDN,BALANCE_TYPE,BE_BUCKET_VALUE,BE_BUCKET_ID, TARGET_ID, MIGRATED_VALUE, DERIVED_VALUE|W|Logging|Track.log
+INC7009|Negative Balances found for DA in Default_Services|MSISDN,SOURCE_FIELD,SOURCE_VALUE,DA_ID|W|Logging|Track.log
+INC7010|BT mapped in A-M-* group|MSISDN,BALANCE_TYPE,BE_BUCKET_ID|I|Logging|Track.log
+INC7011|BT mapped in A-S-* group|MSISDN,BALANCE_TYPE,BE_BUCKET_ID|I|Logging|Track.log
+INC8001|Calling_Card_Lifecycle Lookup Failed|SERIAL_NUMBER,VOUCHER_TYPE,STATE,BALANCE_VALUE|E|Discard and log|Discarded.log
+INC8002|Calling Card Balance Negative value|SERIAL_NUMBER,VOUCHER_TYPE,STATE,BALANCE_VALUE|W|Logging|Exception.log
+INC8003|Calling Card expired|SERIAL_NUMBER,VOUCHER_TYPE,STATE,BALANCE_VALUE,BALANCE_EXPIRYA31:C32|W|Logging|Exception.log
+INC9001|SNA Number series is different|MSISDN,TranslatedNumber / TransNumber|W|Logging|Exception.log
+INC9002|SNA Destination number is empty|MSISDN,CCS_ACCT_TYPE_ID|E|Discard and log|Discarded.log
+INC9003|SNA State is different|MSISDN,SERVICE_STATE|E|Discard and log|Track.log
+INC9004|SNA length is less than six Digit|MSISDN,SERVICE_STATE,CCS_ACCT_TYPE_ID|E|Discard and log|Discarded.log
+INC1101|CIS Reference Mapping failed|MSISDN,BUNDLE_TYPE,PRODUCT_ID|E|Discard and log|CIS_Discarded.log
+INC1102|CIS NWPC Mapping failed|MSISDN,BUNDLE_TYPE,PRODUCT_ID,BT_ID,BT_VALUE|E|Discard and log|CIS_Discarded.log
+INC1103|CIS group condition failed|MSISDN,BUNDLE_TYPE,PRODUCT_ID,BT_ID,BT_VALUE|E|Discard and log|CIS_Discarded.log

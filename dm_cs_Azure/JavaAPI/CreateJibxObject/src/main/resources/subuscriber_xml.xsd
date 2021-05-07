@@ -1,0 +1,375 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified" attributeFormDefault="unqualified">
+  <xs:element name="subscriber_xml">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element name="subscriber_info">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="SUBSCRIBER">
+                <xs:complexType>
+                  <xs:all>
+                    <xs:element type="xs:string" name="MSISDN"/>
+                    <xs:element type="xs:string" name="CCS_ACCT_TYPE_NAME"/>
+                    <xs:element type="xs:string" name="CCS_ACCT_TYPE_ID"/>
+                    <xs:element type="xs:string" name="SERVICE_STATE"/>
+                    <xs:element type="xs:string" name="CREATION_DATE"/>
+                    <xs:element type="xs:string" name="WALLET_EXPIRY"/>
+                    <xs:element type="xs:string" name="WALLET_ID"/>
+                    <xs:element type="xs:string" name="WALLET_TYPE"/>
+                    <xs:element type="xs:string" name="BE_ACCT_ENGINE_ID"/>
+                  </xs:all>
+                </xs:complexType>
+              </xs:element>
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+        <xs:element name="balancesdump_info">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="schemasubscriberbalancesdump_info" maxOccurs="unbounded" minOccurs="0">
+                <xs:complexType>
+                  <xs:all>
+                    <xs:element type="xs:string" name="MSISDN"/>
+					<xs:element type="xs:string" name="WALLET_ID"/>
+					<xs:element type="xs:string" name="BALANCE_TYPE"/>
+					<xs:element type="xs:string" name="BE_BUCKET_ID"/>
+					<xs:element type="xs:string" name="BALANCE_TYPE_NAME"/>
+					<xs:element type="xs:string" name="BE_BUCKET_VALUE"/>
+					<xs:element type="xs:string" name="BE_BUCKET_START_DATE"/>
+					<xs:element type="xs:string" name="BE_NEVER_EXPIRES"/>
+					<xs:element type="xs:string" name="BE_EXPIRY"/>
+					<xs:element type="xs:string" name="BE_BUCKET_NEVER_USED"/>
+					<xs:element type="xs:string" name="BE_BUCKET_LAST_USE"/>
+					<xs:element type="xs:string" name="BE_BUCKET_REFERENCE"/>
+					<xs:element type="xs:string" name="WALLET_TYPE"/>
+					<xs:element type="xs:string" name="CCS_BALANCE_UNIT_ID"/>
+					<xs:element type="xs:string" name="CCS_BALANCE_UNIT_NAME"/>
+					<xs:element type="xs:string" name="BE_ACCT_ENGINE_ID"/>
+                  </xs:all>
+                </xs:complexType>
+              </xs:element>
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+        <xs:element name="cugclidump_info">
+	        <xs:complexType>
+	            <xs:sequence>
+	              <xs:element name="schemasubscribercugclidump_info" maxOccurs="unbounded" minOccurs="0">
+	                <xs:complexType>
+	                  <xs:all>
+	                    <xs:element type="xs:string" name="MSISDN"/>
+	                    <xs:element type="xs:string" name="CUG_NAME"/>
+	                    <xs:element type="xs:string" name="CHANGE_DATE"/>
+	                    <xs:element type="xs:string" name="TARIFF_PLAN"/>
+	                    <xs:element type="xs:string" name="TARIFF_PLAN_NAME"/>
+	                   </xs:all>
+	                </xs:complexType>
+	              </xs:element>
+	            </xs:sequence>
+          	</xs:complexType>
+        </xs:element>
+        <xs:element name="usmsdump_info">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="schemasubscriberusmsdump_info" maxOccurs="unbounded" minOccurs="0">
+                <xs:complexType>
+                  <xs:all>
+                    <xs:element type="xs:string" name="MSISDN"/>
+                    <xs:element type="xs:string" name="INITIAL_ACTIVATION_DATE"/>
+                    <xs:element type="xs:string" name="INITIAL_ACCOUNT_BALANCE"/>
+                    <xs:element type="xs:string" name="LAST_ACCOUNT_EXPIRY_PERIOD"/>
+                    <xs:element type="xs:string" name="LAST_BALANCE_BEFORE_RECHARGE"/>
+                    <xs:element type="xs:string" name="LAST_BALANCE_EXPIRY_PERIOD"/>
+                    <xs:element type="xs:string" name="LAST_EXPIRED_AMOUNT"/>
+                    <xs:element type="xs:string" name="LAST_EXPIRY_DATE"/>
+                    <xs:element type="xs:string" name="LAST_PRODUCT_TYPE_SWAP_DATE"/>
+                    <xs:element type="xs:string" name="LAST_RECHARGE_AMOUNT"/>
+                    <xs:element type="xs:string" name="FIRST_RECHARGE_DATE"/>
+                    <xs:element type="xs:string" name="LAST_RECHARGE_DATE"/>
+                    <xs:element type="xs:string" name="LAST_STATE_CHANGE_DATE"/>
+                    <xs:element type="xs:string" name="TOTAL_EXPIRED_AMOUNT"/>
+                    <xs:element type="xs:string" name="LAST_STATE_CHANGE_REASON"/>
+					<xs:element type="xs:string" name="WALLET_ID"/>
+                    <xs:element type="xs:string" name="WALLET_TYPE"/>
+                    <xs:element type="xs:string" name="BE_ACCT_ENGINE_ID"/>                    
+                  </xs:all>
+                </xs:complexType>
+              </xs:element>
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+        <xs:element name="profiledump_info">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="schemasubscriberprofiledump_info" maxOccurs="unbounded" minOccurs="0">
+                <xs:complexType>
+                  <xs:all>
+					<xs:element type="xs:string" name="MSISDN"/>
+					<xs:element type="xs:string" name="Language_ID"/>
+					<xs:element type="xs:string" name="IMEI"/>
+					<xs:element type="xs:string" name="IMSI"/>
+					<xs:element type="xs:string" name="HLRAddress"/>
+					<xs:element type="xs:string" name="Wallet_Type"/>
+					<xs:element type="xs:string" name="BstrVceIntNumTree"/>
+					<xs:element type="xs:string" name="BstrVceNatNumTree"/>
+					<xs:element type="xs:string" name="PeriodicChargeStatus"/>
+					<xs:element type="xs:string" name="CSBAR"/>
+					<xs:element type="xs:string" name="crbtActReqDate"/>
+					<xs:element type="xs:string" name="crtCnfrmd"/>
+					<xs:element type="xs:string" name="crbtActConfirmDate"/>
+					<xs:element type="xs:string" name="crbtDeact"/>
+					<xs:element type="xs:string" name="crbtDeActReqDate"/>
+					<xs:element type="xs:string" name="crbtDeActConfirmDate"/>
+					<xs:element type="xs:string" name="cbActConfirmDate"/>
+					<xs:element type="xs:string" name="cbExpDate"/>
+					<xs:element type="xs:string" name="cbCnfdAct"/>
+					<xs:element type="xs:string" name="cbWarn1"/>
+					<xs:element type="xs:string" name="cbWarn2"/>
+					<xs:element type="xs:string" name="cbDeActReqDate"/>
+					<xs:element type="xs:string" name="cbDeActConfirmDate"/>
+					<xs:element type="xs:string" name="cfActConfirmDate"/>
+					<xs:element type="xs:string" name="cfConfActive"/>
+					<xs:element type="xs:string" name="cfDeActConfirmDate"/>
+					<xs:element type="xs:string" name="cfDeActReqDate"/>
+					<xs:element type="xs:string" name="cfLastFailedDate"/>
+					<xs:element type="xs:string" name="cfActReqDate"/>
+					<xs:element type="xs:string" name="avmActConfirmDate"/>
+					<xs:element type="xs:string" name="avmCnfrmd"/>
+					<xs:element type="xs:string" name="avmDeActReqDate"/>
+					<xs:element type="xs:string" name="avmDeActConfirmDate"/>
+					<xs:element type="xs:string" name="SprssNtfctn"/>
+					<xs:element type="xs:string" name="avm"/>
+					<xs:element type="xs:string" name="avmActReqDate"/>
+					<xs:element type="xs:string" name="MssdCallNot"/>
+					<xs:element type="xs:string" name="VMCIMEI"/>
+					<xs:element type="xs:string" name="VMCName"/>
+					<xs:element type="xs:string" name="AcctActiveMonth"/>
+					<xs:element type="xs:string" name="AcctActiveYear"/>
+					<xs:element type="xs:string" name="TopXCountr1"/>
+					<xs:element type="xs:string" name="TopXCountr2"/>
+					<xs:element type="xs:string" name="TopXCountr3"/>
+					<xs:element type="xs:string" name="TopXCountr4"/>
+					<xs:element type="xs:string" name="TopXCountr5"/>
+					<xs:element type="xs:string" name="Prepaid"/>
+					<xs:element type="xs:string" name="entBsnssCrclActv"/>
+					<xs:element type="xs:string" name="BusMobPayg50"/>
+					<xs:element type="xs:string" name="BusMobTopUp"/>
+					<xs:element type="xs:string" name="MercuryOptInOutDate"/>
+					<xs:element type="xs:string" name="HardCapLabel"/>
+					<xs:element type="xs:string" name="HardCapAddonLabel"/>
+					<xs:element type="xs:string" name="Active"/>
+					<xs:element type="xs:string" name="Absher"/>
+					<xs:element type="xs:string" name="avmInfSub"/>
+					<xs:element type="xs:string" name="avmPin"/>
+					<xs:element type="xs:string" name="avmProf"/>
+					<xs:element type="xs:string" name="BronzeMPromoActDate"/>
+					<xs:element type="xs:string" name="BronzeMPromoDeactDate"/>
+					<xs:element type="xs:string" name="BstrVceIntNumAct"/>
+					<xs:element type="xs:string" name="BstrVceNatNumAct"/>
+					<xs:element type="xs:string" name="BstrVINActReqDate"/>
+					<xs:element type="xs:string" name="BstrVINConfirmDate"/>
+					<xs:element type="xs:string" name="BstrVINDeActConfDate"/>
+					<xs:element type="xs:string" name="BstrVINDeActReqDate"/>
+					<xs:element type="xs:string" name="BstrVINRecur"/>
+					<xs:element type="xs:string" name="BstrVNNActReqDate"/>
+					<xs:element type="xs:string" name="BstrVNNConfirmDate"/>
+					<xs:element type="xs:string" name="BstrVNNDeActConfDate"/>
+					<xs:element type="xs:string" name="BstrVNNDeActReqDate"/>
+					<xs:element type="xs:string" name="BstrVNNRecur"/>
+					<xs:element type="xs:string" name="cbActReqDate"/>
+					<xs:element type="xs:string" name="cbAll"/>
+					<xs:element type="xs:string" name="cbIncom"/>
+					<xs:element type="xs:string" name="cbInt"/>
+					<xs:element type="xs:string" name="cbIntExc"/>
+					<xs:element type="xs:string" name="cbWR"/>
+					<xs:element type="xs:string" name="cfBusy"/>
+					<xs:element type="xs:string" name="cfData"/>
+					<xs:element type="xs:string" name="cfFax"/>
+					<xs:element type="xs:string" name="cfInt"/>
+					<xs:element type="xs:string" name="cfNoReply"/>
+					<xs:element type="xs:string" name="cfNotReach"/>
+					<xs:element type="xs:string" name="cfVoice"/>
+					<xs:element type="xs:string" name="clir"/>
+					<xs:element type="xs:string" name="cllrRngTne"/>
+					<xs:element type="xs:string" name="CVM"/>
+					<xs:element type="xs:string" name="CVMCounter"/>
+					<xs:element type="xs:string" name="dataGeneric"/>
+					<xs:element type="xs:string" name="Date1"/>
+					<xs:element type="xs:string" name="DisabilityActivationDate"/>
+					<xs:element type="xs:string" name="DisabilityDectivationDate"/>
+					<xs:element type="xs:string" name="EmiratiPlan"/>
+					<xs:element type="xs:string" name="EntCust"/>
+					<xs:element type="xs:string" name="entMssgingActv"/>
+					<xs:element type="xs:string" name="faxGroup3"/>
+					<xs:element type="xs:string" name="GlobalZoneOptIn"/>
+					<xs:element type="xs:string" name="GlobalZoneOptOut"/>
+					<xs:element type="xs:string" name="gprsPmail"/>
+					<xs:element type="xs:string" name="IDD2Act"/>
+					<xs:element type="xs:string" name="IDD2ActDate"/>
+					<xs:element type="xs:string" name="IDD2DeactDate"/>
+					<xs:element type="xs:string" name="IDDCutRateAct"/>
+					<xs:element type="xs:string" name="IDDCutRateActDate"/>
+					<xs:element type="xs:string" name="InternationalMin"/>
+					<xs:element type="xs:string" name="Language"/>
+					<xs:element type="xs:string" name="odbAll"/>
+					<xs:element type="xs:string" name="odbIncom"/>
+					<xs:element type="xs:string" name="odbInt"/>
+					<xs:element type="xs:string" name="odbIntExc"/>
+					<xs:element type="xs:string" name="odbOnlyVoice"/>
+					<xs:element type="xs:string" name="odbOutVoice"/>
+					<xs:element type="xs:string" name="odbWR"/>
+					<xs:element type="xs:string" name="PAYGDataFNL"/>
+					<xs:element type="xs:string" name="PAYGMet"/>
+					<xs:element type="xs:string" name="PCNGlobalOptin"/>
+					<xs:element type="xs:string" name="PCNGlobalOptout"/>
+					<xs:element type="xs:string" name="Plan"/>
+					<xs:element type="xs:string" name="ReceivePostCallSMS"/>
+					<xs:element type="xs:string" name="SocialBndlActChannel"/>
+					<xs:element type="xs:string" name="SocialBndlDeActChannel"/>
+					<xs:element type="xs:string" name="BstrVceIntNumExp"/>
+					<xs:element type="xs:string" name="BstrVceNatNumExp"/>
+					<xs:element type="xs:string" name="BstrVINChngsAllwd"/>
+					<xs:element type="xs:string" name="BstrVNNChngsAllwd"/>
+					<xs:element type="xs:string" name="TranslatedNumber"/>
+					<xs:element type="xs:string" name="TransNumber"/>
+					<xs:element type="xs:string" name="SmsBndl1Recur"/>
+					<xs:element type="xs:string" name="SmsExpDate"/>
+					<xs:element type="xs:string" name="SmsBndl2Recur"/>
+					<xs:element type="xs:string" name="PriceShout"/>
+					<xs:element type="xs:string" name="BlckBrryAct"/>
+					<xs:element type="xs:string" name="BlckBrryCnfdAct"/>
+					<xs:element type="xs:string" name="BlckBrryActCnfrmDate"/>
+					<xs:element type="xs:string" name="BlckBrryExpDate"/>
+					<xs:element type="xs:string" name="SmsBndl3Recur"/>
+					<xs:element type="xs:string" name="Bespoke"/>
+					<xs:element type="xs:string" name="ManRenDateLess1Y"/>
+					<xs:element type="xs:string" name="DataBndl1Recur"/>
+					<xs:element type="xs:string" name="DataBndlType"/>
+					<xs:element type="xs:string" name="DataExpDate"/>
+					<xs:element type="xs:string" name="DataGraceAct"/>
+					<xs:element type="xs:string" name="DataGraceEnd"/>
+					<xs:element type="xs:string" name="DataBndl2Recur"/>
+					<xs:element type="xs:string" name="DataBndl3Recur"/>
+					<xs:element type="xs:string" name="DataBndl4Recur"/>
+					<xs:element type="xs:string" name="DataBndl5Recur"/>
+					<xs:element type="xs:string" name="DataBndl6Recur"/>
+					<xs:element type="xs:string" name="DataBndl8Recur"/>
+					<xs:element type="xs:string" name="DataBndl9Recur"/>
+					<xs:element type="xs:string" name="MBB"/>
+					<xs:element type="xs:string" name="MBBExpDate"/>
+					<xs:element type="xs:string" name="MBBUnlimited"/>
+					<xs:element type="xs:string" name="MBBUnlimExpDate"/>
+					<xs:element type="xs:string" name="MBB2GB"/>
+					<xs:element type="xs:string" name="MBB2GBExpDate"/>
+					<xs:element type="xs:string" name="MBB10GB"/>
+					<xs:element type="xs:string" name="MBB10GBExpDate"/>
+					<xs:element type="xs:string" name="MBBGraceAct"/>
+					<xs:element type="xs:string" name="MBBGraceEnd"/>
+					<xs:element type="xs:string" name="MBBOfferExpDate"/>
+					<xs:element type="xs:string" name="TP_Social_Deact_Conf"/>
+					<xs:element type="xs:string" name="cbAct"/>
+					<xs:element type="xs:string" name="PokeSMSOptoutDate"/>
+					<xs:element type="xs:string" name="PokeSMSOptinDate"/>
+					<xs:element type="xs:string" name="BlckBrryActReqDate"/>
+					<xs:element type="xs:string" name="BlckBrryDeActReqDate"/>
+					<xs:element type="xs:string" name="BlckBrryDeactRbkDate"/>
+					<xs:element type="xs:string" name="BronzeDeactDate"/>
+					<xs:element type="xs:string" name="BronzeActDate"/>
+					<xs:element type="xs:string" name="umsCnfrmd"/>
+					<xs:element type="xs:string" name="umsInfSub"/>
+					<xs:element type="xs:string" name="ums"/>
+					<xs:element type="xs:string" name="umsF2M"/>
+					<xs:element type="xs:string" name="umsSMS2F"/>
+					<xs:element type="xs:string" name="umsVm2MMS"/>
+					<xs:element type="xs:string" name="TravSumOptInDate"/>
+					<xs:element type="xs:string" name="PassOptInDate"/>
+					<xs:element type="xs:string" name="PassOptOutDate"/>
+					<xs:element type="xs:string" name="TwinSIMNumber"/>
+					<xs:element type="xs:string" name="FstTimeActivation"/>
+					<xs:element type="xs:string" name="Anniversarytopuppromo"/>
+					<xs:element type="xs:string" name="AnniversarytopuppromoEnd"/>
+					<xs:element type="xs:string" name="SmartPhoneExpiry"/>
+					<xs:element type="xs:string" name="DSP_Promo"/>
+					<xs:element type="xs:string" name="guiBalAdjDate"/>
+					<xs:element type="xs:string" name="guiBalAdjVal"/>
+					<xs:element type="xs:string" name="BBBundName"/>
+					<xs:element type="xs:string" name="BBPromo"/>
+					<xs:element type="xs:string" name="BSCSAct"/>
+					<xs:element type="xs:string" name="BBPromoSubDate"/>
+					<xs:element type="xs:string" name="BBPromoEndDate"/>
+					<xs:element type="xs:string" name="BlckBrrySprssSMS"/>
+					<xs:element type="xs:string" name="BlckBrryDeActCnfrmDt"/>
+					<xs:element type="xs:string" name="Payg_Life_Optin"/>
+					<xs:element type="xs:string" name="gprsBasicSer"/>
+					<xs:element type="xs:string" name="gprsWap"/>
+					<xs:element type="xs:string" name="smsMtPp"/>
+					<xs:element type="xs:string" name="gprsMms"/>
+					<xs:element type="xs:string" name="smsMoPp"/>
+					<xs:element type="xs:string" name="callhold"/>
+					<xs:element type="xs:string" name="callwait"/>
+					<xs:element type="xs:string" name="multiParty"/>
+					<xs:element type="xs:string" name="IntRoam"/>
+					<xs:element type="xs:string" name="clip"/>
+					<xs:element type="xs:string" name="VdioCall"/>
+					<xs:element type="xs:string" name="DuCS"/>
+					<xs:element type="xs:string" name="BSCS_account_num"/>
+					<xs:element type="xs:string" name="CS_notification_num"/>
+					<xs:element type="xs:string" name="cbGraceAct"/>
+					<xs:element type="xs:string" name="cbGraceEnd"/>
+					<xs:element type="xs:string" name="cbGraceRenew"/>
+					<xs:element type="xs:string" name="gprsCarrier"/>
+					<xs:element type="xs:string" name="PAYGDataLineOffer"/>
+					<xs:element type="xs:string" name="PAYGDataWHSP"/>
+					<xs:element type="xs:string" name="PAYGDataWH"/>
+					<xs:element type="xs:string" name="msisdnChgDate"/>
+					<xs:element type="xs:string" name="mainMSISDN"/>
+					<xs:element type="xs:string" name="CashReturn"/>
+					<xs:element type="xs:string" name="NewTopUpValue"/>
+					<xs:element type="xs:string" name="bdgtCntrlTopUp"/>
+					<xs:element type="xs:string" name="BlckBrryBundle"/>
+					<xs:element type="xs:string" name="MBB10GBWelcome"/>
+					<xs:element type="xs:string" name="MBB2GBWelcome"/>
+					<xs:element type="xs:string" name="MBBUnlimWelcome"/>
+					<xs:element type="xs:string" name="MBBWelcome"/>
+					<xs:element type="xs:string" name="guiBalAdjCount"/>
+					<xs:element type="xs:string" name="LastChangeDateExpiry"/>
+					<xs:element type="xs:string" name="NewPPBundle"/>
+					<xs:element type="xs:string" name="SmsBndlType"/>
+					<xs:element type="xs:string" name="PCN1stCall"/>
+					<xs:element type="xs:string" name="RLHAct_ReqDate"/>
+					<xs:element type="xs:string" name="RLHDeact_Date"/>
+					<xs:element type="xs:string" name="entPDIntNum"/>
+					<xs:element type="xs:string" name="AloRchgBonusOptinDt"/>
+					<xs:element type="xs:string" name="Customer_ID"/>
+					<xs:element type="xs:string" name="IDDBundleActDate"/>
+					<xs:element type="xs:string" name="ICPBundle"/>
+					<xs:element type="xs:string" name="Mercury2DOptinoutDate"/>
+					<xs:element type="xs:string" name="Mercury2MOptinoutDate"/>
+					<xs:element type="xs:string" name="FamSponsr"/>
+					<xs:element type="xs:string" name="FamsponsorEtisalat"/>
+					<xs:element type="xs:string" name="NPPSocBndlDAPAct"/>
+					<xs:element type="xs:string" name="NPPBISDAPMod"/>
+					<xs:element type="xs:string" name="NPPBBSocialDAPMod"/>
+					<xs:element type="xs:string" name="NPPBBSocialDAPDeact"/>
+					<xs:element type="xs:string" name="MercuryDOptinDate"/>
+					<xs:element type="xs:string" name="MercuryDOptoutDate"/>
+					<xs:element type="xs:string" name="CVMDeactDate"/>
+					<xs:element type="xs:string" name="IDDRateCuttersOptinDate"/>
+					<xs:element type="xs:string" name="IDDRateCuttersOptoutDate"/>
+					<xs:element type="xs:string" name="NonstopSocActDate"/>
+					<xs:element type="xs:string" name="NonstopSocDeactDate"/>
+					<xs:element type="xs:string" name="OWFnFLabel"/>
+					<xs:element type="xs:string" name="OneWayFnF"/>	
+					<xs:element type="xs:string" name="OneWayFnFModCount"/>
+					<xs:element type="xs:string" name="AutoRechargeValue"/>										
+				 </xs:all>
+               </xs:complexType>
+              </xs:element>
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+</xs:schema>

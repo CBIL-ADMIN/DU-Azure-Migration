@@ -1,0 +1,5 @@
+REJECTION_REASON-REJECTION_COUNT
+Service class Ignored-44
+Lifecycle lookup mismatch-23
+Community Lookup failed -49
+Subscriber relation missing-203

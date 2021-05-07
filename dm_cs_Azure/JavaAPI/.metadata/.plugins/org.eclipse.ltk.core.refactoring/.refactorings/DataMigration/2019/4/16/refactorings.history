@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<session version="1.0">
+<refactoring comment="Rename compilation unit &apos;com.ericsson.dm.transform.implementation.CommonFunction.java&apos; to &apos;CommonFunctions.java&apos;&#x0D;&#x0A;- Original project: &apos;DataMigration&apos;&#x0D;&#x0A;- Original element: &apos;com.ericsson.dm.transform.implementation.CommonFunction.java&apos;&#x0D;&#x0A;- Renamed element: &apos;com.ericsson.dm.transform.implementation.CommonFunctions.java&apos;" description="Rename compilation unit &apos;CommonFunction.java&apos;" flags="2" id="org.eclipse.jdt.ui.rename.compilationunit" input="/src\/main\/java&lt;com.ericsson.dm.transform.implementation{CommonFunction.java" name="CommonFunctions.java" references="false" stamp="1555236531819" version="1.0"/>
+</session>

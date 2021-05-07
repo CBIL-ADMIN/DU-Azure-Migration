@@ -1,0 +1,3 @@
+FAF_TYPE,SOURCE_COUNT,DISCARDED_COUNT,DISCARDED_REMARK
+International,19669,32,Service class Ignored-28;Lifecycle lookup mismatch-4;
+National,10569,22,Service class Ignored-18;Lifecycle lookup mismatch-4;

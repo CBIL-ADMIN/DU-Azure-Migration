@@ -1,0 +1,3 @@
+REJECTION_REASON-REJECTION_COUNT
+SNA Destination number is empty-12320
+SNA length is less than six Digit-1
